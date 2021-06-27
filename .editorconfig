@@ -1,0 +1,22 @@
+# Windows files
+root = true
+
+[*.bat]
+end_of_line = crlf
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{rst,ini}]
+indent_style = space
+indent_size = 4
+
+[Makefile]
+indent_style = tab
+
+[nginx.conf]
+indent_style = space
+indent_size = 2

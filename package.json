@@ -1,0 +1,12 @@
+{
+    "name": "commands",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "android": "cd frontend/mobile && yarn android",
+        "ios": "cd frontend/mobile && yarn ios",
+        "start": "cd frontend/mobile && yarn start",
+        "test-fe": "cd frontend/mobile && yarn test",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    }
+}
