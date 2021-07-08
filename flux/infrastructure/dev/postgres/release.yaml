@@ -20,10 +20,10 @@ spec:
   valuesFrom:
     - kind: Secret
       name: postgres-credentials
-      valuesKey: postgresqlPassword
-    - kind: Secret
-      name: postgres-credentials
-      valuesKey: postgresqlDatabase
-    - kind: Secret
-      name: postgres-credentials
-      valuesKey: postgresqlUsername
+      valuesKey: values.yaml
+    # - kind: Secret
+    #   name: postgres-credentials
+    #   valuesKey: postgresqlDatabase
+    # - kind: Secret
+    #   name: postgres-credentials
+    #   valuesKey: postgresqlUsername
