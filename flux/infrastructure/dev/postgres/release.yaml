@@ -17,7 +17,13 @@ spec:
   install:
     remediation:
       retries: 3
-  values:
-    postgresqlPassword: DNgobUNfyho6vwGLILH93ryo6EP6uFQqXpIbEWhPxyUilfyCB5O7cebQauF7tcBK
-    postgresqlDatabase: workout
-    postgresqlUsername: UJmrllANSDCBQQrZJQAsSVSCxOccqTjD
+  valuesFrom:
+    - kind: Secret
+      name: postgres-credentials
+      valuesKey: postgresqlPassword
+    - kind: Secret
+      name: postgres-credentials
+      valuesKey: postgresqlDatabase
+    - kind: Secret
+      name: postgres-credentials
+      valuesKey: postgresqlUsername
