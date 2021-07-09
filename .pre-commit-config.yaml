@@ -1,4 +1,4 @@
-exclude: 'docs|node_modules|migrations|.git|.tox|swagger_client|swagger.yml|flux-system|ios|android'
+exclude: 'docs|node_modules|migrations|.git|.tox|swagger_client|swagger.yml|flux-system|ios|android|charts'
 default_stages: [commit]
 fail_fast: true
 
