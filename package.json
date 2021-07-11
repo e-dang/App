@@ -7,6 +7,13 @@
         "ios": "cd frontend/mobile && yarn ios",
         "start": "cd frontend/mobile && yarn start",
         "test-fe": "cd frontend/mobile && yarn test",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "check": "pre-commit run --all-files",
+        "build-dev": "cd backend/tracker && docker build -f docker/Dockerfile -t ericdang/tracker:dev --build-arg BUILD_ENVIRONMENT=dev .",
+        "build-prod": "cd backend/tracker && docker build -f docker/Dockerfile -t ericdang/tracker:prod --build-arg BUILD_ENVIRONMENT=production .",
+        "reconcile": "flux reconcile source git flux-system",
+        "flux": "flux get all",
+        "dev": "cd backend/tracker && telepresence intercept tracker --port 5000 -- uvicorn config.asgi:application --host 0.0.0.0 --port 5000 --reload",
+        "test": "source scripts/env.sh && cd backend/tracker && pytest -m unit"
     }
 }
