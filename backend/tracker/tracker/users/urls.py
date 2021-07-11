@@ -4,6 +4,6 @@ from tracker.users.views import UserViewSet
 app_name = "users"
 
 router = SimpleRouter()
-router.register("users", UserViewSet)
+router.register("", UserViewSet)
 
 urlpatterns = router.urls

@@ -32,11 +32,16 @@ def healthcheck(request):
     return Response(status=200)
 
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("users/", include("tracker.users.urls", namespace="users")),
+api_urls = [
+    path("", include("dj_rest_auth.urls")),
     path("registration/", include("dj_rest_auth.registration.urls")),
+    path("users/", include("tracker.users.urls", namespace="users")),
+]
+
+urlpatterns = [
     path("", healthcheck),
+    path("admin/", admin.site.urls),
+    path(f"api/{settings.API_VERSION}/", include(api_urls)),
 ]
 
 if settings.DEBUG:

@@ -72,6 +72,8 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
+API_VERSION = "v1"
+
 LOCAL_APPS = [
     "tracker.users.apps.UsersConfig",
     "tracker.core.apps.CoreConfig",
