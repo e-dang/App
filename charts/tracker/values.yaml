@@ -38,9 +38,9 @@ securityContext:
   runAsGroup: 150
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   # nodePort: 30000
-  port: 9001
+  port: 80
 
 ingress:
   enabled: false
