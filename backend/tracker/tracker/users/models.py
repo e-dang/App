@@ -32,4 +32,4 @@ class User(AbstractUser):
             str: URL for user detail.
 
         """
-        return reverse("users:detail", kwargs={"uuid": self.uuid})
+        return reverse("users:user-detail", kwargs={"uuid": self.uuid})

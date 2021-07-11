@@ -19,7 +19,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ["uuid", "email"]
         extra_kwargs = {
             "url": {
-                "view_name": "api:v1:user-detail",
+                "view_name": "users:user-detail",
                 "lookup_field": "uuid",
             }
         }

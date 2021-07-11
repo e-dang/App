@@ -17,6 +17,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
+from django.views.generic.base import TemplateView
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
@@ -40,8 +41,14 @@ api_urls = [
 
 urlpatterns = [
     path("", healthcheck),
-    path("admin/", admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     path(f"api/{settings.API_VERSION}/", include(api_urls)),
+    path("accounts/", include("allauth.urls")),
+    path(
+        "password-reset/confirm/<uidb64>/<token>/",
+        TemplateView.as_view(template_name="password_reset_confirm.html"),
+        name="password_reset_confirm",
+    ),
 ]
 
 if settings.DEBUG:
