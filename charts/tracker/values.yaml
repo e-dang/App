@@ -38,9 +38,9 @@ securityContext:
   runAsGroup: 150
 
 service:
-  type: NodePort
-  nodePort: 30000
-  port: 80
+  type: LoadBalancer
+  # nodePort: 30000
+  port: 9001
 
 ingress:
   enabled: false
