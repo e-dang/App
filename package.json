@@ -14,6 +14,6 @@
         "reconcile": "flux reconcile source git flux-system",
         "flux": "flux get all",
         "dev": "cd backend/tracker && telepresence intercept tracker --port 5000 -- uvicorn config.asgi:application --host 0.0.0.0 --port 5000 --reload",
-        "test": "source scripts/env.sh && cd backend/tracker && pytest -m unit"
+        "test": "source scripts/env.sh && cd backend/tracker && pytest"
     }
 }
