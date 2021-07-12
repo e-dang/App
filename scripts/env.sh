@@ -1,11 +1,14 @@
 #!/bin/bash
 
-# This script exports the tracker service's secrets to environment variables so that commands can be run locally. For
-# example, in order to run unit tests, the dev environment variables need to be set, thus this script can be sources
-# and the unit tests subsquently run.
+# This script prints the tracker service's secrets to stdout in the format 'docker run' expects for environment
+# variables to be placed in the container. This allows the docker container to run locally outside of the cluster.
+
+ENV_VARS=""
 
 # https://stackoverflow.com/questions/48512914/exporting-json-to-environment-variables
 VALUES=$(sops -d flux/apps/dev/tracker/secret.yaml | yq -j e '.stringData' -)
-for var in $(echo $VALUES | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" ); do
-    export $var
+for var in $(echo $VALUES | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]"); do
+    ENV_VARS+="-e ${var} "
 done
+
+printf "%s" "$ENV_VARS"
