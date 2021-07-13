@@ -112,6 +112,58 @@ resource "kubernetes_secret" "sops" {
   }
 }
 
+resource "kubectl_manifest" "image_update_automation" {
+  depends_on = [
+    kubectl_manifest.install
+  ]
+
+  yaml_body = yamlencode({
+    apiVersion = "image.toolkit.fluxcd.io/v1beta1"
+    kind       = "ImageUpdateAutomation"
+    metadata = {
+      name      = "flux-system"
+      namespace = "flux-system"
+    }
+    spec = {
+      interval = "1m0s"
+      sourceRef = {
+        kind = "GitRepository"
+        name = "flux-system"
+      }
+      git = {
+        checkout = {
+          ref = {
+            branch = "main"
+          }
+        }
+        commit = {
+          author = {
+            email = "fluxcdbot@dne.com"
+            name  = "fluxcdbot"
+          }
+          messageTemplate = "{{range .Updated.Images}}{{println .}}{{end}}"
+        }
+        push = {
+          branch = "main"
+        }
+        update = {
+          path     = "flux/apps/dev"
+          strategy = "Setters"
+        }
+      }
+    }
+  })
+}
+
+
+locals {
+  combined_sync = <<EOF
+${data.flux_sync.main.content}
+---
+${kubectl_manifest.image_update_automation.yaml_body_parsed}
+EOF
+}
+
 
 resource "github_repository_file" "install" {
   repository          = var.repository_name
@@ -124,7 +176,7 @@ resource "github_repository_file" "install" {
 resource "github_repository_file" "sync" {
   repository          = var.repository_name
   file                = data.flux_sync.main.path
-  content             = data.flux_sync.main.content
+  content             = local.combined_sync
   branch              = var.branch
   overwrite_on_create = true
 }
