@@ -1,4 +1,4 @@
-exclude: 'docs|node_modules|migrations|.git|.tox|swagger_client|swagger.yml|flux-system|ios|android|charts'
+exclude: 'node_modules|migrations|.git|.tox|flux-system|ios|android|charts|.terraspace-cache'
 default_stages: [commit]
 fail_fast: true
 
@@ -39,3 +39,12 @@ repos:
           - json
           - yaml
           - markdown
+
+  - repo: git://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.50.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+      - id: terraform_tflint
+      - id: terraform_tfsec
+        files: infra/(app|config)/.*\.tf$
