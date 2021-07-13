@@ -126,16 +126,19 @@ resource "kubectl_manifest" "image_update_automation" {
     }
     spec = {
       interval = "1m0s"
+
       sourceRef = {
         kind = "GitRepository"
         name = "flux-system"
       }
+
       git = {
         checkout = {
           ref = {
             branch = "main"
           }
         }
+
         commit = {
           author = {
             email = "fluxcdbot@dne.com"
@@ -143,13 +146,15 @@ resource "kubectl_manifest" "image_update_automation" {
           }
           messageTemplate = "{{range .Updated.Images}}{{println .}}{{end}}"
         }
+
         push = {
           branch = "main"
         }
-        update = {
-          path     = "flux/apps/dev"
-          strategy = "Setters"
-        }
+      }
+
+      update = {
+        path     = "flux/apps/dev"
+        strategy = "Setters"
       }
     }
   })

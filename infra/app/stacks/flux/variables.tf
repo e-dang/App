@@ -6,7 +6,7 @@ variable "github_owner" {
 variable "github_token_file" {
   description = "The file containing the personal access token for the owner of the Github repository."
   type        = string
-  default     = "files/github-token.yaml"
+  default     = "files/github-token.yaml" # tfsec:ignore:GEN001
 }
 
 variable "github_deploy_key_file" {
