@@ -13,7 +13,7 @@
         "build-prod": "cd backend/tracker && docker build -f docker/Dockerfile -t ericdang/tracker:prod --build-arg BUILD_ENVIRONMENT=production .",
         "reconcile": "flux reconcile source git flux-system",
         "flux": "flux get all",
-        "dev": "telepresence intercept tracker --port 5000 --docker-run -- $(scripts/env.sh) -v $(pwd)/backend/tracker:/home/django/app -it ericdang/tracker:dev",
+        "dev": "telepresence intercept tracker --port 5000 --docker-run -- -v $(pwd)/backend/tracker:/home/django/app -it --rm ericdang/tracker:dev",
         "test": "docker exec -it intercept-tracker-5000 pytest"
     }
 }
