@@ -43,11 +43,11 @@ jobs:
       - name: Install kind cluster
         uses: engineerd/setup-kind@v0.5.0
 
-      - name: Install terraform
-        uses: hashicorp/setup-terraform@v1
+      # - name: Install terraform
+      #   uses: hashicorp/setup-terraform@v1
 
       - name: Install terraspace
-        run: gem install terraspace
+        run: sudo gem install terraspace
 
       - name: Install telepresence
         run: |
