@@ -43,9 +43,6 @@ jobs:
       - name: Install kind cluster
         uses: engineerd/setup-kind@v0.5.0
 
-      # - name: Install terraform
-      #   uses: hashicorp/setup-terraform@v1
-
       - name: Install terraspace
         run: sudo gem install terraspace
 
@@ -60,6 +57,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
+
+      - name: Install SOPS
+        uses: mdgreenwald/mozilla-sops-action@v1
+        id: install
+        with:
+          version: latest
+
+      - name: Install gnupg
+        run: sudo apt-get install gnupg
+
+      - name: Add private key to keyring
+        run: echo ${{ secrets.TERRAFORM_DECRYPTION_KEY }} | gpg --import
 
       - name: Setup cluster
         run: |
