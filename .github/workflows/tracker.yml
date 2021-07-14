@@ -96,7 +96,7 @@ jobs:
       - name: Setup cluster
         run: |
           cd infra && \
-          terraspace up flux -y && \
+          TS_ENV=cicd terraspace up flux -y && \
           telepresence connect
 
       - name: Build docker image
