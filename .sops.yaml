@@ -1,6 +1,6 @@
 creation_rules:
   - path_regex: ./infra/.*.yaml
-    pgp: 54161A454FF4A56DF8590237EDFA7D24E72A509E
+    pgp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
   - path_regex: ./flux/.*.yaml
     encrypted_regex: ^(data|stringData)$
-    pgp: 38EB88ECBF8553D01E181F56FB7E08FAA3C4FF58
+    pgp: A9D0E9EDCEA9201EA6214063FE9E4A501304255A
