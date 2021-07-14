@@ -1,6 +1,5 @@
 name: Tracker
 
-# Enable Buildkit and let compose use it to speed up image building
 env:
   DOCKER_BUILDKIT: 1
 
@@ -25,9 +24,32 @@ jobs:
         with:
           python-version: 3.9
 
-      # Run all pre-commit hooks on all the files.
-      # Getting only staged files can be tricky in case a new PR is opened
-      # since the action is run on a branch in detached head state
+      - name: Install SOPS
+        uses: mdgreenwald/mozilla-sops-action@v1
+        id: install
+        with:
+          version: latest
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v1
+        with:
+          tflint_version: v0.29.0
+
+      - name: Install Terraform Docs
+        run: |
+          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | && \
+          grep -o -E "https://.+?-linux-amd64.tar.gz")" > terraform-docs.tgz && \
+          tar xzf terraform-docs.tgz && \
+          chmod +x terraform-docs && \
+          sudo mv terraform-docs /usr/bin/
+
+      - name: Install TFSec
+        run: |
+          curl -L "$(curl -s https://api.github.com/repos/tfsec/tfsec/releases/latest | && \
+          grep -o -E "https://.+?tfsec-linux-amd64")" > tfsec && \
+          chmod +x tfsec && \
+          sudo mv tfsec /usr/bin/
+
       - name: Install and Run Pre-commit
         uses: pre-commit/action@v2.0.3
 
