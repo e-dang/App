@@ -45,10 +45,9 @@ jobs:
 
       - name: Install TFSec
         run: |
-          curl -L "$(curl -s https://api.github.com/repos/tfsec/tfsec/releases/latest | \
-          grep -o -E "https://.+?tfsec-linux-amd64")" > tfsec && \
-          chmod +x tfsec && \
-          sudo mv tfsec /usr/bin/
+          wget https://github.com/aquasecurity/tfsec/releases/download/v0.47.0/tfsec-linux-amd64 && \
+          chmod +x tfsec-linux-amd64 && \
+          sudo mv tfsec-linux-amd64 /usr/bin/tfsec
 
       - name: Install and Run Pre-commit
         uses: pre-commit/action@v2.0.3
