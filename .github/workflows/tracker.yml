@@ -65,7 +65,7 @@ jobs:
           version: latest
 
       - name: Install gnupg
-        run: sudo apt-get install gnupg
+        run: sudo apt-get install gnupg2
 
       - name: Add private key to keyring
         run: echo ${{ secrets.TERRAFORM_DECRYPTION_KEY }} | gpg --import
@@ -81,7 +81,7 @@ jobs:
 
       - name: Run tests
         run: |
-          yarn dev & \
+          yarn dev &
           yarn test
 
       - name: Login to DockerHub
