@@ -91,7 +91,7 @@ jobs:
       - name: Add public and private key to keyring
         run: |
           gpg --import 54161A454FF4A56DF8590237EDFA7D24E72A509E.pub
-          echo ${{ secrets.TERRAFORM_DECRYPTION_KEY }} | gpg --import
+          echo "${{ secrets.TERRAFORM_DECRYPTION_KEY }}" | gpg --import
 
       - name: Setup cluster
         run: |
