@@ -12,13 +12,13 @@ data "sops_file" "sops_key" {
 
 provider "kubernetes" {
   config_path    = "~/.kube/config"
-  config_context = "docker-desktop"
+  config_context = var.kube_context
 }
 
 
 provider "kubectl" {
   config_path    = "~/.kube/config"
-  config_context = "docker-desktop"
+  config_context = var.kube_context
 }
 
 

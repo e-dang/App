@@ -37,3 +37,8 @@ variable "target_path" {
   type        = string
   default     = "<%= expansion('flux/clusters/:ENV') %>"
 }
+
+variable "kube_context" {
+  description = "The kubernetes context to use for deploy Flux."
+  type        = string
+}
