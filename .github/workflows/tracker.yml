@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Terraform Docs
         run: |
-          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | && \
+          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | \
           grep -o -E "https://.+?-linux-amd64.tar.gz")" > terraform-docs.tgz && \
           tar xzf terraform-docs.tgz && \
           chmod +x terraform-docs && \
@@ -45,7 +45,7 @@ jobs:
 
       - name: Install TFSec
         run: |
-          curl -L "$(curl -s https://api.github.com/repos/tfsec/tfsec/releases/latest | && \
+          curl -L "$(curl -s https://api.github.com/repos/tfsec/tfsec/releases/latest | \
           grep -o -E "https://.+?tfsec-linux-amd64")" > tfsec && \
           chmod +x tfsec && \
           sudo mv tfsec /usr/bin/
