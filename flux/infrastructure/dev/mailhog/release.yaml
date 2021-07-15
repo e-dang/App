@@ -2,8 +2,10 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: mailhog
-  namespace: default
+  namespace: flux-system
 spec:
+  releaseName: mailhog
+  targetNamespace: default
   interval: 5m
   chart:
     spec:
