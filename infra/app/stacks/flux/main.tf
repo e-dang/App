@@ -171,6 +171,7 @@ EOF
 
 
 resource "github_repository_file" "install" {
+  count               = var.commit ? 1 : 0
   repository          = var.repository_name
   file                = data.flux_install.main.path
   content             = data.flux_install.main.content
@@ -179,6 +180,7 @@ resource "github_repository_file" "install" {
 }
 
 resource "github_repository_file" "sync" {
+  count               = var.commit ? 1 : 0
   repository          = var.repository_name
   file                = data.flux_sync.main.path
   content             = local.combined_sync
@@ -187,6 +189,7 @@ resource "github_repository_file" "sync" {
 }
 
 resource "github_repository_file" "kustomize" {
+  count               = var.commit ? 1 : 0
   repository          = var.repository_name
   file                = data.flux_sync.main.kustomize_path
   content             = data.flux_sync.main.kustomize_content
