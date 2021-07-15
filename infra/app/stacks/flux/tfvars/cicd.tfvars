@@ -1,1 +1,1 @@
-kube_context = "kind"
+kube_context = "kind-kind"
