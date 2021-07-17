@@ -47,19 +47,14 @@ ingress:
   className: nginx
   annotations: {}
   hosts:
-    - host: example.local
+    - host: tracker-test-example.com
       paths:
         - path: /
           pathType: Prefix
-          backend:
-          service:
-            name: tracker
-            port:
-              number: 80
-  tls:
-    - hosts:
-        - example.local
-      secretName: selfsigned-cert-tls
+  # tls:
+  #   - hosts:
+  #       - example.local
+  #     secretName: selfsigned-cert-tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
