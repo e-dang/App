@@ -1,0 +1,12 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tracker
+  namespace: default
+spec:
+  postRenderers:
+    - kustomize:
+        images:
+          - name: ericdang/tracker
+            newName: ericdang/tracker
+            newTag: dev # {"$imagepolicy": "flux-system:tracker:tag"}
