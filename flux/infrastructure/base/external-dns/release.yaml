@@ -16,7 +16,8 @@ spec:
       interval: 1m
   values:
     provider: azure
-    domainFilters: erickdang.com
+    domainFilters:
+      - erickdang.com
     txtPrefix: externaldns-
     azure:
       secretName: external-dns
