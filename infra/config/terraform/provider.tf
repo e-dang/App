@@ -1,3 +1,4 @@
-provider "aws" {
-  region = "us-west-1"
+# Example of azurerm provider
+provider "azurerm" {
+  features {} # required
 }
