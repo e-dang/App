@@ -45,16 +45,17 @@ service:
 ingress:
   enabled: false
   className: nginx
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
   hosts:
-    - host: tracker-test-example.com
+    - host: dev.erickdang.com
       paths:
         - path: /
           pathType: Prefix
-  # tls:
-  #   - hosts:
-  #       - example.local
-  #     secretName: selfsigned-cert-tls
+  tls:
+    - hosts:
+        - dev.erickdang.com
+      secretName: letsencrypt
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
