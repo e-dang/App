@@ -9,4 +9,4 @@ spec:
         images:
           - name: ericdang/tracker
             newName: ericdang/tracker
-            newTag: dev # {"$imagepolicy": "flux-system:tracker:tag"}
+            newTag: c46944e7-1626639723 # {"$imagepolicy": "flux-system:tracker:tag"}
