@@ -1,5 +1,10 @@
-resource "azurerm_resource_group" "aks" {
-  name     = var.resource_group
+locals {
+  resource_group = "<%= expansion('${var.resource_group}-:ENV') %>"
+  cluster_name   = "<%= expansion('${var.cluster_name}-:ENV') %>"
+}
+
+resource "azurerm_resource_group" "stack" {
+  name     = local.resource_group
   location = var.location
 }
 
@@ -8,10 +13,10 @@ data "sops_file" "service_principal" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" { # tfsec:ignore:AZU008 tfsec:ignore:AZU009
-  name                = "test-aks"
-  location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.aks.name
-  dns_prefix          = "test-k8s"
+  name                = local.cluster_name
+  location            = azurerm_resource_group.stack.location
+  resource_group_name = azurerm_resource_group.stack.name
+  dns_prefix          = local.cluster_name
   kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
