@@ -5,11 +5,17 @@ env:
 
 on:
   pull_request:
-    branches: ['main']
-    paths: ['backend/tracker/**']
+    branches:
+      - main
+    paths:
+      - backend/tracker/**
+      - .github/workflows/tracker.yml
   push:
-    branches: ['main']
-    paths: ['backend/tracker/**']
+    branches:
+      - main
+    paths:
+      - backend/tracker/**
+      - .github/workflows/tracker.yml
   workflow_dispatch:
 
 jobs:
