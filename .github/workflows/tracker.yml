@@ -32,7 +32,6 @@ jobs:
 
       - name: Install SOPS
         uses: mdgreenwald/mozilla-sops-action@v1
-        id: install
         with:
           version: latest
 
@@ -43,7 +42,6 @@ jobs:
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v1
-        id: install
         with:
           version: '<version>' # default is latest stable
 
