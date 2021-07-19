@@ -11,6 +11,10 @@ spec:
   secretRef:
     name: flux-system
   url: ssh://git@github.com/e-dang/App.git
+  ignore: |
+    /*
+    !/flux
+    !/charts
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
@@ -51,4 +55,3 @@ spec:
   update:
     path: flux/apps/dev
     strategy: Setters
-
