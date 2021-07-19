@@ -1,2 +1,2 @@
-kube_context = "docker-desktop"
+kube_context = "test-aks-admin"
 commit       = true
