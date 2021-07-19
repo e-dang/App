@@ -14,6 +14,7 @@
         "reconcile": "flux reconcile source git flux-system",
         "flux": "flux get all",
         "dev": "telepresence intercept tracker --port 5000 --docker-run -- -v $(pwd)/backend/tracker:/home/django/app -it --rm ericdang/tracker:dev",
-        "test": "docker exec -it intercept-tracker-5000 pytest"
+        "test": "docker exec -it intercept-tracker-5000 pytest",
+        "kube-config": "./scripts/kube-config.sh"
     }
 }
