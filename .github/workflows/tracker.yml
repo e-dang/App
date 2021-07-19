@@ -43,7 +43,7 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v1
         with:
-          version: '<version>' # default is latest stable
+          version: 'latest'
 
       - name: Add private key to keyring
         run: |
