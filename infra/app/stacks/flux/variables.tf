@@ -42,8 +42,3 @@ variable "kube_context" {
   description = "The kubernetes context to use for deploy Flux."
   type        = string
 }
-
-variable "commit" {
-  description = "Whether to commit the Flux files to Github or not."
-  type        = bool
-}

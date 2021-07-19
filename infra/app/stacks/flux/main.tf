@@ -113,7 +113,6 @@ resource "kubernetes_secret" "sops" {
 }
 
 resource "github_repository_file" "install" {
-  count               = var.commit ? 1 : 0
   repository          = var.repository_name
   file                = data.flux_install.main.path
   content             = data.flux_install.main.content

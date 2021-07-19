@@ -1,2 +1,1 @@
-kube_context = "test-aks-admin"
-commit       = true
+kube_context = "tracker-admin"
