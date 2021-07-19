@@ -1,2 +1,1 @@
-kube_context = "kind-kind"
-target_path  = "flux/clusters/dev"
+target_path = "flux/clusters/dev"

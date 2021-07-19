@@ -11,14 +11,18 @@ data "sops_file" "sops_key" {
 }
 
 provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = var.kube_context
+  host                   = var.cluster_endpoint
+  client_certificate     = base64decode(var.client_certificate)
+  client_key             = base64decode(var.client_key)
+  cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
 }
 
 
 provider "kubectl" {
-  config_path    = "~/.kube/config"
-  config_context = var.kube_context
+  host                   = var.cluster_endpoint
+  client_certificate     = base64decode(var.client_certificate)
+  client_key             = base64decode(var.client_key)
+  cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
 }
 
 
