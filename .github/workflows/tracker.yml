@@ -60,7 +60,9 @@ jobs:
           telepresence connect
 
       - name: Build docker image
-        run: yarn build-dev
+        run: |
+          ./scripts/env.sh
+          yarn build-dev
 
       - name: Run unit tests
         run: yarn test -m unit
