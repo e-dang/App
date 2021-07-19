@@ -44,7 +44,6 @@ ingress:
   enabled: false
   className: nginx
   annotations:
-    kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: letsencrypt
   hosts:
     - host: dev.erickdang.com
