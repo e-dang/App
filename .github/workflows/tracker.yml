@@ -85,6 +85,7 @@ jobs:
           file: backend/tracker/docker/Dockerfile
           context: backend/tracker
           network: host
+          load: true
           build-args: |
             BUILD_ENVIRONMENT=dev
           tags: ericdang/tracker:dev
