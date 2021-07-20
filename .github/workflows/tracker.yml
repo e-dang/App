@@ -91,6 +91,10 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
+      - name: debug
+        run: |
+          docker image ls -a
+
       - name: Run unit tests
         run: yarn test -m unit
 
