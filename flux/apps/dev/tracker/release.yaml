@@ -9,4 +9,4 @@ spec:
         images:
           - name: ericdang/tracker
             newName: ericdang/tracker
-            newTag: staging-cace86c9-1626768393 # {"$imagepolicy": "flux-system:tracker:tag"}
+            newTag: staging-c3360224-1626831912 # {"$imagepolicy": "flux-system:tracker:tag"}
