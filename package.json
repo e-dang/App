@@ -6,7 +6,7 @@
         "android": "cd frontend/mobile && yarn android",
         "ios": "cd frontend/mobile && yarn ios",
         "start": "cd frontend/mobile && yarn start",
-        "test-fe": "cd frontend/mobile && yarn test",
+        "test-mobile": "cd frontend/mobile && yarn test",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "checks": "pre-commit run --all-files",
         "build-dev": "cd backend/tracker && docker build -f docker/Dockerfile -t ericdang/tracker:dev --build-arg BUILD_ENVIRONMENT=dev .",
