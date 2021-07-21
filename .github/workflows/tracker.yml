@@ -100,7 +100,7 @@ jobs:
         continue-on-error: true
         run: |
           rm -rf /tmp/.buildx-cache-dev
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache-dev
+          mv /tmp/.buildx-cache-new-dev /tmp/.buildx-cache-dev
 
       - name: Run unit tests
         run: yarn test -m unit
@@ -137,4 +137,4 @@ jobs:
         continue-on-error: true
         run: |
           rm -rf /tmp/.buildx-cache-prod
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache-prod
+          mv /tmp/.buildx-cache-new-prod /tmp/.buildx-cache-prod
