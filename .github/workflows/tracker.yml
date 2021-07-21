@@ -70,10 +70,12 @@ jobs:
           az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
           telepresence connect
 
-      - name: Cache Docker layers
+      - name: Load cached docker layers
         uses: actions/cache@v2
         with:
-          path: /tmp/.buildx-cache
+          path: |
+            /tmp/.buildx-cache-dev
+            /tmp/.buildx-cache-prod
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
@@ -88,17 +90,17 @@ jobs:
           build-args: |
             BUILD_ENVIRONMENT=dev
           tags: ericdang/tracker:dev
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=local,src=/tmp/.buildx-cache-dev
+          cache-to: type=local,dest=/tmp/.buildx-cache-new-dev
 
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
-      - name: Move cache
+      - name: Move dev cache
         continue-on-error: true
         run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          rm -rf /tmp/.buildx-cache-dev
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache-dev
 
       - name: Run unit tests
         run: yarn test -m unit
@@ -128,3 +130,11 @@ jobs:
           build-args: |
             BUILD_ENVIRONMENT=prod
           tags: ericdang/tracker:${{ steps.tag.outputs.TAG }}
+          cache-from: type=local,src=/tmp/.buildx-cache-prod
+          cache-to: type=local,dest=/tmp/.buildx-cache-new-prod
+
+      - name: Move prod cache
+        continue-on-error: true
+        run: |
+          rm -rf /tmp/.buildx-cache-prod
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache-prod
