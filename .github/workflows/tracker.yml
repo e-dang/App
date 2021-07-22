@@ -2,6 +2,9 @@ name: Tracker
 
 env:
   DOCKER_BUILDKIT: 1
+  CLUSTER_NAME: tracker-dev
+  RESOURCE_GROUP: tracker-stack-dev
+  TP_TIMEOUT: 5m
 
 on:
   pull_request:
@@ -21,9 +24,6 @@ on:
 jobs:
   test-whitebox:
     runs-on: ubuntu-latest
-    env:
-      CLUSTER_NAME: tracker-dev
-      RESOURCE_GROUP: tracker-stack-dev
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
@@ -64,6 +64,11 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Extend telepresence timeout
+        run: |
+          mkdir -p ~/.config/telepresence/
+          yq eval --null-input '.timeouts.apply = env(TP_TIMEOUT)' >> ~/.config/telepresence/config.yml
 
       - name: Connect to cluster context
         run: |
