@@ -30,4 +30,14 @@ EMAIL_PORT = 1025
 # django-extensions
 # ------------------------------------------------------------------------------
 # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html#configuration
-INSTALLED_APPS += ["django_extensions"]  # noqa F405
+INSTALLED_APPS += ["django_extensions", "drf_spectacular"]  # noqa F405
+
+REST_FRAMEWORK["DEFAULT_SCHEMA_CLASS"] = "drf_spectacular.openapi.AutoSchema"  # noqa F405
+SPECTACULAR_SETTINGS = {
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]/",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "TITLE": "Tracker",
+    "DESCRIPTION": "Workout Tracker App",
+    "LICENSE": {"name": "MIT"},
+    "CONTACT": {"name": "Eric Dang"},
+}
