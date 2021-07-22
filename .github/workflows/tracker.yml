@@ -119,9 +119,17 @@ jobs:
         run: |
           sha=${GITHUB_SHA::8}
           ts=$(date +%s)
-          echo "::set-output name=TAG::staging-${sha}-${ts}"
+          echo "::set-output name=DEV_TAG::dev-${sha}-${ts}"
+          echo "::set-output name=STAGING_TAG::staging-${sha}-${ts}"
 
-      - name: Build and push docker image
+      - name: Push dev docker image
+        run: |
+          docker tag ericdang/tracker:dev ericdang/tracker:${{ steps.tag.outputs.DEV_TAG }}
+          docker push ericdang/tracker:${{ steps.tag.outputs.DEV_TAG }}
+
+        # Staging and production docker images are the same, but to get production tag it must pass e2e testing in
+        # a separate pipeline
+      - name: Build and push staging docker image
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -129,7 +137,7 @@ jobs:
           context: backend/tracker
           build-args: |
             BUILD_ENVIRONMENT=prod
-          tags: ericdang/tracker:${{ steps.tag.outputs.TAG }}
+          tags: ericdang/tracker:${{ steps.tag.outputs.STAGING_TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache-prod
           cache-to: type=local,dest=/tmp/.buildx-cache-new-prod
 

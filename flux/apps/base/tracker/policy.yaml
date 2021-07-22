@@ -7,7 +7,7 @@ spec:
   imageRepositoryRef:
     name: tracker
   filterTags:
-    pattern: '^[a-f0-9]+-(?P<ts>[0-9]+)$'
+    pattern: '^dev-[a-f0-9]+-(?P<ts>[0-9]+)$'
     extract: '$ts'
   policy:
     numerical:
