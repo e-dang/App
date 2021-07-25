@@ -4,7 +4,7 @@ metadata:
   name: letsencrypt
 spec:
   acme:
-    server: https://acme-staging-v02.api.letsencrypt.org/directory # staging env
+    server: https://acme-v02.api.letsencrypt.org/directory # staging env
     email: edang830@gmail.com
     privateKeySecretRef:
       name: letsencrypt
