@@ -22,6 +22,7 @@
         "react-native": "0.64.1",
         "react-native-bootsplash": "^3.2.4",
         "react-native-easy-icon": "^1.0.7",
+        "react-native-elements": "^3.4.2",
         "react-native-gesture-handler": "^1.10.3",
         "react-native-normalize": "^1.0.1",
         "react-native-reanimated": "^2.2.0",
@@ -43,11 +44,13 @@
         "@types/react-test-renderer": "^16.9.2",
         "babel-jest": "^26.6.3",
         "babel-plugin-module-resolver": "^4.1.0",
+        "detox": "^18.20.0",
         "eslint": "^7.14.0",
         "jest": "^26.6.3",
         "metro-react-native-babel-preset": "^0.64.0",
         "react-test-renderer": "17.0.1",
         "redux-devtools-extension": "^2.13.9",
+        "ts-jest": "^27.0.4",
         "typescript": "^3.8.3"
     },
     "resolutions": {
