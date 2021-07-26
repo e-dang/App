@@ -11,9 +11,9 @@ export default class AuthApi {
         );
 
         if (resp.status !== 201) {
-            throw Error(resp.data.detail);
+            throw new Error(resp.data.detail);
         }
 
-        return new Promise<void>(() => null);
+        return;
     }
 }

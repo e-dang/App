@@ -40,7 +40,6 @@ export default class Client {
     }
 
     static async post<T, U>(url: string, data?: T): Promise<Response<U>> {
-        console.log('about to make axios post');
         const resp = await Client.impl.post(url, data);
         return {
             data: resp.data,
