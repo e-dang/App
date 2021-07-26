@@ -16,6 +16,7 @@ module.exports = {
                     '@reducers': './src/reducers',
                     '@actions': './src/actions',
                     '@constants': './src/constants',
+                    '@i18n': './src/i18n',
                 },
             },
         ],
