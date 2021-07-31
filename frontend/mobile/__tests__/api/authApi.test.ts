@@ -9,8 +9,8 @@ describe('authApi', () => {
     const regInfo: RegistrationInfo = {
         name: 'test name',
         email: 'example@demo.com',
-        password1: 'testpassword1',
-        password2: 'testpassword2',
+        password1: 'testpassword123',
+        password2: 'testpassword123',
     };
 
     beforeEach(() => {
