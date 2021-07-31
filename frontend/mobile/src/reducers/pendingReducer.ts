@@ -1,7 +1,11 @@
 'use_strict';
 import {RootAction} from '@actions/actionTypes';
 
-export interface PendingState {}
+export interface PendingState {
+    [x: string]: {
+        pending: boolean;
+    };
+}
 
 const initialState: PendingState = {};
 
