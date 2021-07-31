@@ -5,4 +5,5 @@ export const registerAsync = createAsyncAction(
     ['REGISTER_REQUEST', (registrationInfo: RegistrationInfo) => registrationInfo],
     ['REGISTER_SUCCESS', () => null],
     ['REGISTER_FAILURE', (err: Error) => err],
+    ['REGISTER_CANCEL', () => null],
 )();
