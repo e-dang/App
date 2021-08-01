@@ -23,7 +23,6 @@
         "react-i18next": "^11.11.3",
         "react-native": "0.64.1",
         "react-native-bootsplash": "^3.2.4",
-        "react-native-easy-icon": "^1.0.7",
         "react-native-elements": "^3.4.2",
         "react-native-gesture-handler": "^1.10.3",
         "react-native-normalize": "^1.0.1",
@@ -44,7 +43,11 @@
         "@types/jest": "^26.0.23",
         "@types/react-native": "^0.64.5",
         "@types/react-native-vector-icons": "^6.4.8",
+        "@types/react-redux": "^7.1.18",
         "@types/react-test-renderer": "^16.9.2",
+        "@types/styled-components": "^5.1.11",
+        "@types/styled-components-react-native": "^5.1.1",
+        "@types/styled-system": "^5.1.12",
         "babel-jest": "^26.6.3",
         "babel-plugin-module-resolver": "^4.1.0",
         "detox": "^18.20.0",
@@ -55,10 +58,15 @@
         "react-test-renderer": "17.0.1",
         "redux-devtools-extension": "^2.13.9",
         "redux-saga-test-plan": "^4.0.3",
+        "styled-components": "^5.3.0",
+        "styled-system": "^5.1.5",
         "ts-jest": "^27.0.4",
-        "typescript": "^3.8.3"
+        "typescript": "^3.8.3",
+        "typescript-plugin-styled-components": "^2.0.0",
+        "uuid": "^8.3.2"
     },
     "resolutions": {
-        "@types/react": "^17"
+        "@types/react": "^17",
+        "styled-components": "^5.3.0"
     }
 }
