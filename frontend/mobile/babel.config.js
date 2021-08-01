@@ -17,6 +17,8 @@ module.exports = {
                     '@actions': './src/actions',
                     '@constants': './src/constants',
                     '@i18n': './src/i18n',
+                    '@components': './src/components',
+                    '@styles': './src/styles',
                 },
             },
         ],
