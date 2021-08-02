@@ -6,9 +6,11 @@ import {PersistGate} from 'redux-persist/lib/integration/react';
 import App from '@src/App';
 import {persistor, store} from '@src/store';
 import NavigationService, {navigationRef} from '@utils/navigationService';
-import './i18n';
+import '@i18n';
 import {enableScreens} from 'react-native-screens';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {ThemeProvider} from 'styled-components/native';
+import {lightTheme} from '@styles';
 
 /**
  * Optimize memory usage and performance: https://reactnavigation.org/docs/react-native-screens/
@@ -21,17 +23,19 @@ export default function Root() {
     }, []);
     return (
         <SafeAreaProvider>
-            <Provider store={store}>
-                <PersistGate loading={<View />} persistor={persistor}>
-                    <NavigationContainer
-                        ref={navigationRef}
-                        onReady={() => {
-                            NavigationService.isReady = true;
-                        }}>
-                        <App />
-                    </NavigationContainer>
-                </PersistGate>
-            </Provider>
+            <ThemeProvider theme={lightTheme}>
+                <Provider store={store}>
+                    <PersistGate loading={<View />} persistor={persistor}>
+                        <NavigationContainer
+                            ref={navigationRef}
+                            onReady={() => {
+                                NavigationService.isReady = true;
+                            }}>
+                            <App />
+                        </NavigationContainer>
+                    </PersistGate>
+                </Provider>
+            </ThemeProvider>
         </SafeAreaProvider>
     );
 }
