@@ -1,6 +1,5 @@
 'use strict';
-import {registerAsync} from '@src/actions/authActions';
-import {AuthAction} from 'src/actions/actionTypes';
+import {AuthAction, registerAsync} from '@actions';
 import {createReducer} from 'typesafe-actions';
 
 export interface RegistrationState {

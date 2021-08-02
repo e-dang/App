@@ -1,5 +1,5 @@
 'use_strict';
-import {RootAction} from '@actions/actionTypes';
+import {RootAction} from '@actions';
 
 export interface PendingState {
     [x: string]: {

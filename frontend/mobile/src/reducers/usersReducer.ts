@@ -1,8 +1,7 @@
 'use strict';
-import {fetchUserAsync, setUser} from 'src/actions/usersActions';
-import {User} from 'src/types';
+import {fetchUserAsync, setUser, UsersAction} from '@actions';
+import {User} from '@src/types';
 import {createReducer} from 'typesafe-actions';
-import {UsersAction} from 'src/actions/actionTypes';
 
 export interface UsersState {
     user?: User;

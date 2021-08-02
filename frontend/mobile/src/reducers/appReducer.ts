@@ -1,7 +1,6 @@
 'use strict';
-import {setStoreState} from 'src/actions/appActions';
+import {setStoreState, AppAction} from '@actions';
 import {createReducer} from 'typesafe-actions';
-import {AppAction} from 'src/actions/actionTypes';
 
 export interface AppReducerState {
     version: string;

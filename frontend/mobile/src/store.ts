@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import appReducer, {AppReducerState} from '@reducers/appReducer';
 import usersReducer, {UsersState} from '@reducers/usersReducer';
-import sagas from '@sagas/index';
+import sagas from '@sagas';
 import {applyMiddleware, combineReducers, compose, createStore, Dispatch, MiddlewareAPI} from 'redux';
 import {PersistConfig, persistReducer, persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import {RootAction} from '@actions/actionTypes';
+import {RootAction} from '@actions';
 import pendingReducer, {PendingState} from '@reducers/pendingReducer';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import registrationReducer from '@reducers/authReducer';
