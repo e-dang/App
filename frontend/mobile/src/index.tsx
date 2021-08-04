@@ -9,8 +9,7 @@ import NavigationService, {navigationRef} from '@utils/navigationService';
 import '@i18n';
 import {enableScreens} from 'react-native-screens';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {ThemeProvider} from 'styled-components/native';
-import {lightTheme} from '@styles';
+import {NativeBaseProvider} from 'native-base';
 
 /**
  * Optimize memory usage and performance: https://reactnavigation.org/docs/react-native-screens/
@@ -23,7 +22,7 @@ export default function Root() {
     }, []);
     return (
         <SafeAreaProvider>
-            <ThemeProvider theme={lightTheme}>
+            <NativeBaseProvider>
                 <Provider store={store}>
                     <PersistGate loading={<View />} persistor={persistor}>
                         <NavigationContainer
@@ -35,7 +34,7 @@ export default function Root() {
                         </NavigationContainer>
                     </PersistGate>
                 </Provider>
-            </ThemeProvider>
+            </NativeBaseProvider>
         </SafeAreaProvider>
     );
 }
