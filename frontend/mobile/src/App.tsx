@@ -3,12 +3,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
-import Icon from 'react-native-easy-icon';
-import Home from '@screens/Home';
-import Settings from '@screens/Settings';
-import Register from '@screens/Register';
-import {sleep} from '@utils/async';
-import useSelector from '@utils/useSelector';
+import {Home, Settings, Register, Welcome} from '@screens';
+import {sleep, useSelector} from '@utils';
 
 export type AppTabParamList = {
     Home: undefined;
@@ -65,7 +61,8 @@ const App = () => {
     //     />
     // </Tab.Navigator>
     return (
-        <Stack.Navigator initialRouteName="register" headerMode="none">
+        <Stack.Navigator initialRouteName="welcome" headerMode="none">
+            <Stack.Screen name="welcome" component={Welcome} />
             <Stack.Screen name="register" component={Register} />
         </Stack.Navigator>
     );
