@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import Colors from 'src/constants/colors';
 
-function Settings() {
+function SettingsScreen() {
     const {t, i18n} = useTranslation();
     return (
         <View style={styles.container}>
@@ -14,7 +14,7 @@ function Settings() {
     );
 }
 
-export default memo(Settings);
+export const Settings = memo(SettingsScreen);
 
 const styles = StyleSheet.create({
     container: {

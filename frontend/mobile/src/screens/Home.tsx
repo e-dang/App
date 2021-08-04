@@ -2,11 +2,11 @@ import React, {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button, Platform, StyleSheet, Text, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {fetchUserAsync} from 'src/actions/usersActions';
+import {fetchUserAsync} from '@actions';
 import Colors from 'src/constants/colors';
-import useSelector from 'src/utils/useSelector';
+import {useSelector} from '@utils';
 
-function Home() {
+function HomeScreen() {
     const user = useSelector((state) => state.users.user);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -32,7 +32,7 @@ function Home() {
     );
 }
 
-export default memo(Home);
+export const Home = memo(HomeScreen);
 
 const styles = StyleSheet.create({
     container: {

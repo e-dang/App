@@ -1,67 +1,80 @@
-import {registerAsync} from '@src/actions/authActions';
+import {registerAsync} from '@actions';
 import {Email, Name, Password, RegistrationInfo} from '@src/types/auth';
-import useSelector from '@src/utils/useSelector';
+import {getPending, useSelector} from '@utils';
 import React, {memo} from 'react';
 import {useState} from 'react';
-import {View, SafeAreaView} from 'react-native';
+import {View, SafeAreaView, Modal, ActivityIndicator} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
-function Register() {
-    const pendingState = useSelector((state) => state.pendingStates);
+function RegisterScreen() {
+    const isPending = useSelector((state) => getPending(state.pendingStates, 'REGISTER'));
     const dispatch = useDispatch();
     const [name, setName] = useState<Name>('');
     const [email, setEmail] = useState<Email>('');
     const [password1, setPassword1] = useState<Password>('');
-    const [password2, setPassword2] = useState<Password>('');
 
     const handleRegister = () => {
-        dispatch(registerAsync.request({name, email, password1, password2} as RegistrationInfo));
+        dispatch(registerAsync.request({name, email, password1, password2: password1} as RegistrationInfo));
     };
 
     return (
         <SafeAreaView>
             <View>
-                <Input
-                    testID="name"
-                    onChangeText={(value) => setName(value)}
-                    value={name}
-                    placeholder="Name"
-                    keyboardType="default"
-                />
-            </View>
-            <View>
-                <Input
-                    testID="email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email}
-                    placeholder="Email"
-                    keyboardType="email-address"
-                />
-            </View>
-            <View>
-                <Input
-                    onChangeText={(value) => setPassword1(value)}
-                    value={password1}
-                    placeholder="Password"
-                    keyboardType="default"
-                    secureTextEntry={true}
-                />
-            </View>
-            <View>
-                <Input
-                    onChangeText={(value) => setPassword2(value)}
-                    value={password2}
-                    placeholder="Confirm Password"
-                    keyboardType="default"
-                    secureTextEntry={true}
-                />
-            </View>
-            <View>
-                <Button title="Submit" onPress={handleRegister} />
+                <Modal
+                    transparent={true}
+                    animationType={'none'}
+                    visible={isPending}
+                    onRequestClose={() => {
+                        console.log('close modal');
+                    }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            justifyContent: 'space-around',
+                            backgroundColor: '#00000040',
+                        }}>
+                        <View>
+                            <ActivityIndicator testID="loadingModal" animating={isPending} size={'large'} />
+                        </View>
+                    </View>
+                </Modal>
+                <View>
+                    <Input
+                        testID="nameInput"
+                        onChangeText={(value) => setName(value)}
+                        value={name}
+                        placeholder="Name"
+                        keyboardType="default"
+                    />
+                </View>
+                <View>
+                    <Input
+                        testID="emailInput"
+                        onChangeText={(value) => setEmail(value)}
+                        value={email}
+                        placeholder="Email"
+                        keyboardType="email-address"
+                    />
+                </View>
+                <View>
+                    <Input
+                        testID="passwordInput"
+                        onChangeText={(value) => setPassword1(value)}
+                        value={password1}
+                        placeholder="Password"
+                        keyboardType="default"
+                        secureTextEntry={true}
+                    />
+                </View>
+                <View>
+                    <Button testID="signUpBtn" title="Sign Up" onPress={handleRegister} />
+                </View>
             </View>
         </SafeAreaView>
     );
 }
 
-export default memo(Register);
+export const Register = memo(RegisterScreen);
