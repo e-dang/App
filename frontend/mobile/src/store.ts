@@ -1,14 +1,19 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import appReducer, {AppReducerState} from '@reducers/appReducer';
-import usersReducer, {UsersState} from '@reducers/usersReducer';
+import {
+    usersReducer,
+    UsersState,
+    pendingReducer,
+    PendingState,
+    appReducer,
+    AppReducerState,
+    errorReducer,
+} from '@reducers';
 import sagas from '@sagas';
-import {applyMiddleware, combineReducers, compose, createStore, Dispatch, MiddlewareAPI} from 'redux';
+import {applyMiddleware, combineReducers, createStore, Dispatch, MiddlewareAPI} from 'redux';
 import {PersistConfig, persistReducer, persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import {RootAction} from '@actions';
-import pendingReducer, {PendingState} from '@reducers/pendingReducer';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import registrationReducer from '@reducers/authReducer';
 
 const appPersistConfig: PersistConfig<AppReducerState, unknown, unknown, unknown> = {
     storage: AsyncStorage,
@@ -29,7 +34,7 @@ export const reducers = {
     app: persistReducer(appPersistConfig, appReducer),
     users: persistReducer(usersPersistConfig, usersReducer),
     pendingStates: persistReducer(pendingPersistConfig, pendingReducer),
-    registration: registrationReducer,
+    errorStates: errorReducer,
 };
 
 export const rootReducer = combineReducers(reducers);

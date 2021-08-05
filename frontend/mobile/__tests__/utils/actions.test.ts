@@ -1,4 +1,4 @@
-import {getActionName, isPayloadAction} from '@src/utils';
+import {getActionName, isErrorPayload, isPayloadAction} from '@src/utils';
 import {ActionType, createAction} from 'typesafe-actions';
 
 describe('action utils', () => {
@@ -53,6 +53,42 @@ describe('action utils', () => {
         };
 
         const retVal = isPayloadAction(action);
+
+        expect(retVal).toBe(false);
+    });
+
+    test('isErrorPayload returns true when action is a failed action and has string payload', async () => {
+        const testAction = createAction('TEST_ACTION_FAILURE', () => 'Error')();
+        const action: ActionType<typeof testAction> = {
+            type: 'TEST_ACTION_FAILURE',
+            payload: 'Error',
+        };
+
+        const retVal = isErrorPayload(action);
+
+        expect(retVal).toBe(true);
+    });
+
+    test('isErrorPayload returns false when action is not failed action and has string payload', async () => {
+        const testAction = createAction('TEST_ACTION_SUCCESS', () => 'Error')();
+        const action: ActionType<typeof testAction> = {
+            type: 'TEST_ACTION_SUCCESS',
+            payload: 'Error',
+        };
+
+        const retVal = isErrorPayload(action);
+
+        expect(retVal).toBe(false);
+    });
+
+    test('isErrorPayload returns false when action is a failed action and but payload is not a string', async () => {
+        const testAction = createAction('TEST_ACTION_FAILURE', () => 1)();
+        const action: ActionType<typeof testAction> = {
+            type: 'TEST_ACTION_FAILURE',
+            payload: 1,
+        };
+
+        const retVal = isErrorPayload(action);
 
         expect(retVal).toBe(false);
     });

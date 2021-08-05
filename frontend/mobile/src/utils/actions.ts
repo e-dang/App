@@ -7,3 +7,7 @@ export function getActionName(actionType: string) {
 export function isPayloadAction<P>(action: any): action is PayloadAction<string, P> {
     return action.payload !== undefined;
 }
+
+export function isErrorPayload(action: PayloadAction<string, any>): action is PayloadAction<string, string> {
+    return action.type.endsWith('_FAILURE') && typeof action.payload === 'string';
+}

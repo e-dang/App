@@ -25,7 +25,6 @@ describe('pendingReducer', () => {
     test('if action ends with _SUCCESS, it sets pending on the action name in the current state to false', async () => {
         const action: RootAction = {
             type: 'REGISTER_SUCCESS',
-            payload: null,
         };
 
         const retVal = pendingReducer(state, action);
@@ -37,7 +36,7 @@ describe('pendingReducer', () => {
     test('if action ends with _FAILURE, it sets pending on the action name in the current state to false', async () => {
         const action: RootAction = {
             type: 'REGISTER_FAILURE',
-            payload: new Error(),
+            payload: 'Failure',
         };
 
         const retVal = pendingReducer(state, action);
@@ -49,7 +48,6 @@ describe('pendingReducer', () => {
     test('if action ends with _CANCEL, it sets pending on the action name in the current state to false', async () => {
         const action: RootAction = {
             type: 'REGISTER_CANCEL',
-            payload: null,
         };
 
         const retVal = pendingReducer(state, action);
