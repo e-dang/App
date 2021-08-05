@@ -5,7 +5,7 @@ export const fetchUserAsync = createAsyncAction(
     ['USER_FETCH_REQUEST', (userID: string) => userID],
     ['USER_FETCH_SUCCESS', (res: User) => res],
     ['USER_FETCH_FAILURE', (err: Error) => err],
-    'USER_FETCH_CANCEL',
+    ['USER_FETCH_CANCEL', () => null],
 )();
 
 export const setUser = createAction('USER_SET', (user?: User) => user)();
