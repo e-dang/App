@@ -1,4 +1,5 @@
-import {getActionName} from '@src/utils';
+import {getActionName, isPayloadAction} from '@src/utils';
+import {ActionType, createAction} from 'typesafe-actions';
 
 describe('action utils', () => {
     test('getActionName returns the string without _REQUEST in it', async () => {
@@ -31,5 +32,28 @@ describe('action utils', () => {
         const retVal = getActionName(actionType);
 
         expect(retVal).toBe('TEST_ACTION');
+    });
+
+    test('isPayloadAction returns true when the action has payload property', async () => {
+        const testAction = createAction('TEST_ACTION', () => null)();
+        const action: ActionType<typeof testAction> = {
+            type: 'TEST_ACTION',
+            payload: null,
+        };
+
+        const retVal = isPayloadAction(action);
+
+        expect(retVal).toBe(true);
+    });
+
+    test('isPayloadAction returns false when the action does not have a payload property', async () => {
+        const testAction = createAction('TEST_ACTION')();
+        const action: ActionType<typeof testAction> = {
+            type: 'TEST_ACTION',
+        };
+
+        const retVal = isPayloadAction(action);
+
+        expect(retVal).toBe(false);
     });
 });
