@@ -1,5 +1,6 @@
 'use_strict';
 import {RootAction} from '@actions';
+import {getActionName} from '@utils';
 
 export interface PendingState {
     [x: string]: {
@@ -9,11 +10,7 @@ export interface PendingState {
 
 const initialState: PendingState = {};
 
-function getActionName(actionType: string) {
-    return actionType.split('_').slice(0, -1).join('_');
-}
-
-const pendingReducer = (state: PendingState = initialState, action: RootAction) => {
+export const pendingReducer = (state: PendingState = initialState, action: RootAction) => {
     const {type} = action;
     const actionName = getActionName(type);
 
@@ -39,5 +36,3 @@ const pendingReducer = (state: PendingState = initialState, action: RootAction) 
         ...state,
     };
 };
-
-export default pendingReducer;

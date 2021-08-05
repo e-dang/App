@@ -10,9 +10,7 @@ const initialState: AppReducerState = {
     version: '1.0.0',
 };
 
-const appReducer = createReducer<AppReducerState, AppAction>(initialState).handleAction(
+export const appReducer = createReducer<AppReducerState, AppAction>(initialState).handleAction(
     setStoreState,
     (state, action) => Object.assign({}, initialState, state, action.payload),
 );
-
-export default appReducer;

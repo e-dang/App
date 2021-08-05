@@ -9,8 +9,6 @@ export interface UsersState {
 
 const initialState: UsersState = {};
 
-const usersReducer = createReducer<UsersState, UsersAction>(initialState)
+export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
     .handleAction(fetchUserAsync.success, (state, action) => ({...state, user: action.payload}))
     .handleAction(setUser, (state, action) => ({...state, user: action.payload}));
-
-export default usersReducer;
