@@ -1,10 +1,16 @@
 import React from 'react';
 import {Center, Button, Icon as NativeIcon, Stack, Box, Heading} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Screen} from '@components';
+import {NavigationService} from '@utils';
 
 export function Welcome() {
+    const handleSignUpWithEmail = () => {
+        NavigationService.navigate('register');
+    };
+
     return (
-        <Box flex={1} px={4} safeArea>
+        <Screen>
             <Center flex={2}>
                 <Heading>Welcome!</Heading>
             </Center>
@@ -13,7 +19,7 @@ export function Welcome() {
                     <Button
                         borderRadius={100}
                         testID="emailSignUpBtn"
-                        onPress={() => console.log('Email')}
+                        onPress={handleSignUpWithEmail}
                         startIcon={<NativeIcon as={Icon} name="envelope" size={5} />}>
                         Sign In With Email
                     </Button>
@@ -46,6 +52,6 @@ export function Welcome() {
                     </Button>
                 </Stack>
             </Center>
-        </Box>
+        </Screen>
     );
 }
