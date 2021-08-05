@@ -1,5 +1,5 @@
 import {RootAction} from '@src/actions/actionTypes';
-import pendingReducer, {PendingState} from '@src/reducers/pendingReducer';
+import {pendingReducer, PendingState} from '@src/reducers/pendingReducer';
 import {RegistrationInfo} from '@src/types/auth';
 import {mock} from 'jest-mock-extended';
 

@@ -1,8 +1,8 @@
-import {registerAsync} from '@src/actions/authActions';
-import registrationReducer from '@src/reducers/authReducer';
-import authSaga from '@src/sagas/authSagas';
+import {registerAsync} from '@actions';
+import {registrationReducer} from '@reducers';
+import authSaga from '@sagas';
 import {RegistrationInfo} from '@src/types/auth';
-import {TimeoutError} from '@src/utils/errors';
+import {TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
 import {getType} from 'typesafe-actions';
 
@@ -55,4 +55,14 @@ describe('registerSaga', () => {
             .hasFinalState({error: error.message})
             .silentRun();
     });
+});
+
+describe('loginSaga', () => {
+    // test('login is successful', () => {
+    //     return expectSaga(authSaga)
+    //     .withReducer(loginReducer)
+    //     .provider({
+    //         race:
+    //     }).put(
+    // })
 });
