@@ -3,7 +3,7 @@ import * as React from 'react';
 
 export const navigationRef: React.RefObject<NavigationContainerRef> = React.createRef();
 
-export default class NavigationService {
+export class NavigationService {
     public static isReady: boolean;
 
     public static navigate(name: string, params?: Record<string, unknown>) {
