@@ -1,13 +1,13 @@
+import React from 'react';
 import {registerAsync} from '@actions';
+import {Screen} from '@components';
 import {Email, Name, Password, RegistrationInfo} from '@src/types/auth';
 import {getPending, useSelector} from '@utils';
-import React, {memo} from 'react';
+import {Button, Center, Input, Modal, Spinner, Stack} from 'native-base';
 import {useState} from 'react';
-import {View, SafeAreaView, Modal, ActivityIndicator} from 'react-native';
-import {Input, Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
-function RegisterScreen() {
+export function Register() {
     const isPending = useSelector((state) => getPending(state.pendingStates, 'REGISTER'));
     const dispatch = useDispatch();
     const [name, setName] = useState<Name>('');
@@ -18,63 +18,50 @@ function RegisterScreen() {
         dispatch(registerAsync.request({name, email, password1, password2: password1} as RegistrationInfo));
     };
 
+    const cancelRegister = () => {
+        dispatch(registerAsync.cancel());
+    };
+
     return (
-        <SafeAreaView>
-            <View>
-                <Modal
-                    transparent={true}
-                    animationType={'none'}
-                    visible={isPending}
-                    onRequestClose={() => {
-                        console.log('close modal');
-                    }}>
-                    <View
-                        style={{
-                            flex: 1,
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            justifyContent: 'space-around',
-                            backgroundColor: '#00000040',
-                        }}>
-                        <View>
-                            <ActivityIndicator testID="loadingModal" animating={isPending} size={'large'} />
-                        </View>
-                    </View>
+        <Screen>
+            <Center>
+                <Modal isOpen={isPending} onClose={cancelRegister}>
+                    <Modal.CloseButton mt={3} />
+                    <Spinner testID="loadingModal" accessibilityLabel="Loading posts" />
                 </Modal>
-                <View>
+            </Center>
+            <Center flex={1}>
+                <Stack width="90%" space={2}>
                     <Input
                         testID="nameInput"
+                        variant="rounded"
                         onChangeText={(value) => setName(value)}
                         value={name}
                         placeholder="Name"
                         keyboardType="default"
                     />
-                </View>
-                <View>
                     <Input
                         testID="emailInput"
+                        variant="rounded"
                         onChangeText={(value) => setEmail(value)}
                         value={email}
                         placeholder="Email"
                         keyboardType="email-address"
                     />
-                </View>
-                <View>
                     <Input
                         testID="passwordInput"
+                        variant="rounded"
                         onChangeText={(value) => setPassword1(value)}
                         value={password1}
                         placeholder="Password"
                         keyboardType="default"
                         secureTextEntry={true}
                     />
-                </View>
-                <View>
-                    <Button testID="signUpBtn" title="Sign Up" onPress={handleRegister} />
-                </View>
-            </View>
-        </SafeAreaView>
+                    <Button testID="signUpBtn" colorScheme="primary" borderRadius={100} onPress={handleRegister}>
+                        Sign Up
+                    </Button>
+                </Stack>
+            </Center>
+        </Screen>
     );
 }
-
-export const Register = memo(RegisterScreen);
