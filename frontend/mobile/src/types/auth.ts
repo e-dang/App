@@ -2,6 +2,9 @@ export type Email = string;
 export type Name = string;
 export type Password = string;
 
+export interface DetailResponse {
+    detail: string;
+}
 export interface RegistrationInfo {
     name: Name;
     email: Email;
@@ -9,6 +12,11 @@ export interface RegistrationInfo {
     password2: Password;
 }
 
-export interface RegistrationResponse {
-    detail: string;
+export interface LoginInfo {
+    email: Email;
+    password: Password;
+}
+
+export interface AuthToken {
+    token: string | null;
 }
