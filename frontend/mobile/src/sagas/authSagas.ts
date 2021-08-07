@@ -1,4 +1,4 @@
-import AuthApi from '@api/authApi';
+import {AuthApi} from '@api';
 import {all, call, put, race, take, takeLatest} from 'redux-saga/effects';
 import {loginAsync, registerAsync} from '@actions';
 import {timeout} from '@utils';

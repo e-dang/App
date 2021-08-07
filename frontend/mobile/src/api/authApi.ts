@@ -1,7 +1,7 @@
 import Client from '@api/client';
 import {AuthToken, LoginInfo, LoginResponse, RegistrationInfo, RegistrationResponse} from '@src/types/auth';
 
-export default class AuthApi {
+export class AuthApi {
     static readonly timeout = 10000;
     private static client = Client;
 

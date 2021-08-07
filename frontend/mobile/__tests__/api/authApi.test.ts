@@ -1,4 +1,4 @@
-import AuthApi from '@api/authApi';
+import {AuthApi} from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
