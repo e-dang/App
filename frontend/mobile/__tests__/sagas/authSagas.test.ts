@@ -1,7 +1,7 @@
 import {loginAsync, registerAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
 import authSaga from '@sagas';
-import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types/auth';
+import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
 import {TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
 import {getType} from 'typesafe-actions';

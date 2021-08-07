@@ -1,5 +1,5 @@
 import {AuthAction, loginAsync, registerAsync} from '@actions';
-import {Token} from '@src/types/auth';
+import {Token} from '@src/types';
 import {createReducer} from 'typesafe-actions';
 
 export interface AuthState {

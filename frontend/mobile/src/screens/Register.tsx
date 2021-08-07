@@ -1,7 +1,7 @@
 import React from 'react';
 import {registerAsync} from '@actions';
 import {Screen} from '@components';
-import {Email, Name, Password, RegistrationInfo} from '@src/types/auth';
+import {Email, Name, Password, RegistrationInfo} from '@src/types';
 import {getPending, useSelector} from '@utils';
 import {Button, Center, Input, Modal, Spinner, Stack} from 'native-base';
 import {useState} from 'react';

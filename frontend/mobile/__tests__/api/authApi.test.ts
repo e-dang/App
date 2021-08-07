@@ -2,14 +2,7 @@ import {AuthApi} from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
-import {
-    AuthToken,
-    DetailResponse,
-    LoginInfo,
-    LoginResponse,
-    RegistrationInfo,
-    RegistrationResponse,
-} from '@src/types/auth';
+import {AuthToken, DetailResponse, LoginInfo, LoginResponse, RegistrationInfo, RegistrationResponse} from '@src/types';
 
 describe('authApi', () => {
     let client: MockProxy<typeof Client>;

@@ -1,5 +1,5 @@
 import {createAsyncAction} from 'typesafe-actions';
-import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types/auth';
+import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
 
 export const registerAsync = createAsyncAction(
     ['REGISTER_REQUEST', (registrationInfo: RegistrationInfo) => registrationInfo],
