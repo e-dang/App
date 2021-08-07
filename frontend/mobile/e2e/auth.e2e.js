@@ -22,7 +22,7 @@ describe('Auth flow', () => {
         password = 'mytestpassword123';
     });
 
-    test('email auth flow', async () => {
+    test('email signup flow', async () => {
         // the user opens the app and sees an option to register via email and clicks it
         await waitFor(element(by.id('emailSignUpBtn')))
             .toBeVisible()
@@ -51,14 +51,9 @@ describe('Auth flow', () => {
         // the user then hits the Sign Up button
         await element(by.id('signUpBtn')).tap();
 
-        // they see a loading icon appear
-        await waitFor(element(by.id('loadingModal')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
-
         // the registration is successful, and they are taken to the home page
         await waitFor(element(by.id('home')))
             .toBeVisible()
-            .withTimeout(2000);
+            .withTimeout(10000);
     });
 });

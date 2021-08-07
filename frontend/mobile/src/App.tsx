@@ -1,6 +1,6 @@
+import * as React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
 import {Home, Settings, Register, Welcome} from '@screens';
@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App = () => {
-    const user = useSelector((state) => state.users.user);
+    const token = useSelector((state) => state.auth.token);
     const init = async () => {
         await sleep(1000);
         // …do multiple async tasks
@@ -28,39 +28,40 @@ const App = () => {
     }, []);
 
     const {t} = useTranslation();
-    // <Tab.Navigator>
-    //     <Tab.Screen
-    //         name="home"
-    //         component={Home}
-    //         options={{
-    //             tabBarLabel: t('home'),
-    //             tabBarIcon: ({focused, color, size}) => (
-    //                 <Icon
-    //                     name={focused ? 'home' : 'home-outline'}
-    //                     type="material-community"
-    //                     size={size}
-    //                     color={color}
-    //                 />
-    //             ),
-    //         }}
-    //     />
-    //     <Tab.Screen
-    //         name="settings"
-    //         component={Settings}
-    //         options={{
-    //             tabBarLabel: t('settings'),
-    //             tabBarIcon: ({focused, color, size}) => (
-    //                 <Icon
-    //                     name={focused ? 'cog' : 'cog-outline'}
-    //                     type="material-community"
-    //                     size={size}
-    //                     color={color}
-    //                 />
-    //             ),
-    //         }}
-    //     />
-    // </Tab.Navigator>
-    return (
+    return token ? (
+        <Tab.Navigator>
+            <Tab.Screen
+                name="home"
+                component={Home}
+                options={{
+                    tabBarLabel: t('home'),
+                    // tabBarIcon: ({focused, color, size}) => (
+                    //     <Icon
+                    //         name={focused ? 'home' : 'home-outline'}
+                    //         type="material-community"
+                    //         size={size}
+                    //         color={color}
+                    //     />
+                    // ),
+                }}
+            />
+            <Tab.Screen
+                name="settings"
+                component={Settings}
+                options={{
+                    tabBarLabel: t('settings'),
+                    // tabBarIcon: ({focused, color, size}) => (
+                    //     <Icon
+                    //         name={focused ? 'cog' : 'cog-outline'}
+                    //         type="material-community"
+                    //         size={size}
+                    //         color={color}
+                    //     />
+                    // ),
+                }}
+            />
+        </Tab.Navigator>
+    ) : (
         <Stack.Navigator initialRouteName="welcome" headerMode="none">
             <Stack.Screen name="welcome" component={Welcome} />
             <Stack.Screen name="register" component={Register} />

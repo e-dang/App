@@ -27,7 +27,7 @@ export function Register() {
             <Center>
                 <Modal isOpen={isPending} onClose={cancelRegister}>
                     <Modal.CloseButton mt={3} />
-                    <Spinner testID="loadingModal" accessibilityLabel="Loading posts" />
+                    <Spinner animating={isPending} accessibilityLabel="Loading indicator" />
                 </Modal>
             </Center>
             <Center flex={1}>

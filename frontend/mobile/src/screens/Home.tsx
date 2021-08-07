@@ -21,7 +21,7 @@ function HomeScreen() {
     });
 
     return (
-        <View style={styles.container}>
+        <View testID="home" style={styles.container}>
             <Text style={styles.welcome}>{t('welcome')}</Text>
             <Text style={styles.instructions}>{t('instructions')}</Text>
             <Text style={styles.instructions}>{instructions}</Text>
