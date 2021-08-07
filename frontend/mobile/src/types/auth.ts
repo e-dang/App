@@ -1,9 +1,10 @@
 export type Email = string;
 export type Name = string;
 export type Password = string;
+export type Token = string;
 
 export interface DetailResponse {
-    detail: string;
+    detail?: string;
 }
 export interface RegistrationInfo {
     name: Name;
@@ -17,6 +18,14 @@ export interface LoginInfo {
     password: Password;
 }
 
+export interface RegistrationResponse extends DetailResponse {
+    key?: Token;
+}
+
+export interface LoginResponse extends DetailResponse {
+    key?: Token;
+}
+
 export interface AuthToken {
-    token: string | null;
+    token: Token;
 }

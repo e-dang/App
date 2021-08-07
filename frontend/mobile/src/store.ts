@@ -7,6 +7,8 @@ import {
     appReducer,
     AppReducerState,
     errorReducer,
+    authReducer,
+    AuthState,
 } from '@reducers';
 import sagas from '@sagas';
 import {applyMiddleware, combineReducers, createStore, Dispatch, MiddlewareAPI} from 'redux';
@@ -30,9 +32,15 @@ const pendingPersistConfig: PersistConfig<PendingState, unknown, unknown, unknow
     key: 'pendingStates',
 };
 
+const authPersistConfig: PersistConfig<AuthState, unknown, unknown, unknown> = {
+    storage: AsyncStorage,
+    key: 'auth',
+};
+
 export const reducers = {
     app: persistReducer(appPersistConfig, appReducer),
     users: persistReducer(usersPersistConfig, usersReducer),
+    auth: persistReducer(authPersistConfig, authReducer),
     pendingStates: persistReducer(pendingPersistConfig, pendingReducer),
     errorStates: errorReducer,
 };

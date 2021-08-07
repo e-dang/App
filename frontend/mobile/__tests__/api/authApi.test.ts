@@ -2,7 +2,14 @@ import AuthApi from '@api/authApi';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
-import {AuthToken, DetailResponse, LoginInfo, RegistrationInfo} from '@src/types/auth';
+import {
+    AuthToken,
+    DetailResponse,
+    LoginInfo,
+    LoginResponse,
+    RegistrationInfo,
+    RegistrationResponse,
+} from '@src/types/auth';
 
 describe('authApi', () => {
     let client: MockProxy<typeof Client>;
@@ -29,8 +36,8 @@ describe('authApi', () => {
         await expect(() => AuthApi.register(regInfo)).rejects.toThrowError(data.detail);
     });
 
-    test('register returns void when response status is 201', async () => {
-        const data: DetailResponse = {detail: 'verification email sent'};
+    test('register returns an AuthToken when response status is 201', async () => {
+        const data: RegistrationResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
         client.post.mockResolvedValue({
             data,
             status: 201,
@@ -39,7 +46,7 @@ describe('authApi', () => {
 
         const resp = await AuthApi.register(regInfo);
 
-        expect(resp).toBeUndefined();
+        expect(resp).toEqual({token: data.key} as AuthToken);
     });
 
     test('login returns AuthToken object when login is successful', async () => {
@@ -47,8 +54,8 @@ describe('authApi', () => {
             email: 'example@demo.com',
             password: 'password123',
         };
-        const data: AuthToken = {
-            token: '123ahudfiagsefajdopai3r39047',
+        const data: LoginResponse = {
+            key: '123ahudfiagsefajdopai3r39047',
         };
         client.post.mockResolvedValue({
             data,
@@ -58,7 +65,7 @@ describe('authApi', () => {
 
         const resp = await AuthApi.login(loginInfo);
 
-        expect(resp).toBe(data);
+        expect(resp).toEqual({token: data.key} as AuthToken);
     });
 
     test('login throws error when response status is not 200', async () => {
