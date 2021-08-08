@@ -24,6 +24,9 @@ describe('Auth flow', () => {
 
     test('email signup flow', async () => {
         // the user opens the app and sees an option to register via email and clicks it
+        await waitFor(element(by.id('welcomeScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
         await waitFor(element(by.id('emailSignUpBtn')))
             .toBeVisible()
             .withTimeout(TIMEOUT);
@@ -52,7 +55,7 @@ describe('Auth flow', () => {
         await element(by.id('signUpBtn')).tap();
 
         // the registration is successful, and they are taken to the home page
-        await waitFor(element(by.id('home')))
+        await waitFor(element(by.id('homeScreen')))
             .toBeVisible()
             .withTimeout(10000);
     });

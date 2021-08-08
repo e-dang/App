@@ -22,7 +22,7 @@ export function Register() {
     };
 
     return (
-        <Screen>
+        <Screen testID="registerScreen">
             <LoadingModal isLoading={isPending} onClose={cancelRegister} />
             <Center flex={1}>
                 <Stack width="90%" space={2}>

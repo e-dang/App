@@ -10,7 +10,7 @@ export function Welcome() {
     };
 
     return (
-        <Screen>
+        <Screen testID="welcomeScreen">
             <Center flex={2}>
                 <Heading>Welcome!</Heading>
             </Center>
