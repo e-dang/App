@@ -12,7 +12,7 @@ describe('Auth flow', () => {
     let password;
 
     beforeAll(async () => {
-        await device.launchApp();
+        // await device.launchApp();
     });
 
     beforeEach(async () => {
