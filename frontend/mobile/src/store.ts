@@ -11,11 +11,10 @@ import {
     AuthState,
 } from '@reducers';
 import sagas from '@sagas';
-import {applyMiddleware, combineReducers, createStore, Dispatch, MiddlewareAPI} from 'redux';
+import {applyMiddleware, combineReducers, compose, createStore, Dispatch, MiddlewareAPI} from 'redux';
 import {PersistConfig, persistReducer, persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import {RootAction} from '@actions';
-import {composeWithDevTools} from 'redux-devtools-extension';
 
 const appPersistConfig: PersistConfig<AppReducerState, unknown, unknown, unknown> = {
     storage: AsyncStorage,
@@ -61,9 +60,15 @@ const appMiddleware = (_store: MiddlewareAPI) => (next: Dispatch) => (action: Ro
 const sagaMiddleware = createSagaMiddleware();
 
 const middlewares = [sagaMiddleware, appMiddleware];
+
+if (__DEV__) {
+    const createFlipperDebugger = require('redux-flipper').default;
+    middlewares.push(createFlipperDebugger());
+}
+
 const enhancers = [applyMiddleware(...middlewares)];
 
-export const store = createStore(rootReducer, composeWithDevTools(...enhancers));
+export const store = createStore(rootReducer, compose(...enhancers));
 
 sagaMiddleware.run(sagas);
 
