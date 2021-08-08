@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {registerAsync} from '@actions';
-import {Screen} from '@components';
+import {Screen, LoadingModal} from '@components';
 import {Email, Name, Password, RegistrationInfo} from '@src/types';
 import {getPending, useSelector} from '@utils';
-import {Button, Center, Input, Modal, Spinner, Stack} from 'native-base';
-import {useState} from 'react';
+import {Button, Center, Input, Stack} from 'native-base';
 import {useDispatch} from 'react-redux';
 
 export function Register() {
@@ -24,12 +23,7 @@ export function Register() {
 
     return (
         <Screen>
-            <Center>
-                <Modal isOpen={isPending} onClose={cancelRegister}>
-                    <Modal.CloseButton mt={3} />
-                    <Spinner animating={isPending} accessibilityLabel="Loading indicator" />
-                </Modal>
-            </Center>
+            <LoadingModal isLoading={isPending} onClose={cancelRegister} />
             <Center flex={1}>
                 <Stack width="90%" space={2}>
                     <Input
