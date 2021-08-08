@@ -1,9 +1,14 @@
+import {AuthApi} from '@api';
 import {v4 as uuidv4} from 'uuid';
 
 const TIMEOUT = 2000;
 
 function generateEmail() {
     return `${uuidv4()}@demo.com`;
+}
+
+async function createUser(name, email, password) {
+    return await AuthApi.register({name, email, password1: password, password2: password});
 }
 
 describe('Auth flow', () => {
@@ -55,6 +60,41 @@ describe('Auth flow', () => {
         await element(by.id('signUpBtn')).tap();
 
         // the registration is successful, and they are taken to the home page
+        await waitFor(element(by.id('homeScreen')))
+            .toBeVisible()
+            .withTimeout(10000);
+    });
+
+    test('sign in flow', async () => {
+        // an existing user opens the app but is not logged in
+        await createUser(name, email, password);
+        await waitFor(element(by.id('welcomeScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they click on the sign in button and are taken to the SignIn screen
+        await element(by.id('signInBtn')).tap();
+        await waitFor(element(by.id('signInScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they are prompted for their email and password
+        await waitFor(element(by.id('emailInput')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+        await waitFor(element(by.id('passwordInput')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they enter their valid credentials
+        await element(by.id('emailInput')).typeText(email);
+        await element(by.id('passwordInput')).typeText(password);
+        await expect(element(by.id('emailInput'))).toHaveText(email);
+        await expect(element(by.id('passwordInput'))).toHaveText(password);
+
+        // the user then hits the sign in button and is taken to the Home screen
+        await element(by.id('signInBtn')).tap();
+
         await waitFor(element(by.id('homeScreen')))
             .toBeVisible()
             .withTimeout(10000);
