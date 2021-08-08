@@ -1,5 +1,5 @@
 import React from 'react';
-import {Center, Button, Icon as NativeIcon, Stack, Box, Heading} from 'native-base';
+import {Center, Button, Icon as NativeIcon, Stack, Box, Heading, Text, Row} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Screen} from '@components';
 import {NavigationService} from '@utils';
@@ -7,6 +7,10 @@ import {NavigationService} from '@utils';
 export function Welcome() {
     const handleSignUpWithEmail = () => {
         NavigationService.navigate('register');
+    };
+
+    const handleSignIn = () => {
+        NavigationService.navigate('signIn');
     };
 
     return (
@@ -50,6 +54,12 @@ export function Welcome() {
                         startIcon={<NativeIcon as={Icon} name="google" size={5} color="black" />}>
                         Sign In With Google
                     </Button>
+                    <Box mt={7}>
+                        <Text alignSelf="center">Already have an account?</Text>
+                        <Button testID="signInBtn" variant="ghost" onPress={handleSignIn}>
+                            Sign In
+                        </Button>
+                    </Box>
                 </Stack>
             </Center>
         </Screen>

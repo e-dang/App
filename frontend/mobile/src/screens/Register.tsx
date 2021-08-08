@@ -5,9 +5,10 @@ import {Email, Name, Password, RegistrationInfo} from '@src/types';
 import {getPending, useSelector} from '@utils';
 import {Button, Center, Input, Stack} from 'native-base';
 import {useDispatch} from 'react-redux';
+import {get} from 'lodash';
 
 export function Register() {
-    const isPending = useSelector((state) => getPending(state.pendingStates, 'REGISTER'));
+    const isPending = useSelector((state) => get(state.pendingStates, 'REGISTER.pending', false) as boolean);
     const dispatch = useDispatch();
     const [name, setName] = useState<Name>('');
     const [email, setEmail] = useState<Email>('');
