@@ -8,7 +8,6 @@ import {persistor, store} from '@src/store';
 import {NavigationService, navigationRef} from '@utils/navigationService';
 import '@i18n';
 import {enableScreens} from 'react-native-screens';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NativeBaseProvider} from 'native-base';
 
 /**
@@ -21,20 +20,18 @@ export default function Root() {
         NavigationService.isReady = false;
     }, []);
     return (
-        <SafeAreaProvider>
-            <NativeBaseProvider>
-                <Provider store={store}>
-                    <PersistGate loading={<View />} persistor={persistor}>
-                        <NavigationContainer
-                            ref={navigationRef}
-                            onReady={() => {
-                                NavigationService.isReady = true;
-                            }}>
-                            <App />
-                        </NavigationContainer>
-                    </PersistGate>
-                </Provider>
-            </NativeBaseProvider>
-        </SafeAreaProvider>
+        <NativeBaseProvider>
+            <Provider store={store}>
+                <PersistGate loading={<View />} persistor={persistor}>
+                    <NavigationContainer
+                        ref={navigationRef}
+                        onReady={() => {
+                            NavigationService.isReady = true;
+                        }}>
+                        <App />
+                    </NavigationContainer>
+                </PersistGate>
+            </Provider>
+        </NativeBaseProvider>
     );
 }
