@@ -2,9 +2,6 @@ module.exports = {
     testRunner: 'jest',
     runnerConfig: 'e2e/config.json',
     skipLegacyWorkersInjection: true,
-    behavior: {
-        init: {launchApp: false},
-    },
     apps: {
         ios: {
             type: 'ios.app',

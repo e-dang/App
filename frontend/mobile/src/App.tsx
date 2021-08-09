@@ -14,7 +14,7 @@ export type AppTabParamList = {
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const App = () => {
+export const App = () => {
     const token = useSelector((state) => state.auth.token);
     const init = async () => {
         await sleep(1000);
@@ -69,5 +69,3 @@ const App = () => {
         </Stack.Navigator>
     );
 };
-
-export default App;
