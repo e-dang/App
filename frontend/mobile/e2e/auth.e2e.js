@@ -11,20 +11,28 @@ async function createUser(name, email, password) {
     return await AuthApi.register({name, email, password1: password, password2: password});
 }
 
+async function logout() {
+    await element(by.id('masterLogout')).tap();
+}
+
 describe('Auth flow', () => {
     let name;
     let email;
     let password;
 
-    beforeAll(async () => {
-        await device.launchApp();
-    });
+    // beforeAll(async () => {
+    //     await device.launchApp({newInstance: true});
+    // });
 
     beforeEach(async () => {
         await device.reloadReactNative();
         name = 'Test User';
         email = generateEmail();
         password = 'mytestpassword123';
+    });
+
+    afterEach(async () => {
+        await logout();
     });
 
     test('email signup flow', async () => {
@@ -36,6 +44,9 @@ describe('Auth flow', () => {
             .toBeVisible()
             .withTimeout(TIMEOUT);
         await element(by.id('emailSignUpBtn')).tap();
+        await waitFor(element(by.id('emailSignUpScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
 
         // the user sees text input fields for name, email, and password and proceeds to enter their information
         await waitFor(element(by.id('nameInput')))
@@ -98,5 +109,36 @@ describe('Auth flow', () => {
         await waitFor(element(by.id('homeScreen')))
             .toBeVisible()
             .withTimeout(10000);
+    });
+
+    test('the user can navigate back and forth between auth pages', async () => {
+        // An unauthenticated user opens the app
+        await waitFor(element(by.id('welcomeScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they navigate to the sign up with email screen
+        await element(by.id('emailSignUpBtn')).tap();
+        await waitFor(element(by.id('emailSignUpScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they navigate back to the welcome screen
+        await element(by.id('backBtn')).tap();
+        await waitFor(element(by.id('welcomeScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they then navigate to the sign in screen
+        await element(by.id('signInBtn')).tap();
+        await waitFor(element(by.id('signInScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
+
+        // they then click the back button and go back to the welcome screen
+        await element(by.id('backBtn')).tap();
+        await waitFor(element(by.id('welcomeScreen')))
+            .toBeVisible()
+            .withTimeout(TIMEOUT);
     });
 });
