@@ -1,5 +1,5 @@
 export * from './Welcome';
-export * from './Register';
+export * from './SignUp';
 export * from './Home';
 export * from './Settings';
 export * from './SignIn';
