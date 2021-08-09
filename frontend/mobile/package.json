@@ -5,10 +5,11 @@
     "scripts": {
         "android": "react-native run-android",
         "ios": "react-native run-ios",
+        "ios-e2e": "RN_SRC_EXT=e2e.tsx react-native run-ios",
         "start": "react-native start",
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "e2e:ios": "RN_SRC_EXT=e2e.tsx detox test -c ios",
+        "e2e:ios": "detox test -c ios --cleanup",
         "e2e:android": "detox test -c android"
     },
     "dependencies": {

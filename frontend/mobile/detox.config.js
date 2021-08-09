@@ -17,7 +17,9 @@ module.exports = {
         simulator: {
             type: 'ios.simulator',
             device: {
+                id: '06405B2F-B746-4787-A6D8-2E70AE5E76BD',
                 type: 'iPhone 12',
+                name: 'iPhone 12-Detox',
             },
         },
         emulator: {
