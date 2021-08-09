@@ -3,7 +3,7 @@ import {registerAsync} from '@actions';
 import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, NameInput} from '@components';
 import {Email, Name, Password, RegistrationInfo} from '@src/types';
 import {NavigationService, useSelector} from '@utils';
-import {Box, Button, Center, Divider, Heading, HStack, Stack, Text} from 'native-base';
+import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 
@@ -34,11 +34,9 @@ export function Register() {
         <>
             <Header
                 leftContent={
-                    <HStack>
-                        <BackButton testID="backBtn" alignSelf="flex-start" onPress={handleBack}>
-                            Welcome
-                        </BackButton>
-                    </HStack>
+                    <BackButton testID="backBtn" alignSelf="flex-start" onPress={handleBack}>
+                        Welcome
+                    </BackButton>
                 }
             />
             <Screen testID="emailSignUpScreen">
