@@ -1,10 +1,9 @@
+import React, {useState} from 'react';
 import {loginAsync} from '@actions';
-import {LoadingModal, Screen} from '@components';
+import {LoadingModal, Screen, BackButton} from '@components';
 import {Email, Password} from '@src/types';
-import {useSelector} from '@utils';
-import {Button, Center, FormControl, Heading, Input, Stack} from 'native-base';
-import React from 'react';
-import {useState} from 'react';
+import {NavigationService, useSelector} from '@utils';
+import {Button, Center, FormControl, Heading, HStack, Input, Stack} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 
@@ -23,8 +22,17 @@ export function SignIn() {
         dispatch(loginAsync.cancel());
     };
 
+    const handleBack = () => {
+        NavigationService.navigate('welcome');
+    };
+
     return (
         <Screen testID="signInScreen">
+            <HStack alignItems="center" py={2} mb={8} width="100%" alignSelf="stretch">
+                <BackButton testID="backBtn" onPress={handleBack}>
+                    Welcome
+                </BackButton>
+            </HStack>
             <LoadingModal isLoading={isPending} onClose={cancelLogin} />
             <Center flex={2}>
                 <Heading>Sign In</Heading>

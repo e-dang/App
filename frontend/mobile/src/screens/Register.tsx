@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {registerAsync} from '@actions';
-import {Screen, LoadingModal} from '@components';
+import {Screen, LoadingModal, BackButton} from '@components';
 import {Email, Name, Password, RegistrationInfo} from '@src/types';
-import {getPending, useSelector} from '@utils';
-import {Button, Center, Input, Stack} from 'native-base';
+import {NavigationService, useSelector} from '@utils';
+import {Button, Center, HStack, Input, Stack} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 
@@ -22,8 +22,17 @@ export function Register() {
         dispatch(registerAsync.cancel());
     };
 
+    const handleBack = () => {
+        NavigationService.navigate('welcome');
+    };
+
     return (
-        <Screen testID="registerScreen">
+        <Screen testID="emailSignUpScreen">
+            <HStack alignItems="center" py={2} mb={8} width="100%" alignSelf="stretch">
+                <BackButton testID="backBtn" onPress={handleBack}>
+                    Welcome
+                </BackButton>
+            </HStack>
             <LoadingModal isLoading={isPending} onClose={cancelRegister} />
             <Center flex={1}>
                 <Stack width="90%" space={2}>
