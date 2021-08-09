@@ -2,7 +2,7 @@ import detox, {device} from 'detox';
 
 beforeAll(async () => {
     await device.launchApp({
-        newInstance: false,
+        newInstance: true,
     });
 });
 
