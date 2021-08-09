@@ -5,7 +5,3 @@ beforeAll(async () => {
         newInstance: true,
     });
 });
-
-afterAll(async () => {
-    await detox.cleanup();
-});

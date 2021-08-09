@@ -3,3 +3,4 @@ export * from './Register';
 export * from './Home';
 export * from './Settings';
 export * from './SignIn';
+export * from './ForgotPassword';

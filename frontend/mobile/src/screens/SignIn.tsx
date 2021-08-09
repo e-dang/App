@@ -3,7 +3,7 @@ import {loginAsync} from '@actions';
 import {LoadingModal, Screen, BackButton} from '@components';
 import {Email, Password} from '@src/types';
 import {NavigationService, useSelector} from '@utils';
-import {Button, Center, FormControl, Heading, HStack, Input, Stack} from 'native-base';
+import {Button, Center, Divider, FormControl, Heading, HStack, Input, Stack} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 
@@ -24,6 +24,10 @@ export function SignIn() {
 
     const handleBack = () => {
         NavigationService.navigate('welcome');
+    };
+
+    const handleForgotPassword = () => {
+        NavigationService.navigate('forgotPassword');
     };
 
     return (
@@ -66,6 +70,14 @@ export function SignIn() {
                     </FormControl>
                     <Button testID="signInBtn" colorScheme="primary" borderRadius={100} onPress={handleSignIn}>
                         Sign In
+                    </Button>
+                    <Divider />
+                    <Button
+                        testID="forgotPasswordBtn"
+                        colorScheme="primary"
+                        variant="ghost"
+                        onPress={handleForgotPassword}>
+                        Forgot password?
                     </Button>
                 </Stack>
             </Center>

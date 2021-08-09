@@ -20,10 +20,6 @@ describe('Auth flow', () => {
     let email;
     let password;
 
-    // beforeAll(async () => {
-    //     await device.launchApp({newInstance: true});
-    // });
-
     beforeEach(async () => {
         await device.reloadReactNative();
         name = 'Test User';
@@ -111,34 +107,69 @@ describe('Auth flow', () => {
             .withTimeout(10000);
     });
 
-    test('the user can navigate back and forth between auth pages', async () => {
-        // An unauthenticated user opens the app
+    test('forgot password flow', async () => {
+        // an existing user is on the welcome screen and navigates to the sign in screen
+        await createUser(name, email, password);
         await waitFor(element(by.id('welcomeScreen')))
             .toBeVisible()
             .withTimeout(TIMEOUT);
 
+        // they click on the sign in button and are taken to the SignIn screen
+        const signInScreen = element(by.id('signInScreen'));
+        await element(by.id('signInBtn')).tap();
+        await waitFor(signInScreen).toBeVisible().withTimeout(TIMEOUT);
+
+        // they realize that they forgot their password and click the forgot password link and
+        // are navigated to the forgot password screen
+        await element(by.id('forgotPasswordBtn')).tap();
+        await expect(element(by.id('forgotPasswordScreen'))).toBeVisible();
+
+        // the screen asks them for their email address which they type in
+        const emailInput = element(by.id('emailInput'));
+        await expect(emailInput).toBeVisible();
+        await emailInput.typeText(email);
+        await expect(emailInput).toHaveText(email);
+
+        // they then hit the submit and a modal appears telling them an email has been sent to the email
+        // address
+        await element(by.id('submitBtn')).tap();
+        await expect(element(by.id('emailSentNotice'))).toBeVisible();
+
+        // they click ok and are navigated back to the signIn screen
+        await element(by.id('okBtn')).tap();
+        await expect(signInScreen).toBeVisible();
+    });
+
+    test('the user can navigate back and forth between auth pages', async () => {
+        // An unauthenticated user opens the app
+        const welcomeScreen = element(by.id('welcomeScreen'));
+        await expect(welcomeScreen).toBeVisible();
+
         // they navigate to the sign up with email screen
+        const emailSignUpScreen = element(by.id('emailSignUpScreen'));
         await element(by.id('emailSignUpBtn')).tap();
-        await waitFor(element(by.id('emailSignUpScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(emailSignUpScreen).toBeVisible();
 
         // they navigate back to the welcome screen
         await element(by.id('backBtn')).tap();
-        await waitFor(element(by.id('welcomeScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(welcomeScreen).toBeVisible();
 
         // they then navigate to the sign in screen
+        const signInScreen = element(by.id('signInScreen'));
         await element(by.id('signInBtn')).tap();
-        await waitFor(element(by.id('signInScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(signInScreen).toBeVisible();
+
+        // then navigate to the forgot password screen
+        const forgotPasswordScreen = element(by.id('forgotPasswordScreen'));
+        await element(by.id('forgotPasswordBtn')).tap();
+        await expect(forgotPasswordScreen).toBeVisible();
+
+        // they then go back to the sign in screen
+        await element(by.id('backBtn')).tap();
+        await expect(signInScreen).toBeVisible();
 
         // they then click the back button and go back to the welcome screen
         await element(by.id('backBtn')).tap();
-        await waitFor(element(by.id('welcomeScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(welcomeScreen).toBeVisible();
     });
 });

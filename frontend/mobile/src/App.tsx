@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
-import {Home, Settings, Register, Welcome, SignIn} from '@screens';
+import {Home, Settings, Register, Welcome, SignIn, ForgotPassword} from '@screens';
 import {sleep, useSelector} from '@utils';
 
 export type AppTabParamList = {
@@ -66,6 +66,7 @@ export const App = () => {
             <Stack.Screen name="welcome" component={Welcome} />
             <Stack.Screen name="register" component={Register} />
             <Stack.Screen name="signIn" component={SignIn} />
+            <Stack.Screen name="forgotPassword" component={ForgotPassword} />
         </Stack.Navigator>
     );
 };
