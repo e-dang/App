@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BackButton, Header, Screen} from '@components';
+import {BackButton, EmailInput, Header, Screen} from '@components';
 import {Email} from '@src/types';
 import {NavigationService} from '@utils';
 import {Button, Center, Heading, HStack, Input, Modal, Stack} from 'native-base';
@@ -38,14 +38,7 @@ export function ForgotPassword() {
                 </Center>
                 <Center flex={4}>
                     <Stack width="90%" space={2}>
-                        <Input
-                            testID="emailInput"
-                            variant="rounded"
-                            onChangeText={(value) => setEmail(value)}
-                            value={email}
-                            placeholder="Email"
-                            keyboardType="email-address"
-                        />
+                        <EmailInput onChangeText={(value) => setEmail(value)} value={email} />
                         <Button testID="submitBtn" colorScheme="primary" borderRadius={100} onPress={handleSubmit}>
                             Submit
                         </Button>

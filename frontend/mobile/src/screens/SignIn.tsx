@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {loginAsync} from '@actions';
-import {LoadingModal, Screen, BackButton, Header} from '@components';
+import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} from '@components';
 import {Email, Password} from '@src/types';
 import {NavigationService, useSelector} from '@utils';
 import {Box, Button, Center, Divider, FormControl, Heading, Input, Stack, Text} from 'native-base';
@@ -59,31 +59,8 @@ export function SignIn() {
                 </Center>
                 <Center flex={3}>
                     <Stack width="90%" space={2}>
-                        <FormControl isInvalid={!!error}>
-                            <Input
-                                testID="emailInput"
-                                variant="rounded"
-                                onChangeText={(value) => setEmail(value)}
-                                value={email}
-                                placeholder="Email"
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                isInvalid={!!error}
-                            />
-                            <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>
-                        </FormControl>
-                        <FormControl isInvalid={!!error}>
-                            <Input
-                                testID="passwordInput"
-                                variant="rounded"
-                                onChangeText={(value) => setPassword(value)}
-                                value={password}
-                                placeholder="Password"
-                                keyboardType="default"
-                                secureTextEntry={true}
-                            />
-                        </FormControl>
+                        <EmailInput onChangeText={(value) => setEmail(value)} value={email} />
+                        <PasswordInput onChangeText={(value) => setPassword(value)} value={password} />
                         <Button testID="signInBtn" colorScheme="primary" borderRadius={100} onPress={handleSignIn}>
                             Sign In
                         </Button>
