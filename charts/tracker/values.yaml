@@ -45,15 +45,8 @@ ingress:
   className: nginx
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-  hosts:
-    - host: dev.erickdang.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - dev.erickdang.com
-      secretName: letsencrypt
+  hosts: []
+  tls: []
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
