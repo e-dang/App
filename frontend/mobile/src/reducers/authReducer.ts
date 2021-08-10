@@ -1,9 +1,9 @@
 import {AuthAction, loginAsync, registerAsync} from '@actions';
-import {Token} from '@src/types';
+import {AuthToken} from '@src/types';
 import {createReducer} from 'typesafe-actions';
 
 export interface AuthState {
-    token: Token | null;
+    token: AuthToken | null;
 }
 
 const authInitialState: AuthState = {
@@ -11,5 +11,5 @@ const authInitialState: AuthState = {
 };
 
 export const authReducer = createReducer<AuthState, AuthAction>(authInitialState)
-    .handleAction(registerAsync.success, (state, action) => ({...state, token: action.payload.token}))
-    .handleAction(loginAsync.success, (state, action) => ({...state, token: action.payload.token}));
+    .handleAction(registerAsync.success, (state, action) => ({...state, token: action.payload}))
+    .handleAction(loginAsync.success, (state, action) => ({...state, token: action.payload}));

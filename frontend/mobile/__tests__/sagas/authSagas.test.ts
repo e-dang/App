@@ -37,7 +37,7 @@ describe('authSagas', () => {
                 })
                 .put({type: getType(registerAsync.success), payload: token})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
-                .hasFinalState({token: token.token})
+                .hasFinalState({token: token})
                 .silentRun();
         });
 
@@ -86,7 +86,7 @@ describe('authSagas', () => {
                 })
                 .put({type: getType(loginAsync.success), payload: token})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
-                .hasFinalState({token: token.token})
+                .hasFinalState({token: token})
                 .silentRun();
         });
 
