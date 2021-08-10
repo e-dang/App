@@ -11,5 +11,5 @@
 // };
 
 export const API_VERSION = 'v1';
-export const DOMAIN = 'https://dev.erickdang.com';
+export const DOMAIN = 'https://staging.erickdang.com';
 export const ROOT_URL = `${DOMAIN}/api/${API_VERSION}`;
