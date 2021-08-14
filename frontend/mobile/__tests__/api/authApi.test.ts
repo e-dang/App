@@ -42,6 +42,19 @@ describe('authApi', () => {
         expect(resp).toEqual({token: data.key} as AuthToken);
     });
 
+    test('register calls setAuthToken on client when response status is 201', async () => {
+        const data: RegistrationResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
+        client.post.mockResolvedValue({
+            data,
+            status: 201,
+            statusText: 'Created',
+        });
+
+        const resp = await AuthApi.register(regInfo);
+
+        expect(client.setAuthToken).toHaveBeenCalledWith(resp);
+    });
+
     test('login returns AuthToken object when login is successful', async () => {
         const loginInfo: LoginInfo = {
             email: 'example@demo.com',
@@ -59,6 +72,25 @@ describe('authApi', () => {
         const resp = await AuthApi.login(loginInfo);
 
         expect(resp).toEqual({token: data.key} as AuthToken);
+    });
+
+    test('login calls setAuthToken on client when login is successful', async () => {
+        const loginInfo: LoginInfo = {
+            email: 'example@demo.com',
+            password: 'password123',
+        };
+        const data: LoginResponse = {
+            key: '123ahudfiagsefajdopai3r39047',
+        };
+        client.post.mockResolvedValue({
+            data,
+            status: 200,
+            statusText: 'Success',
+        });
+
+        const resp = await AuthApi.login(loginInfo);
+
+        expect(client.setAuthToken).toHaveBeenCalledWith(resp);
     });
 
     test('login throws error when response status is not 200', async () => {
@@ -91,6 +123,18 @@ describe('authApi', () => {
         expect(resp).toBe(undefined);
     });
 
+    test('logout calls clearAuthToken on client when logout is successful', async () => {
+        client.get.mockResolvedValue({
+            data: {},
+            status: 200,
+            statusText: 'Success',
+        });
+
+        await AuthApi.logout();
+
+        expect(client.clearAuthToken).toHaveBeenCalled();
+    });
+
     test('logout resolves to void when logout is not successful', async () => {
         client.get.mockResolvedValue({
             data: {},
@@ -101,5 +145,17 @@ describe('authApi', () => {
         const resp = await AuthApi.logout();
 
         expect(resp).toBe(undefined);
+    });
+
+    test('logout calls clearAuthToken on client when logout is not successful', async () => {
+        client.get.mockResolvedValue({
+            data: {},
+            status: 500,
+            statusText: 'Failure',
+        });
+
+        await AuthApi.logout();
+
+        expect(client.clearAuthToken).toHaveBeenCalled();
     });
 });

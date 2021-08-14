@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {ROOT_URL} from '@api/constants';
+import {AuthToken} from '@src/types';
 
 export interface Response<T> {
     data: T;
@@ -64,5 +65,13 @@ export default class Client {
             status: resp.status,
             statusText: resp.statusText,
         } as Response<U>;
+    }
+
+    static setAuthToken(token: AuthToken) {
+        Client.impl.defaults.headers['Authorization'] = `Token ${token.token}`;
+    }
+
+    static clearAuthToken() {
+        delete Client.impl.defaults.headers['Authorization'];
     }
 }

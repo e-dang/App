@@ -15,7 +15,9 @@ export class AuthApi {
             throw new Error(resp.data.detail);
         }
 
-        return {token: resp.data.key} as AuthToken;
+        const authToken = {token: resp.data.key} as AuthToken;
+        AuthApi.client.setAuthToken(authToken);
+        return authToken;
     }
 
     static async login(loginInfo: LoginInfo): Promise<AuthToken> {
@@ -25,7 +27,9 @@ export class AuthApi {
             throw new Error(resp.data.detail);
         }
 
-        return {token: resp.data.key} as AuthToken;
+        const authToken = {token: resp.data.key} as AuthToken;
+        AuthApi.client.setAuthToken(authToken);
+        return authToken;
     }
 
     static async logout(): Promise<void> {
@@ -33,5 +37,6 @@ export class AuthApi {
         // should invalidate old auth tokens upon successful re-login. This is why auth tokens shouldnt be valid
         // for long periods of time
         await AuthApi.client.get<LogoutResponse>('/logout/');
+        AuthApi.client.clearAuthToken();
     }
 }

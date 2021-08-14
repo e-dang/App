@@ -1,4 +1,5 @@
 import Client from '@api/client';
+import {AuthToken} from '@src/types';
 import {AxiosInstance} from 'axios';
 import {mock} from 'jest-mock-extended';
 
@@ -6,7 +7,7 @@ describe('Client', () => {
     const url = 'https://test.url.dne/';
     const data = {};
 
-    it('delete calls delete method on impl with url', async () => {
+    test('delete calls delete method on impl with url', async () => {
         Client['impl'] = mock<AxiosInstance>();
 
         Client.delete(url);
@@ -14,7 +15,7 @@ describe('Client', () => {
         expect(Client['impl'].delete).toHaveBeenCalledWith(url);
     });
 
-    it('get calls get method on impl with url', async () => {
+    test('get calls get method on impl with url', async () => {
         Client['impl'] = mock<AxiosInstance>();
 
         Client.get(url);
@@ -22,7 +23,7 @@ describe('Client', () => {
         expect(Client['impl'].get).toHaveBeenCalledWith(url);
     });
 
-    it('head calls head method on impl with url', async () => {
+    test('head calls head method on impl with url', async () => {
         Client['impl'] = mock<AxiosInstance>();
 
         Client.head(url);
@@ -30,7 +31,7 @@ describe('Client', () => {
         expect(Client['impl'].head).toHaveBeenCalledWith(url);
     });
 
-    it('post calls post method on impl with url and data', async () => {
+    test('post calls post method on impl with url and data', async () => {
         Client['impl'] = mock<AxiosInstance>();
 
         Client.post(url, data);
@@ -38,7 +39,7 @@ describe('Client', () => {
         expect(Client['impl'].post).toHaveBeenCalledWith(url, data);
     });
 
-    it('put calls put method on impl with url and data', async () => {
+    test('put calls put method on impl with url and data', async () => {
         Client['impl'] = mock<AxiosInstance>();
 
         Client.put(url, data);
@@ -46,11 +47,32 @@ describe('Client', () => {
         expect(Client['impl'].put).toHaveBeenCalledWith(url, data);
     });
 
-    it('patch calls patch method on impl with url and data', async () => {
+    test('patch calls patch method on impl with url and data', async () => {
         Client['impl'] = mock<AxiosInstance>();
 
         Client.patch(url, data);
 
         expect(Client['impl'].patch).toHaveBeenCalledWith(url, data);
+    });
+
+    test('setAuthToken sets impl Authorization header to token', async () => {
+        Client['impl'] = mock<AxiosInstance>();
+        Client['impl'].defaults = {headers: {}};
+        const authToken: AuthToken = {
+            token: 'a4efwadfjpaafg99033r',
+        };
+
+        Client.setAuthToken(authToken);
+
+        expect(Client['impl'].defaults.headers['Authorization']).toEqual(`Token a4efwadfjpaafg99033r`);
+    });
+
+    test('clearAuthToken removes Authorization header from impl', async () => {
+        Client['impl'] = mock<AxiosInstance>();
+        Client['impl'].defaults = {headers: {Authorization: 'stuff'}};
+
+        Client.clearAuthToken();
+
+        expect(Client['impl'].defaults.headers).not.toHaveProperty('Authorization');
     });
 });
