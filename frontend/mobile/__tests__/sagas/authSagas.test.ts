@@ -8,6 +8,7 @@ import {call, fork} from 'redux-saga/effects';
 import {getType} from 'typesafe-actions';
 import {createMockTask} from '@redux-saga/testing-utils';
 import {AuthApi} from '@api';
+import {persistor} from '@src/store';
 
 jest.mock('../../src/store', () => ({
     __esModule: true,
@@ -174,12 +175,14 @@ describe('authFlowSaga', () => {
                 [call(registerSaga, action), true],
                 [fork(backgroundTask), createMockTask()],
                 [call(AuthApi.logout), undefined],
+                [call(persistor.purge), undefined],
             ])
             .take([registerAsync.request, loginAsync.request])
             .call(registerSaga, action)
             .fork(backgroundTask)
             .take(logout)
             .call(AuthApi.logout)
+            .call(persistor.purge)
             .dispatch(action)
             .dispatch(logout())
             .silentRun();
@@ -196,12 +199,14 @@ describe('authFlowSaga', () => {
                 [call(loginSaga, action), true],
                 [fork(backgroundTask), createMockTask()],
                 [call(AuthApi.logout), undefined],
+                [call(persistor.purge), undefined],
             ])
             .take([registerAsync.request, loginAsync.request])
             .call(loginSaga, action)
             .fork(backgroundTask)
             .take(logout)
             .call(AuthApi.logout)
+            .call(persistor.purge)
             .dispatch(action)
             .dispatch(logout())
             .silentRun();

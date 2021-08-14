@@ -36,6 +36,6 @@ export function* authFlowSaga() {
         yield take(logout);
         yield call(AuthApi.logout);
         yield cancel(task);
-        persistor.purge();
+        yield call(persistor.purge);
     }
 }
