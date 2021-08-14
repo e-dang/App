@@ -112,8 +112,11 @@ describe('authApi', () => {
     });
 
     test('logout resolves to void when logout is successful', async () => {
-        client.get.mockResolvedValue({
-            data: {},
+        const data: DetailResponse = {
+            detail: 'Logout successful',
+        };
+        client.post.mockResolvedValue({
+            data,
             status: 200,
             statusText: 'Success',
         });
@@ -124,8 +127,11 @@ describe('authApi', () => {
     });
 
     test('logout calls clearAuthToken on client when logout is successful', async () => {
-        client.get.mockResolvedValue({
-            data: {},
+        const data: DetailResponse = {
+            detail: 'Logout successful',
+        };
+        client.post.mockResolvedValue({
+            data,
             status: 200,
             statusText: 'Success',
         });
@@ -136,8 +142,11 @@ describe('authApi', () => {
     });
 
     test('logout resolves to void when logout is not successful', async () => {
-        client.get.mockResolvedValue({
-            data: {},
+        const data: DetailResponse = {
+            detail: 'Server error',
+        };
+        client.post.mockResolvedValue({
+            data,
             status: 500,
             statusText: 'Failure',
         });
@@ -148,8 +157,11 @@ describe('authApi', () => {
     });
 
     test('logout calls clearAuthToken on client when logout is not successful', async () => {
+        const data: DetailResponse = {
+            detail: 'Server error',
+        };
         client.get.mockResolvedValue({
-            data: {},
+            data,
             status: 500,
             statusText: 'Failure',
         });

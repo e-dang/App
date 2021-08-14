@@ -1,5 +1,13 @@
 import Client from '@api/client';
-import {AuthToken, LoginInfo, LoginResponse, LogoutResponse, RegistrationInfo, RegistrationResponse} from '@src/types';
+import {
+    AuthToken,
+    DetailResponse,
+    LoginInfo,
+    LoginResponse,
+    LogoutResponse,
+    RegistrationInfo,
+    RegistrationResponse,
+} from '@src/types';
 
 export class AuthApi {
     static readonly timeout = 60000;
@@ -36,7 +44,7 @@ export class AuthApi {
         // logout should never fail on the client side. If something causes the request to fail the backend
         // should invalidate old auth tokens upon successful re-login. This is why auth tokens shouldnt be valid
         // for long periods of time
-        await AuthApi.client.get<LogoutResponse>('/logout/');
+        await AuthApi.client.post<{}, DetailResponse>('/logout/', {});
         AuthApi.client.clearAuthToken();
     }
 }
