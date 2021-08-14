@@ -4,8 +4,9 @@ import {registerSaga, loginSaga, authFlow, backgroundTask} from '@sagas';
 import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
 import {TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
-import {call} from 'redux-saga/effects';
+import {call, fork} from 'redux-saga/effects';
 import {getType} from 'typesafe-actions';
+import {createMockTask} from '@redux-saga/testing-utils';
 
 jest.mock('../../src/store', () => ({
     __esModule: true,
@@ -152,7 +153,10 @@ describe('authFlow', () => {
         };
         const action = registerAsync.request(regInfo);
         return expectSaga(authFlow)
-            .provide([[call(registerSaga, action), true]])
+            .provide([
+                [call(registerSaga, action), true],
+                [fork(backgroundTask), createMockTask()],
+            ])
             .take([registerAsync.request, loginAsync.request])
             .call(registerSaga, action)
             .fork(backgroundTask)
@@ -169,7 +173,10 @@ describe('authFlow', () => {
         };
         const action = loginAsync.request(loginInfo);
         return expectSaga(authFlow)
-            .provide([[call(loginSaga, action), true]])
+            .provide([
+                [call(loginSaga, action), true],
+                [fork(backgroundTask), createMockTask()],
+            ])
             .take([registerAsync.request, loginAsync.request])
             .call(loginSaga, action)
             .fork(backgroundTask)
