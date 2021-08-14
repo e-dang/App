@@ -1,5 +1,5 @@
 import React from 'react';
-import {Center, Button, Icon as NativeIcon, Stack, Box, Heading, Text, Row, Divider} from 'native-base';
+import {Center, Button, Icon as NativeIcon, Stack, Box, Heading, Text, Divider} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Header, Screen} from '@components';
 import {NavigationService} from '@utils';

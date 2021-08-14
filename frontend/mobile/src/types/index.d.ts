@@ -28,8 +28,6 @@ export interface LoginResponse extends DetailResponse {
     key?: Token;
 }
 
-export interface LogoutResponse {}
-
 export interface AuthToken {
     token: Token;
 }

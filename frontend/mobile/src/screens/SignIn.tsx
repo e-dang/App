@@ -3,7 +3,7 @@ import {loginAsync} from '@actions';
 import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} from '@components';
 import {Email, Password} from '@src/types';
 import {NavigationService, useSelector} from '@utils';
-import {Box, Button, Center, Divider, FormControl, Heading, Input, Stack, Text} from 'native-base';
+import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 

@@ -5,7 +5,6 @@ import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
 import {Home, Settings, Register, Welcome, SignIn, ForgotPassword} from '@screens';
 import {useSelector} from '@utils';
-import {useDispatch} from 'react-redux';
 
 export type AppTabParamList = {
     Home: undefined;
@@ -18,7 +17,6 @@ const Stack = createStackNavigator();
 export const App = () => {
     const token = useSelector((state) => state.auth.token);
     const {t} = useTranslation();
-    const dispatch = useDispatch();
 
     const init = async () => {};
 

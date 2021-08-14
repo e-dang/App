@@ -1,13 +1,5 @@
 import Client from '@api/client';
-import {
-    AuthToken,
-    DetailResponse,
-    LoginInfo,
-    LoginResponse,
-    LogoutResponse,
-    RegistrationInfo,
-    RegistrationResponse,
-} from '@src/types';
+import {AuthToken, DetailResponse, LoginInfo, LoginResponse, RegistrationInfo, RegistrationResponse} from '@src/types';
 
 export class AuthApi {
     static readonly timeout = 60000;
