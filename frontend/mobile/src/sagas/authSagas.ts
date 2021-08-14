@@ -17,7 +17,7 @@ export function* backgroundTask() {
     }
 }
 
-export function* authFlow() {
+export function* authFlowSaga() {
     while (true) {
         const action: AnyAction = yield take([registerAsync.request, loginAsync.request]);
 
@@ -34,6 +34,7 @@ export function* authFlow() {
         const task: Task = yield fork(backgroundTask);
 
         yield take(logout);
+        yield call(AuthApi.logout);
         yield cancel(task);
         persistor.purge();
     }

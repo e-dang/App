@@ -1,6 +1,6 @@
 import {loginAsync, logout, registerAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
-import {registerSaga, loginSaga, authFlow, backgroundTask} from '@sagas';
+import {registerSaga, loginSaga, authFlowSaga, backgroundTask} from '@sagas';
 import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
 import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
@@ -160,7 +160,7 @@ describe('authSagas', () => {
     });
 });
 
-describe('authFlow', () => {
+describe('authFlowSaga', () => {
     test('after successful registration, background tasks are started, and waits for logout', () => {
         const regInfo: RegistrationInfo = {
             name: 'Test User',
@@ -169,15 +169,17 @@ describe('authFlow', () => {
             password2: 'password123',
         };
         const action = registerAsync.request(regInfo);
-        return expectSaga(authFlow)
+        return expectSaga(authFlowSaga)
             .provide([
                 [call(registerSaga, action), true],
                 [fork(backgroundTask), createMockTask()],
+                [call(AuthApi.logout), undefined],
             ])
             .take([registerAsync.request, loginAsync.request])
             .call(registerSaga, action)
             .fork(backgroundTask)
             .take(logout)
+            .call(AuthApi.logout)
             .dispatch(action)
             .dispatch(logout())
             .silentRun();
@@ -189,15 +191,17 @@ describe('authFlow', () => {
             password: 'mytestpassword123',
         };
         const action = loginAsync.request(loginInfo);
-        return expectSaga(authFlow)
+        return expectSaga(authFlowSaga)
             .provide([
                 [call(loginSaga, action), true],
                 [fork(backgroundTask), createMockTask()],
+                [call(AuthApi.logout), undefined],
             ])
             .take([registerAsync.request, loginAsync.request])
             .call(loginSaga, action)
             .fork(backgroundTask)
             .take(logout)
+            .call(AuthApi.logout)
             .dispatch(action)
             .dispatch(logout())
             .silentRun();
