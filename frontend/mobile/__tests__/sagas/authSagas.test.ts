@@ -2,11 +2,12 @@ import {loginAsync, logout, registerAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
 import {registerSaga, loginSaga, authFlow, backgroundTask} from '@sagas';
 import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
-import {TimeoutError} from '@utils';
+import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
 import {call, fork} from 'redux-saga/effects';
 import {getType} from 'typesafe-actions';
 import {createMockTask} from '@redux-saga/testing-utils';
+import {AuthApi} from '@api';
 
 jest.mock('../../src/store', () => ({
     __esModule: true,
@@ -32,6 +33,7 @@ describe('authSagas', () => {
                 .provide({
                     race: () => ({response: token}),
                 })
+                .race({response: call(AuthApi.register, regInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(registerAsync.success), payload: token})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: null}})
@@ -45,6 +47,7 @@ describe('authSagas', () => {
                 .provide({
                     race: () => ({response: token}),
                 })
+                .race({response: call(AuthApi.register, regInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(registerAsync.success), payload: token})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({token: token})
@@ -61,6 +64,7 @@ describe('authSagas', () => {
                         throw error;
                     },
                 })
+                .race({response: call(AuthApi.register, regInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(registerAsync.failure), payload: error})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: error.message}})
@@ -77,6 +81,7 @@ describe('authSagas', () => {
                         throw error;
                     },
                 })
+                .race({response: call(AuthApi.register, regInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(registerAsync.failure), payload: error})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: error.message}})
@@ -97,6 +102,7 @@ describe('authSagas', () => {
                 .provide({
                     race: () => ({response: token}),
                 })
+                .race({response: call(AuthApi.login, loginInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(loginAsync.success), payload: token})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({token: token})
@@ -110,6 +116,7 @@ describe('authSagas', () => {
                 .provide({
                     race: () => ({response: token}),
                 })
+                .race({response: call(AuthApi.login, loginInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(loginAsync.success), payload: token})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: null}})
@@ -126,6 +133,7 @@ describe('authSagas', () => {
                         throw error;
                     },
                 })
+                .race({response: call(AuthApi.login, loginInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(loginAsync.failure), payload: error})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: error.message}})
@@ -142,6 +150,7 @@ describe('authSagas', () => {
                         throw error;
                     },
                 })
+                .race({response: call(AuthApi.login, loginInfo), timeout: call(timeout, AuthApi.timeout)})
                 .put({type: getType(loginAsync.failure), payload: error})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: error.message}})
