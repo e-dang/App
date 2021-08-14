@@ -78,4 +78,28 @@ describe('authApi', () => {
 
         await expect(() => AuthApi.login(loginInfo)).rejects.toThrowError(data.detail);
     });
+
+    test('logout resolves to void when logout is successful', async () => {
+        client.get.mockResolvedValue({
+            data: {},
+            status: 200,
+            statusText: 'Success',
+        });
+
+        const resp = await AuthApi.logout();
+
+        expect(resp).toBe(undefined);
+    });
+
+    test('logout resolves to void when logout is not successful', async () => {
+        client.get.mockResolvedValue({
+            data: {},
+            status: 500,
+            statusText: 'Failure',
+        });
+
+        const resp = await AuthApi.logout();
+
+        expect(resp).toBe(undefined);
+    });
 });
