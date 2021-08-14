@@ -1,10 +1,18 @@
-import {loginAsync, registerAsync} from '@actions';
+import {loginAsync, logout, registerAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
-import authSaga from '@sagas';
+import {registerSaga, loginSaga, authFlow, backgroundTask} from '@sagas';
 import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
 import {TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
+import {call} from 'redux-saga/effects';
 import {getType} from 'typesafe-actions';
+
+jest.mock('../../src/store', () => ({
+    __esModule: true,
+    persistor: {
+        purge: jest.fn(),
+    },
+}));
 
 describe('authSagas', () => {
     const token: AuthToken = {token: 'aiwodjafgjdka12408adfahjd'};
@@ -18,7 +26,7 @@ describe('authSagas', () => {
         };
 
         test('registration is successfull clears error state', () => {
-            return expectSaga(authSaga)
+            return expectSaga(registerSaga, registerAsync.request(regInfo))
                 .withReducer(errorReducer, {REGISTER: {error: 'Failure'}})
                 .provide({
                     race: () => ({response: token}),
@@ -30,7 +38,7 @@ describe('authSagas', () => {
         });
 
         test('registration is successfull sets auth state token', () => {
-            return expectSaga(authSaga)
+            return expectSaga(registerSaga, registerAsync.request(regInfo))
                 .withReducer(authReducer, {token: null})
                 .provide({
                     race: () => ({response: token}),
@@ -43,14 +51,14 @@ describe('authSagas', () => {
 
         test('registration fails due to invalid input', () => {
             const error = new Error('Invalid password');
-            return expectSaga(authSaga)
+            return expectSaga(registerSaga, registerAsync.request(regInfo))
                 .withReducer(errorReducer, {REGISTER: {error: null}})
                 .provide({
                     race: () => {
                         throw error;
                     },
                 })
-                .put({type: getType(registerAsync.failure), payload: error.message})
+                .put({type: getType(registerAsync.failure), payload: error})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: error.message}})
                 .silentRun();
@@ -58,14 +66,14 @@ describe('authSagas', () => {
 
         test('registration fails due to timeout', () => {
             const error = new TimeoutError();
-            return expectSaga(authSaga)
+            return expectSaga(registerSaga, registerAsync.request(regInfo))
                 .withReducer(errorReducer, {REGISTER: {error: null}})
                 .provide({
                     race: () => {
                         throw error;
                     },
                 })
-                .put({type: getType(registerAsync.failure), payload: error.message})
+                .put({type: getType(registerAsync.failure), payload: error})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: error.message}})
                 .silentRun();
@@ -79,7 +87,7 @@ describe('authSagas', () => {
         };
 
         test('when login is successful it sets auth state token', () => {
-            return expectSaga(authSaga)
+            return expectSaga(loginSaga, loginAsync.request(loginInfo))
                 .withReducer(authReducer)
                 .provide({
                     race: () => ({response: token}),
@@ -91,7 +99,7 @@ describe('authSagas', () => {
         });
 
         test('when login is successful it clears error state', () => {
-            return expectSaga(authSaga)
+            return expectSaga(loginSaga, loginAsync.request(loginInfo))
                 .withReducer(errorReducer, {LOGIN: {error: 'Failure'}})
                 .provide({
                     race: () => ({response: token}),
@@ -104,14 +112,14 @@ describe('authSagas', () => {
 
         test('when login fails due to invalid input it sets error state to error message', () => {
             const error = new Error('Incorrect password');
-            return expectSaga(authSaga)
+            return expectSaga(loginSaga, loginAsync.request(loginInfo))
                 .withReducer(errorReducer, {LOGIN: {error: null}})
                 .provide({
                     race: () => {
                         throw error;
                     },
                 })
-                .put({type: getType(loginAsync.failure), payload: error.message})
+                .put({type: getType(loginAsync.failure), payload: error})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: error.message}})
                 .silentRun();
@@ -119,17 +127,55 @@ describe('authSagas', () => {
 
         test('when login fails due to timeout it sets error to error message', () => {
             const error = new TimeoutError();
-            return expectSaga(authSaga)
+            return expectSaga(loginSaga, loginAsync.request(loginInfo))
                 .withReducer(errorReducer, {LOGIN: {error: null}})
                 .provide({
                     race: () => {
                         throw error;
                     },
                 })
-                .put({type: getType(loginAsync.failure), payload: error.message})
+                .put({type: getType(loginAsync.failure), payload: error})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: error.message}})
                 .silentRun();
         });
+    });
+});
+
+describe('authFlow', () => {
+    test('after successful registration, background tasks are started, and waits for logout', () => {
+        const regInfo: RegistrationInfo = {
+            name: 'Test User',
+            email: 'testemail@demo.com',
+            password1: 'password123',
+            password2: 'password123',
+        };
+        const action = registerAsync.request(regInfo);
+        return expectSaga(authFlow)
+            .provide([[call(registerSaga, action), true]])
+            .take([registerAsync.request, loginAsync.request])
+            .call(registerSaga, action)
+            .fork(backgroundTask)
+            .take(logout)
+            .dispatch(action)
+            .dispatch(logout())
+            .silentRun();
+    });
+
+    test('after successful login, background tasks are started, and waits for logout', () => {
+        const loginInfo: LoginInfo = {
+            email: 'example@demo.com',
+            password: 'mytestpassword123',
+        };
+        const action = loginAsync.request(loginInfo);
+        return expectSaga(authFlow)
+            .provide([[call(loginSaga, action), true]])
+            .take([registerAsync.request, loginAsync.request])
+            .call(loginSaga, action)
+            .fork(backgroundTask)
+            .take(logout)
+            .dispatch(action)
+            .dispatch(logout())
+            .silentRun();
     });
 });

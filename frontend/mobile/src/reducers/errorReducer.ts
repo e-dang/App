@@ -27,7 +27,7 @@ export const errorReducer: Reducer<ErrorState, RootAction> = (state: ErrorState 
         return {
             ...state,
             [actionName]: {
-                error: action.payload,
+                error: action.payload.message,
             },
         };
     }

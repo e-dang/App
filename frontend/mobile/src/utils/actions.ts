@@ -8,6 +8,6 @@ export function isPayloadAction<P>(action: any): action is PayloadAction<string,
     return action.payload !== undefined;
 }
 
-export function isErrorPayload(action: PayloadAction<string, any>): action is PayloadAction<string, string> {
-    return action.type.endsWith('_FAILURE') && typeof action.payload === 'string';
+export function isErrorPayload(action: PayloadAction<string, any>): action is PayloadAction<string, Error> {
+    return action.type.endsWith('_FAILURE') && action.payload instanceof Error;
 }

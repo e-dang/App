@@ -57,11 +57,11 @@ describe('action utils', () => {
         expect(retVal).toBe(false);
     });
 
-    test('isErrorPayload returns true when action is a failed action and has string payload', async () => {
-        const testAction = createAction('TEST_ACTION_FAILURE', () => 'Error')();
+    test('isErrorPayload returns true when action is a failed action and has error payload', async () => {
+        const testAction = createAction('TEST_ACTION_FAILURE', (err: Error) => err)();
         const action: ActionType<typeof testAction> = {
             type: 'TEST_ACTION_FAILURE',
-            payload: 'Error',
+            payload: new Error(),
         };
 
         const retVal = isErrorPayload(action);
@@ -69,11 +69,11 @@ describe('action utils', () => {
         expect(retVal).toBe(true);
     });
 
-    test('isErrorPayload returns false when action is not failed action and has string payload', async () => {
-        const testAction = createAction('TEST_ACTION_SUCCESS', () => 'Error')();
+    test('isErrorPayload returns false when action is not failed action and has error payload', async () => {
+        const testAction = createAction('TEST_ACTION_SUCCESS', (err: Error) => err)();
         const action: ActionType<typeof testAction> = {
             type: 'TEST_ACTION_SUCCESS',
-            payload: 'Error',
+            payload: new Error(),
         };
 
         const retVal = isErrorPayload(action);

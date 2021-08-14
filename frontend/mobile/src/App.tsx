@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
 import {Home, Settings, Register, Welcome, SignIn, ForgotPassword} from '@screens';
-import {sleep, useSelector} from '@utils';
+import {useSelector} from '@utils';
+import {useDispatch} from 'react-redux';
 
 export type AppTabParamList = {
     Home: undefined;
@@ -16,10 +17,10 @@ const Stack = createStackNavigator();
 
 export const App = () => {
     const token = useSelector((state) => state.auth.token);
-    const init = async () => {
-        await sleep(1000);
-        // …do multiple async tasks
-    };
+    const {t} = useTranslation();
+    const dispatch = useDispatch();
+
+    const init = async () => {};
 
     React.useEffect(() => {
         init().finally(() => {
@@ -27,8 +28,7 @@ export const App = () => {
         });
     }, []);
 
-    const {t} = useTranslation();
-    return token ? (
+    return token !== null ? (
         <Tab.Navigator>
             <Tab.Screen
                 name="home"

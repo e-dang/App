@@ -1,11 +1,14 @@
 import React from 'react';
 import {App as AppBase} from '@src/App';
 import {Box, Button} from 'native-base';
-import {persistor} from './store';
+import {useDispatch} from 'react-redux';
+import {logout} from '@actions';
 
 export function App() {
+    const dispatch = useDispatch();
+
     const handleLogout = () => {
-        persistor.purge();
+        dispatch(logout());
     };
 
     return (

@@ -2,7 +2,7 @@ import Client from '@api/client';
 import {AuthToken, LoginInfo, LoginResponse, RegistrationInfo, RegistrationResponse} from '@src/types';
 
 export class AuthApi {
-    static readonly timeout = 10000;
+    static readonly timeout = 60000;
     private static client = Client;
 
     static async register(registrationInfo: RegistrationInfo): Promise<AuthToken> {

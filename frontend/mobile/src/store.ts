@@ -14,7 +14,8 @@ import sagas from '@sagas';
 import {applyMiddleware, combineReducers, compose, createStore, Dispatch, MiddlewareAPI} from 'redux';
 import {PersistConfig, persistReducer, persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import {RootAction} from '@actions';
+import {logout, RootAction} from '@actions';
+import {getType} from 'typesafe-actions';
 
 const appPersistConfig: PersistConfig<AppReducerState, unknown, unknown, unknown> = {
     storage: AsyncStorage,
@@ -47,6 +48,14 @@ export const reducers = {
 export const rootReducer = combineReducers(reducers);
 export type RootState = ReturnType<typeof rootReducer>;
 
+const wrappedReducer: typeof rootReducer = (state: any, action: RootAction) => {
+    if (action.type === getType(logout)) {
+        return rootReducer(undefined, action);
+    }
+
+    return rootReducer(state, action);
+};
+
 const appMiddleware = (_store: MiddlewareAPI) => (next: Dispatch) => (action: RootAction) => {
     //   var state = store.getState()
     //   switch (action.type) {
@@ -68,7 +77,7 @@ if (__DEV__) {
 
 const enhancers = [applyMiddleware(...middlewares)];
 
-export const store = createStore(rootReducer, compose(...enhancers));
+export const store = createStore(wrappedReducer, compose(...enhancers));
 
 sagaMiddleware.run(sagas);
 

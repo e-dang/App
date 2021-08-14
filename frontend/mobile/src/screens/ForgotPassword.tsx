@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {BackButton, EmailInput, Header, Screen} from '@components';
 import {Email} from '@src/types';
 import {NavigationService} from '@utils';
-import {Button, Center, Heading, HStack, Input, Modal, Stack} from 'native-base';
+import {Button, Center, Heading, HStack, Modal, Stack} from 'native-base';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState<Email>('');
