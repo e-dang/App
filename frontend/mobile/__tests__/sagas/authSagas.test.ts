@@ -35,6 +35,7 @@ describe('authSagas', () => {
                 .put({type: getType(registerAsync.success), payload: token})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: null}})
+                .returns(true)
                 .silentRun();
         });
 
@@ -47,6 +48,7 @@ describe('authSagas', () => {
                 .put({type: getType(registerAsync.success), payload: token})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({token: token})
+                .returns(true)
                 .silentRun();
         });
 
@@ -62,6 +64,7 @@ describe('authSagas', () => {
                 .put({type: getType(registerAsync.failure), payload: error})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: error.message}})
+                .returns(false)
                 .silentRun();
         });
 
@@ -77,6 +80,7 @@ describe('authSagas', () => {
                 .put({type: getType(registerAsync.failure), payload: error})
                 .dispatch({type: getType(registerAsync.request), payload: regInfo})
                 .hasFinalState({REGISTER: {error: error.message}})
+                .returns(false)
                 .silentRun();
         });
     });
@@ -96,6 +100,7 @@ describe('authSagas', () => {
                 .put({type: getType(loginAsync.success), payload: token})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({token: token})
+                .returns(true)
                 .silentRun();
         });
 
@@ -108,6 +113,7 @@ describe('authSagas', () => {
                 .put({type: getType(loginAsync.success), payload: token})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: null}})
+                .returns(true)
                 .silentRun();
         });
 
@@ -123,6 +129,7 @@ describe('authSagas', () => {
                 .put({type: getType(loginAsync.failure), payload: error})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: error.message}})
+                .returns(false)
                 .silentRun();
         });
 
@@ -138,6 +145,7 @@ describe('authSagas', () => {
                 .put({type: getType(loginAsync.failure), payload: error})
                 .dispatch({type: getType(loginAsync.request), payload: loginInfo})
                 .hasFinalState({LOGIN: {error: error.message}})
+                .returns(false)
                 .silentRun();
         });
     });
