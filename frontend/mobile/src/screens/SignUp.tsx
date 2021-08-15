@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {signUpAsync} from '@actions';
 import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, NameInput} from '@components';
-import {Email, Name, Password, RegistrationInfo} from '@src/types';
+import {Email, Name, Password} from '@src/types';
 import {useSelector} from '@utils';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 import {useNavigation} from '@react-navigation/native';
+import {SignUpInfo} from '@api';
 
 export function SignUp() {
     const isPending = useSelector((state) => get(state.pendingStates, 'SIGN_UP.pending', false) as boolean);
@@ -17,7 +18,7 @@ export function SignUp() {
     const [password1, setPassword1] = useState<Password>('');
 
     const handleSignUp = () => {
-        dispatch(signUpAsync.request({name, email, password1, password2: password1} as RegistrationInfo));
+        dispatch(signUpAsync.request({name, email, password1, password2: password1} as SignUpInfo));
     };
 
     const cancelSignUp = () => {

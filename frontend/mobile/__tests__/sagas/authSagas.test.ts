@@ -1,12 +1,12 @@
 import {forgotPasswordAsync, signInAsync, signOut, signUpAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
 import {signUpSaga, signInSaga, authFlowSaga, backgroundTask, forgotPasswordSaga} from '@sagas';
-import {AuthToken, SignInInfo, RegistrationInfo} from '@src/types';
+import {AuthToken} from '@src/types';
 import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
 import {call, fork} from 'redux-saga/effects';
 import {createMockTask} from '@redux-saga/testing-utils';
-import {AuthApi} from '@api';
+import {AuthApi, SignUpInfo, SignInInfo} from '@api';
 import {persistor} from '@src/store';
 
 jest.mock('../../src/store', () => ({
@@ -22,7 +22,7 @@ describe('authSagas', () => {
         email: 'example@demo.com',
         password: 'mytestpassword123',
     };
-    const regInfo: RegistrationInfo = {
+    const regInfo: SignUpInfo = {
         name: 'Test User',
         email: 'testemail@demo.com',
         password1: 'password123',

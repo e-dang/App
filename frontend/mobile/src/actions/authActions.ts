@@ -1,8 +1,9 @@
 import {createAction, createAsyncAction} from 'typesafe-actions';
-import {AuthToken, Email, SignInInfo, RegistrationInfo} from '@src/types';
+import {AuthToken, Email} from '@src/types';
+import {SignUpInfo, SignInInfo} from '@api';
 
 export const signUpAsync = createAsyncAction(
-    ['SIGN_UP_REQUEST', (registrationInfo: RegistrationInfo) => registrationInfo],
+    ['SIGN_UP_REQUEST', (signUpInfo: SignUpInfo) => signUpInfo],
     ['SIGN_UP_SUCCESS', (resp: AuthToken) => resp],
     ['SIGN_UP_FAILURE', (err: Error) => err],
     'SIGN_UP_CANCEL',
