@@ -28,6 +28,9 @@ export interface LoginResponse extends DetailResponse {
     key?: Token;
 }
 
+export interface ForgotPasswordRequest {
+    email: Email;
+}
 export interface AuthToken {
     token: Token;
 }

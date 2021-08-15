@@ -49,11 +49,13 @@ export class AuthApi {
         AuthApi.client.clearAuthToken();
     }
 
-    static async forgotPassword(email: Email): Promise<void> {
+    static async forgotPassword(email: Email): Promise<string> {
         const resp = await AuthApi.client.post<ForgotPasswordRequest, DetailResponse>('/password/reset/', {email});
 
         if (resp.status !== 200) {
             throw new Error(resp.data.detail);
         }
+
+        return resp.data.detail as string;
     }
 }

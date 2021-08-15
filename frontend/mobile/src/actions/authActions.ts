@@ -1,5 +1,5 @@
 import {createAction, createAsyncAction} from 'typesafe-actions';
-import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
+import {AuthToken, Email, LoginInfo, RegistrationInfo} from '@src/types';
 
 export const registerAsync = createAsyncAction(
     ['REGISTER_REQUEST', (registrationInfo: RegistrationInfo) => registrationInfo],
@@ -16,3 +16,9 @@ export const loginAsync = createAsyncAction(
 )();
 
 export const logout = createAction('LOGOUT')();
+
+export const forgotPasswordAsync = createAsyncAction(
+    ['FORGOT_PASSWORD_REQUEST', (email: Email) => email],
+    ['FORGOT_PASSWORD_SUCCESS', (msg: string) => msg],
+    ['FORGOT_PASSWORD_FAILURE', (err: Error) => err],
+)();

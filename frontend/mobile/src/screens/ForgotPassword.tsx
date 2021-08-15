@@ -3,18 +3,21 @@ import {BackButton, EmailInput, Header, Screen} from '@components';
 import {Email} from '@src/types';
 import {Button, Center, Heading, HStack, Modal, Stack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {forgotPasswordAsync} from '@actions';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState<Email>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigation = useNavigation();
+    const dispatch = useDispatch();
 
     const handleBack = () => {
         navigation.navigate('signIn');
     };
 
     const handleSubmit = () => {
-        console.log('submit');
+        dispatch(forgotPasswordAsync.request(email));
         setIsOpen(true);
     };
 

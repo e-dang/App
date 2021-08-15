@@ -1,6 +1,6 @@
-import {loginAsync, logout, registerAsync} from '@actions';
+import {forgotPasswordAsync, loginAsync, logout, registerAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
-import {registerSaga, loginSaga, authFlowSaga, backgroundTask} from '@sagas';
+import {registerSaga, loginSaga, authFlowSaga, backgroundTask, forgotPasswordSaga} from '@sagas';
 import {AuthToken, LoginInfo, RegistrationInfo} from '@src/types';
 import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
@@ -154,8 +154,61 @@ describe('authSagas', () => {
         });
     });
 
+    describe('forgotPasswordSaga', () => {
+        const forgotPasswordRace = {
+            response: call(AuthApi.forgotPassword, loginInfo.email),
+            timeout: call(timeout, AuthApi.timeout),
+        };
+
+        test('when forgot password is successful it clears error state', () => {
+            const msg = 'Email sent';
+            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(loginInfo.email))
+                .withReducer(errorReducer, {FORGOT_PASSWORD: {error: 'Failure'}})
+                .provide({
+                    race: () => ({response: msg}),
+                })
+                .race(forgotPasswordRace)
+                .put(forgotPasswordAsync.success(msg))
+                .hasFinalState({FORGOT_PASSWORD: {error: null}})
+                .returns(true)
+                .silentRun();
+        });
+
+        test('when forgot password fails it sets error state to Error message', () => {
+            const error = new Error('Network error');
+            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(loginInfo.email))
+                .withReducer(errorReducer, {FORGOT_PASSWORD: {error: null}})
+                .provide({
+                    race: () => {
+                        throw error;
+                    },
+                })
+                .race(forgotPasswordRace)
+                .put(forgotPasswordAsync.failure(error))
+                .hasFinalState({FORGOT_PASSWORD: {error: error.message}})
+                .returns(false)
+                .silentRun();
+        });
+
+        test('when forgot password fails due to timeout it sets error state to Error message', () => {
+            const error = new TimeoutError();
+            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(loginInfo.email))
+                .withReducer(errorReducer, {FORGOT_PASSWORD: {error: null}})
+                .provide({
+                    race: () => {
+                        throw error;
+                    },
+                })
+                .race(forgotPasswordRace)
+                .put(forgotPasswordAsync.failure(error))
+                .hasFinalState({FORGOT_PASSWORD: {error: error.message}})
+                .returns(false)
+                .silentRun();
+        });
+    });
+
     describe('authFlowSaga', () => {
-        const requestActions = [registerAsync.request, loginAsync.request];
+        const requestActions = [registerAsync.request, loginAsync.request, forgotPasswordAsync.request];
 
         test('after successful registration, background tasks are started, and waits for logout', () => {
             const action = registerAsync.request(regInfo);
@@ -196,6 +249,17 @@ describe('authSagas', () => {
                 .take(requestActions)
                 .dispatch(action)
                 .dispatch(logout())
+                .silentRun();
+        });
+
+        test('after successful password reset, the saga waits for user to make an auth request action', () => {
+            const action = forgotPasswordAsync.request(loginInfo.email);
+            return expectSaga(authFlowSaga)
+                .provide([[call(forgotPasswordSaga, action), true]])
+                .take(requestActions)
+                .call(forgotPasswordSaga, action)
+                .take(requestActions)
+                .dispatch(action)
                 .silentRun();
         });
     });

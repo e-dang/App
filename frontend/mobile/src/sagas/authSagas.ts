@@ -1,6 +1,6 @@
 import {AuthApi} from '@api';
 import {call, cancel, fork, delay, take} from 'redux-saga/effects';
-import {loginAsync, logout, registerAsync} from '@actions';
+import {forgotPasswordAsync, loginAsync, logout, registerAsync} from '@actions';
 import {createAsyncSaga} from '@utils';
 import {getType} from 'typesafe-actions';
 import {persistor} from '@src/store';
@@ -9,6 +9,7 @@ import {AnyAction} from 'redux';
 
 export const registerSaga = createAsyncSaga(registerAsync, AuthApi.register, AuthApi.timeout);
 export const loginSaga = createAsyncSaga(loginAsync, AuthApi.login, AuthApi.timeout);
+export const forgotPasswordSaga = createAsyncSaga(forgotPasswordAsync, AuthApi.forgotPassword, AuthApi.timeout);
 
 export function* backgroundTask() {
     while (true) {
@@ -19,16 +20,19 @@ export function* backgroundTask() {
 
 export function* authFlowSaga() {
     while (true) {
-        const action: AnyAction = yield take([registerAsync.request, loginAsync.request]);
+        const action: AnyAction = yield take([registerAsync.request, loginAsync.request, forgotPasswordAsync.request]);
 
-        let successful: boolean;
+        let shouldContinue: boolean;
         if (action.type === getType(registerAsync.request)) {
-            successful = yield call(registerSaga, action as ReturnType<typeof registerAsync.request>);
+            shouldContinue = yield call(registerSaga, action as ReturnType<typeof registerAsync.request>);
+        } else if (action.type === getType(loginAsync.request)) {
+            shouldContinue = yield call(loginSaga, action as ReturnType<typeof loginAsync.request>);
         } else {
-            successful = yield call(loginSaga, action as ReturnType<typeof loginAsync.request>);
+            yield call(forgotPasswordSaga, action as ReturnType<typeof forgotPasswordAsync.request>);
+            shouldContinue = false;
         }
 
-        if (!successful) {
+        if (!shouldContinue) {
             continue;
         }
         const task: Task = yield fork(backgroundTask);

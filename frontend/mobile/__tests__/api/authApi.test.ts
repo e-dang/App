@@ -179,7 +179,7 @@ describe('authApi', () => {
         expect(client.clearAuthToken).toHaveBeenCalled();
     });
 
-    test('forgotPassword returns void when successful', async () => {
+    test('forgotPassword returns message string when successful', async () => {
         const email: Email = 'test@demo.com';
         const data: DetailResponse = {
             detail: 'Success',
@@ -192,7 +192,7 @@ describe('authApi', () => {
 
         const resp = await AuthApi.forgotPassword(email);
 
-        expect(resp).toBe(undefined);
+        expect(resp).toBe(data.detail);
     });
 
     test('forgotPassword throws error when unsuccessful', async () => {
