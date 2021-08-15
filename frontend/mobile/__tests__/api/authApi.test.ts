@@ -2,7 +2,15 @@ import {AuthApi} from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
-import {AuthToken, DetailResponse, LoginInfo, LoginResponse, RegistrationInfo, RegistrationResponse} from '@src/types';
+import {
+    AuthToken,
+    DetailResponse,
+    Email,
+    LoginInfo,
+    LoginResponse,
+    RegistrationInfo,
+    RegistrationResponse,
+} from '@src/types';
 
 describe('authApi', () => {
     let client: MockProxy<typeof Client>;
@@ -160,7 +168,7 @@ describe('authApi', () => {
         const data: DetailResponse = {
             detail: 'Server error',
         };
-        client.get.mockResolvedValue({
+        client.post.mockResolvedValue({
             data,
             status: 500,
             statusText: 'Failure',
@@ -169,5 +177,35 @@ describe('authApi', () => {
         await AuthApi.logout();
 
         expect(client.clearAuthToken).toHaveBeenCalled();
+    });
+
+    test('forgotPassword returns void when successful', async () => {
+        const email: Email = 'test@demo.com';
+        const data: DetailResponse = {
+            detail: 'Success',
+        };
+        client.post.mockResolvedValue({
+            data,
+            status: 200,
+            statusText: 'Success',
+        });
+
+        const resp = await AuthApi.forgotPassword(email);
+
+        expect(resp).toBe(undefined);
+    });
+
+    test('forgotPassword throws error when unsuccessful', async () => {
+        const email: Email = 'test@demo.com';
+        const data: DetailResponse = {
+            detail: 'Failure',
+        };
+        client.post.mockResolvedValue({
+            data,
+            status: 500,
+            statusText: 'Failure',
+        });
+
+        await expect(() => AuthApi.forgotPassword(email)).rejects.toThrowError(data.detail);
     });
 });

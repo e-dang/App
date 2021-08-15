@@ -1,5 +1,14 @@
 import Client from '@api/client';
-import {AuthToken, DetailResponse, LoginInfo, LoginResponse, RegistrationInfo, RegistrationResponse} from '@src/types';
+import {
+    AuthToken,
+    DetailResponse,
+    Email,
+    ForgotPasswordRequest,
+    LoginInfo,
+    LoginResponse,
+    RegistrationInfo,
+    RegistrationResponse,
+} from '@src/types';
 
 export class AuthApi {
     static readonly timeout = 60000;
@@ -38,5 +47,13 @@ export class AuthApi {
         // for long periods of time
         await AuthApi.client.post<{}, DetailResponse>('/logout/', {});
         AuthApi.client.clearAuthToken();
+    }
+
+    static async forgotPassword(email: Email): Promise<void> {
+        const resp = await AuthApi.client.post<ForgotPasswordRequest, DetailResponse>('/password/reset/', {email});
+
+        if (resp.status !== 200) {
+            throw new Error(resp.data.detail);
+        }
     }
 }
