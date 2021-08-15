@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import {BackButton, EmailInput, Header, Screen} from '@components';
 import {Email} from '@src/types';
-import {NavigationService} from '@utils';
 import {Button, Center, Heading, HStack, Modal, Stack} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState<Email>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const navigation = useNavigation();
 
     const handleBack = () => {
-        NavigationService.navigate('signIn');
+        navigation.navigate('signIn');
     };
 
     const handleSubmit = () => {
@@ -19,7 +20,7 @@ export function ForgotPassword() {
 
     const handleClose = () => {
         setIsOpen(false);
-        NavigationService.navigate('signIn');
+        navigation.navigate('signIn');
     };
 
     return (

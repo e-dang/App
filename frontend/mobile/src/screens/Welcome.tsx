@@ -2,15 +2,16 @@ import React from 'react';
 import {Center, Button, Icon as NativeIcon, Stack, Box, Heading, Text, Divider} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Header, Screen} from '@components';
-import {NavigationService} from '@utils';
+import {useNavigation} from '@react-navigation/native';
 
 export function Welcome() {
+    const navigation = useNavigation();
     const handleSignUpWithEmail = () => {
-        NavigationService.navigate('register');
+        navigation.navigate('register');
     };
 
     const handleSignIn = () => {
-        NavigationService.navigate('signIn');
+        navigation.navigate('signIn');
     };
 
     return (

@@ -2,14 +2,16 @@ import React, {useState} from 'react';
 import {loginAsync} from '@actions';
 import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} from '@components';
 import {Email, Password} from '@src/types';
-import {NavigationService, useSelector} from '@utils';
+import {useSelector} from '@utils';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
+import {useNavigation} from '@react-navigation/native';
 
 export function SignIn() {
     const [email, setEmail] = useState<Email>('');
     const [password, setPassword] = useState<Password>('');
+    const navigation = useNavigation();
     const dispatch = useDispatch();
     const error = useSelector((state) => get(state.errorStates, 'LOGIN.error', '') as string);
     const isPending = useSelector((state) => get(state.pendingStates, 'LOGIN.pending', false) as boolean);
@@ -23,15 +25,15 @@ export function SignIn() {
     };
 
     const handleBack = () => {
-        NavigationService.navigate('welcome');
+        navigation.navigate('welcome');
     };
 
     const handleForgotPassword = () => {
-        NavigationService.navigate('forgotPassword');
+        navigation.navigate('forgotPassword');
     };
 
     const handleSignUp = () => {
-        NavigationService.navigate('register');
+        navigation.navigate('register');
     };
 
     return (

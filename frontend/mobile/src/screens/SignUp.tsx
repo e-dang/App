@@ -2,14 +2,16 @@ import React, {useState} from 'react';
 import {registerAsync} from '@actions';
 import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, NameInput} from '@components';
 import {Email, Name, Password, RegistrationInfo} from '@src/types';
-import {NavigationService, useSelector} from '@utils';
+import {useSelector} from '@utils';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
+import {useNavigation} from '@react-navigation/native';
 
 export function Register() {
     const isPending = useSelector((state) => get(state.pendingStates, 'REGISTER.pending', false) as boolean);
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const [name, setName] = useState<Name>('');
     const [email, setEmail] = useState<Email>('');
     const [password1, setPassword1] = useState<Password>('');
@@ -23,11 +25,11 @@ export function Register() {
     };
 
     const handleBack = () => {
-        NavigationService.navigate('welcome');
+        navigation.navigate('welcome');
     };
 
     const handleSignIn = () => {
-        NavigationService.navigate('signIn');
+        navigation.navigate('signIn');
     };
 
     return (
