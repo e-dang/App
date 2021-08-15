@@ -173,5 +173,17 @@ describe('Auth flow', () => {
         // they then click the back button and go back to the welcome screen
         await element(by.id('backBtn')).tap();
         await expect(welcomeScreen).toBeVisible();
+
+        // they then go to the sign up with email screen again
+        await element(by.id('emailSignUpBtn')).tap();
+        await expect(emailSignUpScreen).toBeVisible();
+
+        // they navigate to the sign in screen
+        await element(by.id('signInBtn')).tap();
+        await expect(signInScreen).toBeVisible();
+
+        // they navigate back to the sign up with email screen
+        await element(by.id('signUpBtn')).tap();
+        await expect(emailSignUpScreen).toBeVisible();
     });
 });
