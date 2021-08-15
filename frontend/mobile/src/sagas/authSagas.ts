@@ -34,8 +34,8 @@ export function* authFlowSaga() {
         const task: Task = yield fork(backgroundTask);
 
         yield take(logout);
-        yield call(AuthApi.logout);
         yield cancel(task);
+        yield call(AuthApi.logout);
         yield call(persistor.purge);
     }
 }
