@@ -4,8 +4,8 @@ import {
     DetailResponse,
     Email,
     ForgotPasswordRequest,
-    LoginInfo,
-    LoginResponse,
+    SignInInfo,
+    SignInResponse,
     RegistrationInfo,
     RegistrationResponse,
 } from '@src/types';
@@ -29,8 +29,8 @@ export class AuthApi {
         return authToken;
     }
 
-    static async login(loginInfo: LoginInfo): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<LoginInfo, LoginResponse>('/login/', loginInfo);
+    static async signIn(signInInfo: SignInInfo): Promise<AuthToken> {
+        const resp = await AuthApi.client.post<SignInInfo, SignInResponse>('/login/', signInInfo);
 
         if (resp.status !== 200) {
             throw new Error(resp.data.detail);
@@ -43,7 +43,7 @@ export class AuthApi {
 
     static async logout(): Promise<void> {
         // logout should never fail on the client side. If something causes the request to fail the backend
-        // should invalidate old auth tokens upon successful re-login. This is why auth tokens shouldnt be valid
+        // should invalidate old auth tokens upon successful re-signIn. This is why auth tokens shouldnt be valid
         // for long periods of time
         await AuthApi.client.post<{}, DetailResponse>('/logout/', {});
         AuthApi.client.clearAuthToken();

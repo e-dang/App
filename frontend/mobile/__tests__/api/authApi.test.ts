@@ -6,8 +6,8 @@ import {
     AuthToken,
     DetailResponse,
     Email,
-    LoginInfo,
-    LoginResponse,
+    SignInInfo,
+    SignInResponse,
     RegistrationInfo,
     RegistrationResponse,
 } from '@src/types';
@@ -63,12 +63,12 @@ describe('authApi', () => {
         expect(client.setAuthToken).toHaveBeenCalledWith(resp);
     });
 
-    test('login returns AuthToken object when login is successful', async () => {
-        const loginInfo: LoginInfo = {
+    test('signIn returns AuthToken object when signIn is successful', async () => {
+        const signInInfo: SignInInfo = {
             email: 'example@demo.com',
             password: 'password123',
         };
-        const data: LoginResponse = {
+        const data: SignInResponse = {
             key: '123ahudfiagsefajdopai3r39047',
         };
         client.post.mockResolvedValue({
@@ -77,17 +77,17 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.login(loginInfo);
+        const resp = await AuthApi.signIn(signInInfo);
 
         expect(resp).toEqual({token: data.key} as AuthToken);
     });
 
-    test('login calls setAuthToken on client when login is successful', async () => {
-        const loginInfo: LoginInfo = {
+    test('signIn calls setAuthToken on client when signIn is successful', async () => {
+        const signInInfo: SignInInfo = {
             email: 'example@demo.com',
             password: 'password123',
         };
-        const data: LoginResponse = {
+        const data: SignInResponse = {
             key: '123ahudfiagsefajdopai3r39047',
         };
         client.post.mockResolvedValue({
@@ -96,13 +96,13 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.login(loginInfo);
+        const resp = await AuthApi.signIn(signInInfo);
 
         expect(client.setAuthToken).toHaveBeenCalledWith(resp);
     });
 
-    test('login throws error when response status is not 200', async () => {
-        const loginInfo: LoginInfo = {
+    test('signIn throws error when response status is not 200', async () => {
+        const signInInfo: SignInInfo = {
             email: 'dne@dne.com',
             password: 'password123',
         };
@@ -116,7 +116,7 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        await expect(() => AuthApi.login(loginInfo)).rejects.toThrowError(data.detail);
+        await expect(() => AuthApi.signIn(signInInfo)).rejects.toThrowError(data.detail);
     });
 
     test('logout resolves to void when logout is successful', async () => {

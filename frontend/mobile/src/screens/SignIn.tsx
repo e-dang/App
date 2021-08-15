@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {loginAsync} from '@actions';
+import {signInAsync} from '@actions';
 import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} from '@components';
 import {Email, Password} from '@src/types';
 import {useSelector} from '@utils';
@@ -13,15 +13,15 @@ export function SignIn() {
     const [password, setPassword] = useState<Password>('');
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const error = useSelector((state) => get(state.errorStates, 'LOGIN.error', '') as string);
-    const isPending = useSelector((state) => get(state.pendingStates, 'LOGIN.pending', false) as boolean);
+    const error = useSelector((state) => get(state.errorStates, 'SIGN_IN.error', '') as string);
+    const isPending = useSelector((state) => get(state.pendingStates, 'SIGN_IN.pending', false) as boolean);
 
     const handleSignIn = () => {
-        dispatch(loginAsync.request({email, password}));
+        dispatch(signInAsync.request({email, password}));
     };
 
-    const cancelLogin = () => {
-        dispatch(loginAsync.cancel());
+    const cancelSignIn = () => {
+        dispatch(signInAsync.cancel());
     };
 
     const handleBack = () => {
@@ -55,7 +55,7 @@ export function SignIn() {
                 }
             />
             <Screen testID="signInScreen">
-                <LoadingModal isLoading={isPending} onClose={cancelLogin} />
+                <LoadingModal isLoading={isPending} onClose={cancelSignIn} />
                 <Center flex={4}>
                     <Heading>Sign In</Heading>
                 </Center>

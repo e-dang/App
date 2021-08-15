@@ -15,7 +15,7 @@ export interface RegistrationInfo {
     password2: Password;
 }
 
-export interface LoginInfo {
+export interface SignInInfo {
     email: Email;
     password: Password;
 }
@@ -24,7 +24,7 @@ export interface RegistrationResponse extends DetailResponse {
     key?: Token;
 }
 
-export interface LoginResponse extends DetailResponse {
+export interface SignInResponse extends DetailResponse {
     key?: Token;
 }
 
