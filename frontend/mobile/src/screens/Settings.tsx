@@ -1,26 +1,38 @@
 import React, {memo} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Button, StyleSheet, Text, View} from 'react-native';
-import Colors from 'src/constants/colors';
+import {Header, Screen} from '@components';
+import {Button, Center, Heading, Stack} from 'native-base';
+import {useDispatch} from 'react-redux';
+import {logout} from '@actions';
 
 function SettingsScreen() {
-    const {t, i18n} = useTranslation();
+    const dispatch = useDispatch();
+
+    const handleSignOut = () => {
+        dispatch(logout());
+    };
+
     return (
-        <View style={styles.container}>
-            <Text>{t('settings')}</Text>
-            <Button title={t('english')} onPress={() => i18n.changeLanguage('en')} />
-            <Button title={t('french')} onPress={() => i18n.changeLanguage('fr')} />
-        </View>
+        <>
+            <Header />
+            <Screen testID="settingsScreen">
+                <Center flex={4}>
+                    <Heading>Settings</Heading>
+                </Center>
+                <Center flex={3}>
+                    <Stack direction="column" space={2} width="90%">
+                        <Button
+                            testID="signOutBtn"
+                            variant="outline"
+                            colorScheme="secondary"
+                            borderRadius={100}
+                            onPress={handleSignOut}>
+                            Sign Out
+                        </Button>
+                    </Stack>
+                </Center>
+            </Screen>
+        </>
     );
 }
 
 export const Settings = memo(SettingsScreen);
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Colors.aliceBlue,
-    },
-});

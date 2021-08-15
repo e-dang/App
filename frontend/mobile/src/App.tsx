@@ -32,6 +32,7 @@ export const App = () => {
                 name="home"
                 component={Home}
                 options={{
+                    tabBarTestID: 'navHome',
                     tabBarLabel: t('home'),
                     // tabBarIcon: ({focused, color, size}) => (
                     //     <Icon
@@ -47,6 +48,7 @@ export const App = () => {
                 name="settings"
                 component={Settings}
                 options={{
+                    tabBarTestID: 'navSettings',
                     tabBarLabel: t('settings'),
                     // tabBarIcon: ({focused, color, size}) => (
                     //     <Icon

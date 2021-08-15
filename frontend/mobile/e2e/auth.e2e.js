@@ -65,10 +65,11 @@ describe('Auth flow', () => {
         await expect(element(by.id('homeScreen'))).toBeVisible();
     });
 
-    test('sign in flow', async () => {
+    test('sign in and sign out flow', async () => {
         // an existing user opens the app but is not logged in
         await createUser(name, email, password);
-        await expect(element(by.id('welcomeScreen'))).toBeVisible();
+        const welcomeScreen = element(by.id('welcomeScreen'));
+        await expect(welcomeScreen).toBeVisible();
 
         // they click on the sign in button and are taken to the SignIn screen
         await element(by.id('signInBtn')).tap();
@@ -88,8 +89,17 @@ describe('Auth flow', () => {
 
         // the user then hits the sign in button and is taken to the Home screen
         await element(by.id('signInBtn')).tap();
-
         await expect(element(by.id('homeScreen'))).toBeVisible();
+
+        // they navigate to settings and then click logout
+        await element(by.id('navSettings')).tap();
+        await expect(element(by.id('settingsScreen'))).toBeVisible();
+        const signOutBtn = element(by.id('signOutBtn'));
+        await expect(signOutBtn).toBeVisible();
+        await signOutBtn.tap();
+
+        // they are then taken back to the welcome screen
+        await expect(welcomeScreen).toBeVisible();
     });
 
     test('forgot password flow', async () => {
