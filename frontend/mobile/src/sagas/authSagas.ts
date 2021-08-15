@@ -13,7 +13,7 @@ export const loginSaga = createAsyncSaga(loginAsync, AuthApi.login, AuthApi.time
 export function* backgroundTask() {
     while (true) {
         console.log('stuff');
-        yield delay(2000);
+        yield delay(60000);
     }
 }
 
