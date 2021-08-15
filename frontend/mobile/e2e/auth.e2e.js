@@ -1,4 +1,5 @@
 import {AuthApi} from '@api';
+import Client from '@api/client';
 import {v4 as uuidv4} from 'uuid';
 
 const TIMEOUT = 2000;
@@ -13,6 +14,7 @@ async function createUser(name, email, password) {
 
 async function logout() {
     await element(by.id('masterLogout')).tap();
+    Client.clearAuthToken();
 }
 
 describe('Auth flow', () => {
