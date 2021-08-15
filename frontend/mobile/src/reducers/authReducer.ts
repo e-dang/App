@@ -1,4 +1,4 @@
-import {AuthAction, signInAsync, registerAsync} from '@actions';
+import {AuthAction, signInAsync, signUpAsync} from '@actions';
 import {AuthToken} from '@src/types';
 import {createReducer} from 'typesafe-actions';
 
@@ -11,5 +11,5 @@ const authInitialState: AuthState = {
 };
 
 export const authReducer = createReducer<AuthState, AuthAction>(authInitialState)
-    .handleAction(registerAsync.success, (state, action) => ({...state, token: action.payload}))
+    .handleAction(signUpAsync.success, (state, action) => ({...state, token: action.payload}))
     .handleAction(signInAsync.success, (state, action) => ({...state, token: action.payload}));

@@ -1,6 +1,6 @@
-import {forgotPasswordAsync, signInAsync, logout, registerAsync} from '@actions';
+import {forgotPasswordAsync, signInAsync, signOut, signUpAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
-import {registerSaga, signInSaga, authFlowSaga, backgroundTask, forgotPasswordSaga} from '@sagas';
+import {signUpSaga, signInSaga, authFlowSaga, backgroundTask, forgotPasswordSaga} from '@sagas';
 import {AuthToken, SignInInfo, RegistrationInfo} from '@src/types';
 import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
@@ -29,30 +29,30 @@ describe('authSagas', () => {
         password2: 'password123',
     };
 
-    describe('registerSaga', () => {
-        const registerObj = {response: call(AuthApi.register, regInfo), timeout: call(timeout, AuthApi.timeout)};
+    describe('signUpSaga', () => {
+        const signUpObj = {response: call(AuthApi.signUp, regInfo), timeout: call(timeout, AuthApi.timeout)};
 
         test('registration is successfull clears error state', () => {
-            return expectSaga(registerSaga, registerAsync.request(regInfo))
-                .withReducer(errorReducer, {REGISTER: {error: 'Failure'}})
+            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+                .withReducer(errorReducer, {SIGN_UP: {error: 'Failure'}})
                 .provide({
                     race: () => ({response: token}),
                 })
-                .race(registerObj)
-                .put(registerAsync.success(token))
-                .hasFinalState({REGISTER: {error: null}})
+                .race(signUpObj)
+                .put(signUpAsync.success(token))
+                .hasFinalState({SIGN_UP: {error: null}})
                 .returns(true)
                 .silentRun();
         });
 
         test('registration is successfull sets auth state token', () => {
-            return expectSaga(registerSaga, registerAsync.request(regInfo))
+            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
                 .withReducer(authReducer, {token: null})
                 .provide({
                     race: () => ({response: token}),
                 })
-                .race(registerObj)
-                .put(registerAsync.success(token))
+                .race(signUpObj)
+                .put(signUpAsync.success(token))
                 .hasFinalState({token: token})
                 .returns(true)
                 .silentRun();
@@ -60,32 +60,32 @@ describe('authSagas', () => {
 
         test('registration fails due to invalid input', () => {
             const error = new Error('Invalid password');
-            return expectSaga(registerSaga, registerAsync.request(regInfo))
-                .withReducer(errorReducer, {REGISTER: {error: null}})
+            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+                .withReducer(errorReducer, {SIGN_UP: {error: null}})
                 .provide({
                     race: () => {
                         throw error;
                     },
                 })
-                .race(registerObj)
-                .put(registerAsync.failure(error))
-                .hasFinalState({REGISTER: {error: error.message}})
+                .race(signUpObj)
+                .put(signUpAsync.failure(error))
+                .hasFinalState({SIGN_UP: {error: error.message}})
                 .returns(false)
                 .silentRun();
         });
 
         test('registration fails due to timeout', () => {
             const error = new TimeoutError();
-            return expectSaga(registerSaga, registerAsync.request(regInfo))
-                .withReducer(errorReducer, {REGISTER: {error: null}})
+            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+                .withReducer(errorReducer, {SIGN_UP: {error: null}})
                 .provide({
                     race: () => {
                         throw error;
                     },
                 })
-                .race(registerObj)
-                .put(registerAsync.failure(error))
-                .hasFinalState({REGISTER: {error: error.message}})
+                .race(signUpObj)
+                .put(signUpAsync.failure(error))
+                .hasFinalState({SIGN_UP: {error: error.message}})
                 .returns(false)
                 .silentRun();
         });
@@ -208,47 +208,47 @@ describe('authSagas', () => {
     });
 
     describe('authFlowSaga', () => {
-        const requestActions = [registerAsync.request, signInAsync.request, forgotPasswordAsync.request];
+        const requestActions = [signUpAsync.request, signInAsync.request, forgotPasswordAsync.request];
 
-        test('after successful registration, background tasks are started, and waits for logout', () => {
-            const action = registerAsync.request(regInfo);
+        test('after successful registration, background tasks are started, and waits for signOut', () => {
+            const action = signUpAsync.request(regInfo);
             return expectSaga(authFlowSaga)
                 .provide([
-                    [call(registerSaga, action), true],
+                    [call(signUpSaga, action), true],
                     [fork(backgroundTask), createMockTask()],
-                    [call(AuthApi.logout), undefined],
+                    [call(AuthApi.signOut), undefined],
                     [call(persistor.purge), undefined],
                 ])
                 .take(requestActions)
-                .call(registerSaga, action)
+                .call(signUpSaga, action)
                 .fork(backgroundTask)
-                .take(logout)
-                .call(AuthApi.logout)
+                .take(signOut)
+                .call(AuthApi.signOut)
                 .call(persistor.purge)
                 .take(requestActions)
                 .dispatch(action)
-                .dispatch(logout())
+                .dispatch(signOut())
                 .silentRun();
         });
 
-        test('after successful signIn, background tasks are started, and waits for logout', () => {
+        test('after successful signIn, background tasks are started, and waits for signOut', () => {
             const action = signInAsync.request(signInInfo);
             return expectSaga(authFlowSaga)
                 .provide([
                     [call(signInSaga, action), true],
                     [fork(backgroundTask), createMockTask()],
-                    [call(AuthApi.logout), undefined],
+                    [call(AuthApi.signOut), undefined],
                     [call(persistor.purge), undefined],
                 ])
                 .take(requestActions)
                 .call(signInSaga, action)
                 .fork(backgroundTask)
-                .take(logout)
-                .call(AuthApi.logout)
+                .take(signOut)
+                .call(AuthApi.signOut)
                 .call(persistor.purge)
                 .take(requestActions)
                 .dispatch(action)
-                .dispatch(logout())
+                .dispatch(signOut())
                 .silentRun();
         });
 

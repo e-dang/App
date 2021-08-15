@@ -26,7 +26,7 @@ describe('authApi', () => {
         AuthApi['client'] = client;
     });
 
-    test('register throws error when response status is not 201', async () => {
+    test('signUp throws error when response status is not 201', async () => {
         const data: DetailResponse = {detail: 'Fail'};
         client.post.mockResolvedValue({
             data,
@@ -34,10 +34,10 @@ describe('authApi', () => {
             statusText: 'Server Error',
         } as Response<DetailResponse>);
 
-        await expect(() => AuthApi.register(regInfo)).rejects.toThrowError(data.detail);
+        await expect(() => AuthApi.signUp(regInfo)).rejects.toThrowError(data.detail);
     });
 
-    test('register returns an AuthToken when response status is 201', async () => {
+    test('signUp returns an AuthToken when response status is 201', async () => {
         const data: RegistrationResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
         client.post.mockResolvedValue({
             data,
@@ -45,12 +45,12 @@ describe('authApi', () => {
             statusText: 'Created',
         });
 
-        const resp = await AuthApi.register(regInfo);
+        const resp = await AuthApi.signUp(regInfo);
 
         expect(resp).toEqual({token: data.key} as AuthToken);
     });
 
-    test('register calls setAuthToken on client when response status is 201', async () => {
+    test('signUp calls setAuthToken on client when response status is 201', async () => {
         const data: RegistrationResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
         client.post.mockResolvedValue({
             data,
@@ -58,7 +58,7 @@ describe('authApi', () => {
             statusText: 'Created',
         });
 
-        const resp = await AuthApi.register(regInfo);
+        const resp = await AuthApi.signUp(regInfo);
 
         expect(client.setAuthToken).toHaveBeenCalledWith(resp);
     });
@@ -119,9 +119,9 @@ describe('authApi', () => {
         await expect(() => AuthApi.signIn(signInInfo)).rejects.toThrowError(data.detail);
     });
 
-    test('logout resolves to void when logout is successful', async () => {
+    test('signOut resolves to void when signOut is successful', async () => {
         const data: DetailResponse = {
-            detail: 'Logout successful',
+            detail: 'Sign out successful',
         };
         client.post.mockResolvedValue({
             data,
@@ -129,14 +129,14 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.logout();
+        const resp = await AuthApi.signOut();
 
         expect(resp).toBe(undefined);
     });
 
-    test('logout calls clearAuthToken on client when logout is successful', async () => {
+    test('signOut calls clearAuthToken on client when signOut is successful', async () => {
         const data: DetailResponse = {
-            detail: 'Logout successful',
+            detail: 'Sign out successful',
         };
         client.post.mockResolvedValue({
             data,
@@ -144,12 +144,12 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        await AuthApi.logout();
+        await AuthApi.signOut();
 
         expect(client.clearAuthToken).toHaveBeenCalled();
     });
 
-    test('logout resolves to void when logout is not successful', async () => {
+    test('signOut resolves to void when signOut is not successful', async () => {
         const data: DetailResponse = {
             detail: 'Server error',
         };
@@ -159,12 +159,12 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        const resp = await AuthApi.logout();
+        const resp = await AuthApi.signOut();
 
         expect(resp).toBe(undefined);
     });
 
-    test('logout calls clearAuthToken on client when logout is not successful', async () => {
+    test('signOut calls clearAuthToken on client when signOut is not successful', async () => {
         const data: DetailResponse = {
             detail: 'Server error',
         };
@@ -174,7 +174,7 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        await AuthApi.logout();
+        await AuthApi.signOut();
 
         expect(client.clearAuthToken).toHaveBeenCalled();
     });

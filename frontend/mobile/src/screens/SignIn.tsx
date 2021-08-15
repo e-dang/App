@@ -33,7 +33,7 @@ export function SignIn() {
     };
 
     const handleSignUp = () => {
-        navigation.navigate('register');
+        navigation.navigate('signUp');
     };
 
     return (

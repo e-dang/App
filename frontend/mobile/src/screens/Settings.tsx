@@ -2,13 +2,13 @@ import React, {memo} from 'react';
 import {Header, Screen} from '@components';
 import {Button, Center, Heading, Stack} from 'native-base';
 import {useDispatch} from 'react-redux';
-import {logout} from '@actions';
+import {signOut} from '@actions';
 
 function SettingsScreen() {
     const dispatch = useDispatch();
 
     const handleSignOut = () => {
-        dispatch(logout());
+        dispatch(signOut());
     };
 
     return (

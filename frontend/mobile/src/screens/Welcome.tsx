@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 export function Welcome() {
     const navigation = useNavigation();
     const handleSignUpWithEmail = () => {
-        navigation.navigate('register');
+        navigation.navigate('signUp');
     };
 
     const handleSignIn = () => {

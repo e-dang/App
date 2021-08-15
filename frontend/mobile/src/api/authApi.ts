@@ -14,7 +14,7 @@ export class AuthApi {
     static readonly timeout = 60000;
     private static client = Client;
 
-    static async register(registrationInfo: RegistrationInfo): Promise<AuthToken> {
+    static async signUp(registrationInfo: RegistrationInfo): Promise<AuthToken> {
         const resp = await AuthApi.client.post<RegistrationInfo, RegistrationResponse>(
             '/registration/',
             registrationInfo,
@@ -41,8 +41,8 @@ export class AuthApi {
         return authToken;
     }
 
-    static async logout(): Promise<void> {
-        // logout should never fail on the client side. If something causes the request to fail the backend
+    static async signOut(): Promise<void> {
+        // signOut should never fail on the client side. If something causes the request to fail the backend
         // should invalidate old auth tokens upon successful re-signIn. This is why auth tokens shouldnt be valid
         // for long periods of time
         await AuthApi.client.post<{}, DetailResponse>('/logout/', {});

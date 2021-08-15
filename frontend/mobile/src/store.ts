@@ -14,7 +14,7 @@ import sagas from '@sagas';
 import {applyMiddleware, combineReducers, compose, createStore, Dispatch, MiddlewareAPI} from 'redux';
 import {PersistConfig, persistReducer, persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import {logout, RootAction} from '@actions';
+import {signOut, RootAction} from '@actions';
 import {getType} from 'typesafe-actions';
 
 const appPersistConfig: PersistConfig<AppReducerState, unknown, unknown, unknown> = {
@@ -49,7 +49,7 @@ export const rootReducer = combineReducers(reducers);
 export type RootState = ReturnType<typeof rootReducer>;
 
 const wrappedReducer: typeof rootReducer = (state: any, action: RootAction) => {
-    if (action.type === getType(logout)) {
+    if (action.type === getType(signOut)) {
         return rootReducer(undefined, action);
     }
 

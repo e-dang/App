@@ -12,26 +12,26 @@ describe('test errorReducer', () => {
 
     test('if action ends with _SUCCESS the error state for that action is set to null', async () => {
         const action: RootAction = {
-            type: 'REGISTER_SUCCESS',
+            type: 'SIGN_UP_SUCCESS',
             payload: mock<AuthToken>(),
         };
 
         const retVal = errorReducer(state, action);
 
-        expect(retVal).toHaveProperty('REGISTER');
-        expect(retVal.REGISTER.error).toBe(null);
+        expect(retVal).toHaveProperty('SIGN_UP');
+        expect(retVal.SIGN_UP.error).toBe(null);
     });
 
     test('if action ends with _FAILURE the error state for that action is set to the action payload', async () => {
         const payload = new Error('Failure');
         const action: RootAction = {
-            type: 'REGISTER_FAILURE',
+            type: 'SIGN_UP_FAILURE',
             payload,
         };
 
         const retVal = errorReducer(state, action);
 
-        expect(retVal).toHaveProperty('REGISTER');
-        expect(retVal.REGISTER.error).toBe(payload.message);
+        expect(retVal).toHaveProperty('SIGN_UP');
+        expect(retVal.SIGN_UP.error).toBe(payload.message);
     });
 });

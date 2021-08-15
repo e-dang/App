@@ -2,28 +2,28 @@ import React from 'react';
 import {App as AppBase} from '@src/App';
 import {Box, Button} from 'native-base';
 import {useDispatch} from 'react-redux';
-import {logout} from '@actions';
+import {signOut} from '@actions';
 
 export function App() {
     const dispatch = useDispatch();
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleSignOut = () => {
+        dispatch(signOut());
     };
 
     return (
         <Box flex={1}>
             <AppBase />
             <Button
-                testID="masterLogout"
+                testID="masterSignOut"
                 position="absolute"
                 top={10}
                 left={200}
                 bg="black"
                 size="xs"
-                onPress={handleLogout}
+                onPress={handleSignOut}
                 color="black">
-                Logout
+                SignOut
             </Button>
         </Box>
     );

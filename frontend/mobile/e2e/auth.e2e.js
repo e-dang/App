@@ -9,11 +9,11 @@ function generateEmail() {
 }
 
 async function createUser(name, email, password) {
-    return await AuthApi.register({name, email, password1: password, password2: password});
+    return await AuthApi.signUp({name, email, password1: password, password2: password});
 }
 
-async function logout() {
-    await element(by.id('masterLogout')).tap();
+async function signOut() {
+    await element(by.id('masterSignOut')).tap();
     Client.clearAuthToken();
 }
 
@@ -30,11 +30,11 @@ describe('Auth flow', () => {
     });
 
     afterEach(async () => {
-        await logout();
+        await signOut();
     });
 
     test('email signup flow', async () => {
-        // the user opens the app and sees an option to register via email and clicks it
+        // the user opens the app and sees an option to signUp via email and clicks it
         await expect(element(by.id('welcomeScreen'))).toBeVisible();
         const signUpBtn = element(by.id('emailSignUpBtn'));
         await expect(signUpBtn).toBeVisible();
@@ -91,7 +91,7 @@ describe('Auth flow', () => {
         await element(by.id('signInBtn')).tap();
         await expect(element(by.id('homeScreen'))).toBeVisible();
 
-        // they navigate to settings and then click logout
+        // they navigate to settings and then click signOut
         await element(by.id('navSettings')).tap();
         await expect(element(by.id('settingsScreen'))).toBeVisible();
         const signOutBtn = element(by.id('signOutBtn'));
