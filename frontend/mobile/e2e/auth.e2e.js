@@ -35,91 +35,72 @@ describe('Auth flow', () => {
 
     test('email signup flow', async () => {
         // the user opens the app and sees an option to register via email and clicks it
-        await waitFor(element(by.id('welcomeScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
-        await waitFor(element(by.id('emailSignUpBtn')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
-        await element(by.id('emailSignUpBtn')).tap();
-        await waitFor(element(by.id('emailSignUpScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(element(by.id('welcomeScreen'))).toBeVisible();
+        const signUpBtn = element(by.id('emailSignUpBtn'));
+        await expect(signUpBtn).toBeVisible();
+        await signUpBtn.tap();
 
-        // the user sees text input fields for name, email, and password and proceeds to enter their information
-        await waitFor(element(by.id('nameInput')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
-        await waitFor(element(by.id('emailInput')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
-        await waitFor(element(by.id('passwordInput')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        // they are taken to the email sign up screen where they see sees text input fields for name, email, and
+        // password
+        await expect(element(by.id('emailSignUpScreen'))).toBeVisible();
+        const nameInput = element(by.id('nameInput'));
+        const emailInput = element(by.id('emailInput'));
+        const passwordInput = element(by.id('passwordInput'));
+        await expect(nameInput).toBeVisible();
+        await expect(emailInput).toBeVisible();
+        await expect(passwordInput).toBeVisible();
 
-        await element(by.id('nameInput')).typeText(name);
-        await element(by.id('emailInput')).typeText(email);
-        await element(by.id('passwordInput')).typeText(password);
-
-        await expect(element(by.id('nameInput'))).toHaveText(name);
-        await expect(element(by.id('emailInput'))).toHaveText(email);
-        await expect(element(by.id('passwordInput'))).toHaveText(password);
+        // they enter their info
+        await nameInput.typeText(name);
+        await emailInput.typeText(email);
+        await passwordInput.typeText(password);
+        await expect(nameInput).toHaveText(name);
+        await expect(emailInput).toHaveText(email);
+        await expect(passwordInput).toHaveText(password);
 
         // the user then hits the Sign Up button
         await element(by.id('signUpBtn')).tap();
 
         // the registration is successful, and they are taken to the home page
-        await waitFor(element(by.id('homeScreen')))
-            .toBeVisible()
-            .withTimeout(10000);
+        await expect(element(by.id('homeScreen'))).toBeVisible();
     });
 
     test('sign in flow', async () => {
         // an existing user opens the app but is not logged in
         await createUser(name, email, password);
-        await waitFor(element(by.id('welcomeScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(element(by.id('welcomeScreen'))).toBeVisible();
 
         // they click on the sign in button and are taken to the SignIn screen
         await element(by.id('signInBtn')).tap();
-        await waitFor(element(by.id('signInScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(element(by.id('signInScreen'))).toBeVisible();
 
         // they are prompted for their email and password
-        await waitFor(element(by.id('emailInput')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
-        await waitFor(element(by.id('passwordInput')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        const emailInput = element(by.id('emailInput'));
+        const passwordInput = element(by.id('passwordInput'));
+        await expect(emailInput).toBeVisible();
+        await expect(passwordInput).toBeVisible();
 
         // they enter their valid credentials
-        await element(by.id('emailInput')).typeText(email);
-        await element(by.id('passwordInput')).typeText(password);
-        await expect(element(by.id('emailInput'))).toHaveText(email);
-        await expect(element(by.id('passwordInput'))).toHaveText(password);
+        await emailInput.typeText(email);
+        await passwordInput.typeText(password);
+        await expect(emailInput).toHaveText(email);
+        await expect(passwordInput).toHaveText(password);
 
         // the user then hits the sign in button and is taken to the Home screen
         await element(by.id('signInBtn')).tap();
 
-        await waitFor(element(by.id('homeScreen')))
-            .toBeVisible()
-            .withTimeout(10000);
+        await expect(element(by.id('homeScreen'))).toBeVisible();
     });
 
     test('forgot password flow', async () => {
         // an existing user is on the welcome screen and navigates to the sign in screen
         await createUser(name, email, password);
-        await waitFor(element(by.id('welcomeScreen')))
-            .toBeVisible()
-            .withTimeout(TIMEOUT);
+        await expect(element(by.id('welcomeScreen'))).toBeVisible();
+        await element(by.id('signInBtn')).tap();
 
         // they click on the sign in button and are taken to the SignIn screen
         const signInScreen = element(by.id('signInScreen'));
-        await element(by.id('signInBtn')).tap();
-        await waitFor(signInScreen).toBeVisible().withTimeout(TIMEOUT);
+        await expect(signInScreen).toBeVisible();
 
         // they realize that they forgot their password and click the forgot password link and
         // are navigated to the forgot password screen
