@@ -1,8 +1,9 @@
 import {AuthApi} from '@api';
 import Client from '@api/client';
 import {v4 as uuidv4} from 'uuid';
+import axios from 'axios';
 
-const TIMEOUT = 2000;
+const MAILHOG_URL = 'https://mail.dev.erickdang.com/api/v2/search';
 
 function generateEmail() {
     return `${uuidv4()}@demo.com`;
@@ -15,6 +16,17 @@ async function createUser(name, email, password) {
 async function signOut() {
     await element(by.id('masterSignOut')).tap();
     Client.clearAuthToken();
+}
+
+async function checkForEmail(to, predicate) {
+    const messages = await axios.get(MAILHOG_URL, {
+        params: {
+            kind: 'to',
+            query: to,
+        },
+    });
+
+    messages.data.items.some(predicate);
 }
 
 describe('Auth flow', () => {
@@ -131,6 +143,15 @@ describe('Auth flow', () => {
         // they click ok and are navigated back to the signIn screen
         await element(by.id('okBtn')).tap();
         await expect(signInScreen).toBeVisible();
+
+        // they check their email and see the email to reset their password
+        checkForEmail(email, (msg) => {
+            if (msg.Content.Headers.Subject[0].includes('Password Reset')) {
+                return true;
+            }
+
+            return false;
+        });
     });
 
     test('the user can navigate back and forth between auth pages', async () => {
