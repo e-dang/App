@@ -17,7 +17,7 @@ spec:
   values:
     ingress:
       hosts:
-        - host: mail.erickdang.com
+        - host: mail.dev.erickdang.com
           paths: /
       tls:
         - hosts:
