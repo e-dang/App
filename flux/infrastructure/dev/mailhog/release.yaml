@@ -16,6 +16,7 @@ spec:
       interval: 1m
   values:
     ingress:
+      enabled: true
       hosts:
         - host: mail.dev.erickdang.com
           paths: /
