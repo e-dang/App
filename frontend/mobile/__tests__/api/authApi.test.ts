@@ -1,12 +1,4 @@
-import {
-    AuthApi,
-    DetailResponse,
-    SignUpRequest,
-    SignUpResponse,
-    SignInRequest,
-    SignInResponse,
-    ForgotPasswordRequest,
-} from '@api';
+import {AuthApi, DetailResponse, SignUpRequest, TokenResponse, SignInRequest, ForgotPasswordRequest} from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
@@ -38,7 +30,7 @@ describe('authApi', () => {
     });
 
     test('signUp returns an AuthToken when response status is 201', async () => {
-        const data: SignUpResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
+        const data: TokenResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
         client.post.mockResolvedValue({
             data,
             status: 201,
@@ -51,7 +43,7 @@ describe('authApi', () => {
     });
 
     test('signUp calls setAuthToken on client when response status is 201', async () => {
-        const data: SignUpResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
+        const data: TokenResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
         client.post.mockResolvedValue({
             data,
             status: 201,
@@ -68,7 +60,7 @@ describe('authApi', () => {
             email: 'example@demo.com',
             password: 'password123',
         };
-        const data: SignInResponse = {
+        const data: TokenResponse = {
             key: '123ahudfiagsefajdopai3r39047',
         };
         client.post.mockResolvedValue({
@@ -87,7 +79,7 @@ describe('authApi', () => {
             email: 'example@demo.com',
             password: 'password123',
         };
-        const data: SignInResponse = {
+        const data: TokenResponse = {
             key: '123ahudfiagsefajdopai3r39047',
         };
         client.post.mockResolvedValue({

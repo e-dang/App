@@ -20,11 +20,7 @@ export interface ForgotPasswordRequest {
     email: Email;
 }
 
-export interface SignUpResponse extends DetailResponse {
-    key?: Token;
-}
-
-export interface SignInResponse extends DetailResponse {
+export interface TokenResponse extends DetailResponse {
     key?: Token;
 }
 
@@ -33,7 +29,7 @@ export class AuthApi {
     private static client = Client;
 
     static async signUp(request: SignUpRequest): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<SignUpRequest, SignUpResponse>('/registration/', request);
+        const resp = await AuthApi.client.post<SignUpRequest, TokenResponse>('/registration/', request);
 
         if (resp.status !== 201) {
             throw new Error(resp.data.detail);
@@ -45,7 +41,7 @@ export class AuthApi {
     }
 
     static async signIn(request: SignInRequest): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<SignInRequest, SignInResponse>('/login/', request);
+        const resp = await AuthApi.client.post<SignInRequest, TokenResponse>('/login/', request);
 
         if (resp.status !== 200) {
             throw new Error(resp.data.detail);
