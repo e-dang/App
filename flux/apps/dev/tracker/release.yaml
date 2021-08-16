@@ -7,13 +7,13 @@ spec:
   values:
     ingress:
       hosts:
-        - host: staging.erickdang.com
+        - host: dev.erickdang.com
           paths:
             - path: /
               pathType: Prefix
       tls:
         - hosts:
-            - staging.erickdang.com
+            - dev.erickdang.com
           secretName: letsencrypt-tracker
   postRenderers:
     - kustomize:
