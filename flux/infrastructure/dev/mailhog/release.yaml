@@ -19,7 +19,8 @@ spec:
       enabled: true
       hosts:
         - host: mail.dev.erickdang.com
-          paths: /
+          paths:
+            - '/'
       tls:
         - hosts:
             - mail.dev.erickdang.com
