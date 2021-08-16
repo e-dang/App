@@ -1,25 +1,25 @@
 import {createAction, createAsyncAction} from 'typesafe-actions';
-import {AuthToken, Email} from '@src/types';
-import {SignUpInfo, SignInInfo} from '@api';
+import {AuthToken} from '@src/types';
+import {SignUpRequest, SignInRequest, ForgotPasswordRequest} from '@api';
 
-export const signUpAsync = createAsyncAction(
-    ['SIGN_UP_REQUEST', (signUpInfo: SignUpInfo) => signUpInfo],
-    ['SIGN_UP_SUCCESS', (resp: AuthToken) => resp],
-    ['SIGN_UP_FAILURE', (err: Error) => err],
-    'SIGN_UP_CANCEL',
-)();
+export const signUpAsync = createAsyncAction('SIGN_UP_REQUEST', 'SIGN_UP_SUCCESS', 'SIGN_UP_FAILURE', 'SIGN_UP_CANCEL')<
+    SignUpRequest,
+    AuthToken,
+    Error,
+    undefined
+>();
 
-export const signInAsync = createAsyncAction(
-    ['SIGN_IN_REQUEST', (signInInfo: SignInInfo) => signInInfo],
-    ['SIGN_IN_SUCCESS', (resp: AuthToken) => resp],
-    ['SIGN_IN_FAILURE', (err: Error) => err],
-    'SIGN_IN_CANCEL',
-)();
+export const signInAsync = createAsyncAction('SIGN_IN_REQUEST', 'SIGN_IN_SUCCESS', 'SIGN_IN_FAILURE', 'SIGN_IN_CANCEL')<
+    SignInRequest,
+    AuthToken,
+    Error,
+    undefined
+>();
 
 export const signOut = createAction('SIGN_OUT')();
 
 export const forgotPasswordAsync = createAsyncAction(
-    ['FORGOT_PASSWORD_REQUEST', (email: Email) => email],
-    ['FORGOT_PASSWORD_SUCCESS', (msg: string) => msg],
-    ['FORGOT_PASSWORD_FAILURE', (err: Error) => err],
-)();
+    'FORGOT_PASSWORD_REQUEST',
+    'FORGOT_PASSWORD_SUCCESS',
+    'FORGOT_PASSWORD_FAILURE',
+)<ForgotPasswordRequest, string, Error>();

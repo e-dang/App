@@ -7,7 +7,6 @@ import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useDispatch} from 'react-redux';
 import {get} from 'lodash';
 import {useNavigation} from '@react-navigation/native';
-import {SignUpInfo} from '@api';
 
 export function SignUp() {
     const isPending = useSelector((state) => get(state.pendingStates, 'SIGN_UP.pending', false) as boolean);
@@ -15,10 +14,10 @@ export function SignUp() {
     const navigation = useNavigation();
     const [name, setName] = useState<Name>('');
     const [email, setEmail] = useState<Email>('');
-    const [password1, setPassword1] = useState<Password>('');
+    const [password, setPassword] = useState<Password>('');
 
     const handleSignUp = () => {
-        dispatch(signUpAsync.request({name, email, password1, password2: password1} as SignUpInfo));
+        dispatch(signUpAsync.request({name, email, password1: password, password2: password}));
     };
 
     const cancelSignUp = () => {
@@ -51,7 +50,7 @@ export function SignUp() {
                     <Stack width="90%" space={2}>
                         <NameInput onChangeText={(value) => setName(value)} value={name} />
                         <EmailInput onChangeText={(value) => setEmail(value)} value={email} />
-                        <PasswordInput onChangeText={(value) => setPassword1(value)} value={password1} />
+                        <PasswordInput onChangeText={(value) => setPassword(value)} value={password} />
                         <Button testID="signUpBtn" colorScheme="primary" borderRadius={100} onPress={handleSignUp}>
                             Sign Up
                         </Button>

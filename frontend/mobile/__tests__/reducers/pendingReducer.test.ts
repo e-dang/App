@@ -1,7 +1,7 @@
 import {RootAction} from '@src/actions/actionTypes';
 import {pendingReducer, PendingState} from '@src/reducers/pendingReducer';
 import {AuthToken} from '@src/types';
-import {SignUpInfo} from '@src/types';
+import {SignUpRequest} from '@src/types';
 import {mock} from 'jest-mock-extended';
 
 describe('pendingReducer', () => {
@@ -14,7 +14,7 @@ describe('pendingReducer', () => {
     test('if action ends with _REQUEST, it sets pending on the action name in the current state to true', async () => {
         const action: RootAction = {
             type: 'SIGN_UP_REQUEST',
-            payload: mock<SignUpInfo>(),
+            payload: mock<SignUpRequest>(),
         };
 
         const retVal = pendingReducer(state, action);

@@ -17,7 +17,7 @@ export function ForgotPassword() {
     };
 
     const handleSubmit = () => {
-        dispatch(forgotPasswordAsync.request(email));
+        dispatch(forgotPasswordAsync.request({email}));
         setIsOpen(true);
     };
 

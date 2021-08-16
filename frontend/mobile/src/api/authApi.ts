@@ -4,16 +4,20 @@ import {AuthToken, Email, Name, Password, Token} from '@src/types';
 export interface DetailResponse {
     detail?: string;
 }
-export interface SignUpInfo {
+export interface SignUpRequest {
     name: Name;
     email: Email;
     password1: Password;
     password2: Password;
 }
 
-export interface SignInInfo {
+export interface SignInRequest {
     email: Email;
     password: Password;
+}
+
+export interface ForgotPasswordRequest {
+    email: Email;
 }
 
 export interface SignUpResponse extends DetailResponse {
@@ -24,16 +28,12 @@ export interface SignInResponse extends DetailResponse {
     key?: Token;
 }
 
-export interface ForgotPasswordRequest {
-    email: Email;
-}
-
 export class AuthApi {
     static readonly timeout = 60000;
     private static client = Client;
 
-    static async signUp(signUpInfo: SignUpInfo): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<SignUpInfo, SignUpResponse>('/registration/', signUpInfo);
+    static async signUp(request: SignUpRequest): Promise<AuthToken> {
+        const resp = await AuthApi.client.post<SignUpRequest, SignUpResponse>('/registration/', request);
 
         if (resp.status !== 201) {
             throw new Error(resp.data.detail);
@@ -44,8 +44,8 @@ export class AuthApi {
         return authToken;
     }
 
-    static async signIn(signInInfo: SignInInfo): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<SignInInfo, SignInResponse>('/login/', signInInfo);
+    static async signIn(request: SignInRequest): Promise<AuthToken> {
+        const resp = await AuthApi.client.post<SignInRequest, SignInResponse>('/login/', request);
 
         if (resp.status !== 200) {
             throw new Error(resp.data.detail);
@@ -64,8 +64,8 @@ export class AuthApi {
         AuthApi.client.clearAuthToken();
     }
 
-    static async forgotPassword(email: Email): Promise<string> {
-        const resp = await AuthApi.client.post<ForgotPasswordRequest, DetailResponse>('/password/reset/', {email});
+    static async forgotPassword(request: ForgotPasswordRequest): Promise<string> {
+        const resp = await AuthApi.client.post<ForgotPasswordRequest, DetailResponse>('/password/reset/', request);
 
         if (resp.status !== 200) {
             throw new Error(resp.data.detail);

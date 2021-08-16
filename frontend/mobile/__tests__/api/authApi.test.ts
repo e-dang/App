@@ -1,12 +1,20 @@
-import {AuthApi, DetailResponse, SignUpInfo, SignUpResponse, SignInInfo, SignInResponse} from '@api';
+import {
+    AuthApi,
+    DetailResponse,
+    SignUpRequest,
+    SignUpResponse,
+    SignInRequest,
+    SignInResponse,
+    ForgotPasswordRequest,
+} from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
-import {AuthToken, Email} from '@src/types';
+import {AuthToken} from '@src/types';
 
 describe('authApi', () => {
     let client: MockProxy<typeof Client>;
-    const regInfo: SignUpInfo = {
+    const regInfo: SignUpRequest = {
         name: 'test name',
         email: 'example@demo.com',
         password1: 'testpassword123',
@@ -56,7 +64,7 @@ describe('authApi', () => {
     });
 
     test('signIn returns AuthToken object when signIn is successful', async () => {
-        const signInInfo: SignInInfo = {
+        const signInRequest: SignInRequest = {
             email: 'example@demo.com',
             password: 'password123',
         };
@@ -69,13 +77,13 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.signIn(signInInfo);
+        const resp = await AuthApi.signIn(signInRequest);
 
         expect(resp).toEqual({token: data.key} as AuthToken);
     });
 
     test('signIn calls setAuthToken on client when signIn is successful', async () => {
-        const signInInfo: SignInInfo = {
+        const signInRequest: SignInRequest = {
             email: 'example@demo.com',
             password: 'password123',
         };
@@ -88,13 +96,13 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.signIn(signInInfo);
+        const resp = await AuthApi.signIn(signInRequest);
 
         expect(client.setAuthToken).toHaveBeenCalledWith(resp);
     });
 
     test('signIn throws error when response status is not 200', async () => {
-        const signInInfo: SignInInfo = {
+        const signInRequest: SignInRequest = {
             email: 'dne@dne.com',
             password: 'password123',
         };
@@ -108,7 +116,7 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        await expect(() => AuthApi.signIn(signInInfo)).rejects.toThrowError(data.detail);
+        await expect(() => AuthApi.signIn(signInRequest)).rejects.toThrowError(data.detail);
     });
 
     test('signOut resolves to void when signOut is successful', async () => {
@@ -172,7 +180,7 @@ describe('authApi', () => {
     });
 
     test('forgotPassword returns message string when successful', async () => {
-        const email: Email = 'test@demo.com';
+        const request: ForgotPasswordRequest = {email: 'test@demo.com'};
         const data: DetailResponse = {
             detail: 'Success',
         };
@@ -182,13 +190,13 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.forgotPassword(email);
+        const resp = await AuthApi.forgotPassword(request);
 
         expect(resp).toBe(data.detail);
     });
 
     test('forgotPassword throws error when unsuccessful', async () => {
-        const email: Email = 'test@demo.com';
+        const request: ForgotPasswordRequest = {email: 'test@demo.com'};
         const data: DetailResponse = {
             detail: 'Failure',
         };
@@ -198,6 +206,6 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        await expect(() => AuthApi.forgotPassword(email)).rejects.toThrowError(data.detail);
+        await expect(() => AuthApi.forgotPassword(request)).rejects.toThrowError(data.detail);
     });
 });

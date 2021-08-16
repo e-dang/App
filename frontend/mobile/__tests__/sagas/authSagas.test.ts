@@ -6,7 +6,7 @@ import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
 import {call, fork} from 'redux-saga/effects';
 import {createMockTask} from '@redux-saga/testing-utils';
-import {AuthApi, SignUpInfo, SignInInfo} from '@api';
+import {AuthApi, SignUpRequest, SignInRequest} from '@api';
 import {persistor} from '@src/store';
 
 jest.mock('../../src/store', () => ({
@@ -18,22 +18,25 @@ jest.mock('../../src/store', () => ({
 
 describe('authSagas', () => {
     const token: AuthToken = {token: 'aiwodjafgjdka12408adfahjd'};
-    const signInInfo: SignInInfo = {
+    const signInRequest: SignInRequest = {
         email: 'example@demo.com',
         password: 'mytestpassword123',
     };
-    const regInfo: SignUpInfo = {
+    const signUpRequest: SignUpRequest = {
         name: 'Test User',
         email: 'testemail@demo.com',
         password1: 'password123',
         password2: 'password123',
     };
+    const forgotPasswordRequest = {
+        email: signInRequest.email,
+    };
 
     describe('signUpSaga', () => {
-        const signUpObj = {response: call(AuthApi.signUp, regInfo), timeout: call(timeout, AuthApi.timeout)};
+        const signUpObj = {response: call(AuthApi.signUp, signUpRequest), timeout: call(timeout, AuthApi.timeout)};
 
         test('registration is successfull clears error state', () => {
-            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+            return expectSaga(signUpSaga, signUpAsync.request(signUpRequest))
                 .withReducer(errorReducer, {SIGN_UP: {error: 'Failure'}})
                 .provide({
                     race: () => ({response: token}),
@@ -46,7 +49,7 @@ describe('authSagas', () => {
         });
 
         test('registration is successfull sets auth state token', () => {
-            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+            return expectSaga(signUpSaga, signUpAsync.request(signUpRequest))
                 .withReducer(authReducer, {token: null})
                 .provide({
                     race: () => ({response: token}),
@@ -60,7 +63,7 @@ describe('authSagas', () => {
 
         test('registration fails due to invalid input', () => {
             const error = new Error('Invalid password');
-            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+            return expectSaga(signUpSaga, signUpAsync.request(signUpRequest))
                 .withReducer(errorReducer, {SIGN_UP: {error: null}})
                 .provide({
                     race: () => {
@@ -76,7 +79,7 @@ describe('authSagas', () => {
 
         test('registration fails due to timeout', () => {
             const error = new TimeoutError();
-            return expectSaga(signUpSaga, signUpAsync.request(regInfo))
+            return expectSaga(signUpSaga, signUpAsync.request(signUpRequest))
                 .withReducer(errorReducer, {SIGN_UP: {error: null}})
                 .provide({
                     race: () => {
@@ -92,10 +95,10 @@ describe('authSagas', () => {
     });
 
     describe('signInSaga', () => {
-        const signInRace = {response: call(AuthApi.signIn, signInInfo), timeout: call(timeout, AuthApi.timeout)};
+        const signInRace = {response: call(AuthApi.signIn, signInRequest), timeout: call(timeout, AuthApi.timeout)};
 
         test('when signIn is successful it sets auth state token', () => {
-            return expectSaga(signInSaga, signInAsync.request(signInInfo))
+            return expectSaga(signInSaga, signInAsync.request(signInRequest))
                 .withReducer(authReducer)
                 .provide({
                     race: () => ({response: token}),
@@ -108,7 +111,7 @@ describe('authSagas', () => {
         });
 
         test('when signIn is successful it clears error state', () => {
-            return expectSaga(signInSaga, signInAsync.request(signInInfo))
+            return expectSaga(signInSaga, signInAsync.request(signInRequest))
                 .withReducer(errorReducer, {SIGN_IN: {error: 'Failure'}})
                 .provide({
                     race: () => ({response: token}),
@@ -122,7 +125,7 @@ describe('authSagas', () => {
 
         test('when signIn fails due to invalid input it sets error state to error message', () => {
             const error = new Error('Incorrect password');
-            return expectSaga(signInSaga, signInAsync.request(signInInfo))
+            return expectSaga(signInSaga, signInAsync.request(signInRequest))
                 .withReducer(errorReducer, {SIGN_IN: {error: null}})
                 .provide({
                     race: () => {
@@ -139,7 +142,7 @@ describe('authSagas', () => {
         test('when signIn fails due to timeout it sets error to error message', () => {
             const error = new TimeoutError();
 
-            return expectSaga(signInSaga, signInAsync.request(signInInfo))
+            return expectSaga(signInSaga, signInAsync.request(signInRequest))
                 .withReducer(errorReducer, {SIGN_IN: {error: null}})
                 .provide({
                     race: () => {
@@ -156,13 +159,13 @@ describe('authSagas', () => {
 
     describe('forgotPasswordSaga', () => {
         const forgotPasswordRace = {
-            response: call(AuthApi.forgotPassword, signInInfo.email),
+            response: call(AuthApi.forgotPassword, forgotPasswordRequest),
             timeout: call(timeout, AuthApi.timeout),
         };
 
         test('when forgot password is successful it clears error state', () => {
             const msg = 'Email sent';
-            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(signInInfo.email))
+            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(forgotPasswordRequest))
                 .withReducer(errorReducer, {FORGOT_PASSWORD: {error: 'Failure'}})
                 .provide({
                     race: () => ({response: msg}),
@@ -176,7 +179,7 @@ describe('authSagas', () => {
 
         test('when forgot password fails it sets error state to Error message', () => {
             const error = new Error('Network error');
-            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(signInInfo.email))
+            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(forgotPasswordRequest))
                 .withReducer(errorReducer, {FORGOT_PASSWORD: {error: null}})
                 .provide({
                     race: () => {
@@ -192,7 +195,7 @@ describe('authSagas', () => {
 
         test('when forgot password fails due to timeout it sets error state to Error message', () => {
             const error = new TimeoutError();
-            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(signInInfo.email))
+            return expectSaga(forgotPasswordSaga, forgotPasswordAsync.request(forgotPasswordRequest))
                 .withReducer(errorReducer, {FORGOT_PASSWORD: {error: null}})
                 .provide({
                     race: () => {
@@ -211,7 +214,7 @@ describe('authSagas', () => {
         const requestActions = [signUpAsync.request, signInAsync.request, forgotPasswordAsync.request];
 
         test('after successful registration, background tasks are started, and waits for signOut', () => {
-            const action = signUpAsync.request(regInfo);
+            const action = signUpAsync.request(signUpRequest);
             return expectSaga(authFlowSaga)
                 .provide([
                     [call(signUpSaga, action), true],
@@ -232,7 +235,7 @@ describe('authSagas', () => {
         });
 
         test('after successful signIn, background tasks are started, and waits for signOut', () => {
-            const action = signInAsync.request(signInInfo);
+            const action = signInAsync.request(signInRequest);
             return expectSaga(authFlowSaga)
                 .provide([
                     [call(signInSaga, action), true],
@@ -253,7 +256,7 @@ describe('authSagas', () => {
         });
 
         test('after successful password reset, the saga waits for user to make an auth request action', () => {
-            const action = forgotPasswordAsync.request(signInInfo.email);
+            const action = forgotPasswordAsync.request(forgotPasswordRequest);
             return expectSaga(authFlowSaga)
                 .provide([[call(forgotPasswordSaga, action), true]])
                 .take(requestActions)
