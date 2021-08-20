@@ -38,7 +38,10 @@ describe('authApi', () => {
     });
 
     test('signUp returns an AuthToken when response status is 201', async () => {
-        const data: TokenResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
+        const data: TokenResponse = {
+            access_token: 'aaajafiuh89q247qy7ea90djkl',
+            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
+        };
         client.post.mockResolvedValue({
             data,
             status: 201,
@@ -47,11 +50,14 @@ describe('authApi', () => {
 
         const resp = await AuthApi.signUp(regInfo);
 
-        expect(resp).toEqual({token: data.key} as AuthToken);
+        expect(resp).toEqual({accessToken: data.access_token, refreshToken: data.refresh_token} as AuthToken);
     });
 
     test('signUp calls setAuthToken on client when response status is 201', async () => {
-        const data: TokenResponse = {key: 'aaajafiuh89q247qy7ea90djkl'};
+        const data: TokenResponse = {
+            access_token: 'aaajafiuh89q247qy7ea90djkl',
+            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
+        };
         client.post.mockResolvedValue({
             data,
             status: 201,
@@ -69,7 +75,8 @@ describe('authApi', () => {
             password: 'password123',
         };
         const data: TokenResponse = {
-            key: '123ahudfiagsefajdopai3r39047',
+            access_token: 'aaajafiuh89q247qy7ea90djkl',
+            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
         };
         client.post.mockResolvedValue({
             data,
@@ -79,7 +86,7 @@ describe('authApi', () => {
 
         const resp = await AuthApi.signIn(signInRequest);
 
-        expect(resp).toEqual({token: data.key} as AuthToken);
+        expect(resp).toEqual({accessToken: data.access_token, refreshToken: data.refresh_token} as AuthToken);
     });
 
     test('signIn calls setAuthToken on client when signIn is successful', async () => {
@@ -88,7 +95,8 @@ describe('authApi', () => {
             password: 'password123',
         };
         const data: TokenResponse = {
-            key: '123ahudfiagsefajdopai3r39047',
+            access_token: 'aaajafiuh89q247qy7ea90djkl',
+            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
         };
         client.post.mockResolvedValue({
             data,
@@ -212,7 +220,8 @@ describe('authApi', () => {
     test('refreshToken returns new auth token when successful', async () => {
         const request: RefreshTokenRequest = {refresh: 'adnafuihsefiuhawodj'};
         const data: TokenResponse = {
-            key: 'adwmaiofhsefjawjdaopwdk',
+            access_token: 'aaajafiuh89q247qy7ea90djkl',
+            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
         };
 
         client.post.mockResolvedValue({

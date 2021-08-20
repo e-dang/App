@@ -25,7 +25,8 @@ export interface RefreshTokenRequest {
 }
 
 export interface TokenResponse extends DetailResponse {
-    key?: Token;
+    access_token?: Token;
+    refresh_token?: Token;
 }
 
 export class AuthApi {
@@ -39,7 +40,7 @@ export class AuthApi {
             throw new Error(resp.data.detail);
         }
 
-        const authToken = {token: resp.data.key} as AuthToken;
+        const authToken = {accessToken: resp.data.access_token, refreshToken: resp.data.refresh_token} as AuthToken;
         AuthApi.client.setAuthToken(authToken);
         return authToken;
     }
@@ -51,7 +52,7 @@ export class AuthApi {
             throw new Error(resp.data.detail);
         }
 
-        const authToken = {token: resp.data.key} as AuthToken;
+        const authToken = {accessToken: resp.data.access_token, refreshToken: resp.data.refresh_token} as AuthToken;
         AuthApi.client.setAuthToken(authToken);
         return authToken;
     }

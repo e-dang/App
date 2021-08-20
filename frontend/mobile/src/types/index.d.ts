@@ -6,7 +6,8 @@ export type Password = string;
 export type Token = string;
 
 export interface AuthToken {
-    token: Token;
+    accessToken: Token;
+    refreshToken: Token;
 }
 
 export interface User {
