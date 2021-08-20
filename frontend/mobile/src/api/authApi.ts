@@ -20,6 +20,10 @@ export interface ForgotPasswordRequest {
     email: Email;
 }
 
+export interface RefreshTokenRequest {
+    refresh: Token;
+}
+
 export interface TokenResponse extends DetailResponse {
     key?: Token;
 }
@@ -68,5 +72,15 @@ export class AuthApi {
         }
 
         return resp.data.detail as string;
+    }
+
+    static async refreshToken(request: RefreshTokenRequest) {
+        const resp = await AuthApi.client.post<RefreshTokenRequest, TokenResponse>('/token/refresh/', request);
+
+        if (resp.status !== 200) {
+            throw new Error(resp.data.detail);
+        }
+
+        return resp.data;
     }
 }

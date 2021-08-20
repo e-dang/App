@@ -1,4 +1,12 @@
-import {AuthApi, DetailResponse, SignUpRequest, TokenResponse, SignInRequest, ForgotPasswordRequest} from '@api';
+import {
+    AuthApi,
+    DetailResponse,
+    SignUpRequest,
+    TokenResponse,
+    SignInRequest,
+    ForgotPasswordRequest,
+    RefreshTokenRequest,
+} from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
 import {Response} from '@api/client';
@@ -199,5 +207,37 @@ describe('authApi', () => {
         });
 
         await expect(() => AuthApi.forgotPassword(request)).rejects.toThrowError(data.detail);
+    });
+
+    test('refreshToken returns new auth token when successful', async () => {
+        const request: RefreshTokenRequest = {refresh: 'adnafuihsefiuhawodj'};
+        const data: TokenResponse = {
+            key: 'adwmaiofhsefjawjdaopwdk',
+        };
+
+        client.post.mockResolvedValue({
+            data,
+            status: 200,
+            statusText: 'Success',
+        });
+
+        const resp = await AuthApi.refreshToken(request);
+
+        expect(resp).toEqual(data);
+    });
+
+    test('refreshToken throws error when unsuccessful', async () => {
+        const request: RefreshTokenRequest = {refresh: 'afme3fhq2389u7aiodjaopdk'};
+        const data: TokenResponse = {
+            detail: 'Token is invalid or expired',
+        };
+
+        client.post.mockResolvedValue({
+            data,
+            status: 401,
+            statusText: 'Failure',
+        });
+
+        await expect(() => AuthApi.refreshToken(request)).rejects.toThrowError(data.detail);
     });
 });
