@@ -82,6 +82,8 @@ export class AuthApi {
             throw new Error(resp.data.detail);
         }
 
-        return resp.data;
+        const authToken = {accessToken: resp.data.access_token, refreshToken: resp.data.refresh_token} as AuthToken;
+        AuthApi.client.setAuthToken(authToken);
+        return authToken;
     }
 }

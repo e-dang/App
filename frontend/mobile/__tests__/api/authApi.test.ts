@@ -232,7 +232,25 @@ describe('authApi', () => {
 
         const resp = await AuthApi.refreshToken(request);
 
-        expect(resp).toEqual(data);
+        expect(resp).toEqual({accessToken: data.access_token, refreshToken: data.refresh_token} as AuthToken);
+    });
+
+    test('refreshToken calls setAuthToken on client when successful', async () => {
+        const request: RefreshTokenRequest = {refresh: 'adnafuihsefiuhawodj'};
+        const data: TokenResponse = {
+            access_token: 'aaajafiuh89q247qy7ea90djkl',
+            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
+        };
+
+        client.post.mockResolvedValue({
+            data,
+            status: 200,
+            statusText: 'Success',
+        });
+
+        const resp = await AuthApi.refreshToken(request);
+
+        expect(client.setAuthToken).toHaveBeenCalledWith(resp);
     });
 
     test('refreshToken throws error when unsuccessful', async () => {
