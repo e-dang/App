@@ -19,6 +19,7 @@ module.exports = {
                     '@i18n': './src/i18n',
                     '@components': './src/components',
                     '@styles': './src/styles',
+                    '@selectors': './src/selectors',
                 },
             },
         ],
