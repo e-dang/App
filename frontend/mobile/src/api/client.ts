@@ -68,7 +68,7 @@ export default class Client {
     }
 
     static setAuthToken(token: AuthToken) {
-        Client.impl.defaults.headers['Authorization'] = `Token ${token.token}`;
+        Client.impl.defaults.headers['Authorization'] = `Bearer ${token.accessToken}`;
     }
 
     static clearAuthToken() {

@@ -59,12 +59,13 @@ describe('Client', () => {
         Client['impl'] = mock<AxiosInstance>();
         Client['impl'].defaults = {headers: {}};
         const authToken: AuthToken = {
-            token: 'a4efwadfjpaafg99033r',
+            accessToken: 'a4efwadfjpaafg99033r',
+            refreshToken: 'awdjafaf9ajdwaw.aefimewfhq38awdho',
         };
 
         Client.setAuthToken(authToken);
 
-        expect(Client['impl'].defaults.headers['Authorization']).toEqual(`Token a4efwadfjpaafg99033r`);
+        expect(Client['impl'].defaults.headers['Authorization']).toEqual(`Bearer a4efwadfjpaafg99033r`);
     });
 
     test('clearAuthToken removes Authorization header from impl', async () => {
