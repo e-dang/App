@@ -2,7 +2,7 @@ import {AuthApi} from '@api';
 import {call, cancel, fork, delay, take} from 'redux-saga/effects';
 import {forgotPasswordAsync, signInAsync, signOut, signUpAsync} from '@actions';
 import {createAsyncSaga} from '@utils';
-import {getType} from 'typesafe-actions';
+import {ActionType, getType} from 'typesafe-actions';
 import {persistor} from '@src/store';
 import {Task} from 'redux-saga';
 import {AnyAction} from 'redux';
@@ -37,9 +37,9 @@ export function* authFlowSaga() {
         }
         const task: Task = yield fork(backgroundTask);
 
-        yield take(signOut);
+        const signOutAction: ActionType<typeof signOut> = yield take(signOut);
         yield cancel(task);
-        yield call(AuthApi.signOut);
+        yield call(AuthApi.signOut, signOutAction.payload);
         yield call(persistor.purge);
     }
 }

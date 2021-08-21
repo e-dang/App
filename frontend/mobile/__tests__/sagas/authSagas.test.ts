@@ -6,7 +6,7 @@ import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';
 import {call, fork} from 'redux-saga/effects';
 import {createMockTask} from '@redux-saga/testing-utils';
-import {AuthApi, SignUpRequest, SignInRequest} from '@api';
+import {AuthApi, SignUpRequest, SignInRequest, SignOutRequest} from '@api';
 import {persistor} from '@src/store';
 
 jest.mock('../../src/store', () => ({
@@ -17,7 +17,10 @@ jest.mock('../../src/store', () => ({
 }));
 
 describe('authSagas', () => {
-    const token: AuthToken = {token: 'aiwodjafgjdka12408adfahjd'};
+    const token: AuthToken = {
+        accessToken: 'aiwodjafgjdka12408adfahjd',
+        refreshToken: 'awdoajfiwhf8139ru.adaadjafih890',
+    };
     const signInRequest: SignInRequest = {
         email: 'example@demo.com',
         password: 'mytestpassword123',
@@ -212,6 +215,7 @@ describe('authSagas', () => {
 
     describe('authFlowSaga', () => {
         const requestActions = [signUpAsync.request, signInAsync.request, forgotPasswordAsync.request];
+        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
 
         test('after successful registration, background tasks are started, and waits for signOut', () => {
             const action = signUpAsync.request(signUpRequest);
@@ -219,18 +223,18 @@ describe('authSagas', () => {
                 .provide([
                     [call(signUpSaga, action), true],
                     [fork(backgroundTask), createMockTask()],
-                    [call(AuthApi.signOut), undefined],
+                    [call(AuthApi.signOut, signOutRequest), undefined],
                     [call(persistor.purge), undefined],
                 ])
                 .take(requestActions)
                 .call(signUpSaga, action)
                 .fork(backgroundTask)
                 .take(signOut)
-                .call(AuthApi.signOut)
+                .call(AuthApi.signOut, signOutRequest)
                 .call(persistor.purge)
                 .take(requestActions)
                 .dispatch(action)
-                .dispatch(signOut())
+                .dispatch(signOut(signOutRequest))
                 .silentRun();
         });
 
@@ -240,18 +244,18 @@ describe('authSagas', () => {
                 .provide([
                     [call(signInSaga, action), true],
                     [fork(backgroundTask), createMockTask()],
-                    [call(AuthApi.signOut), undefined],
+                    [call(AuthApi.signOut, signOutRequest), undefined],
                     [call(persistor.purge), undefined],
                 ])
                 .take(requestActions)
                 .call(signInSaga, action)
                 .fork(backgroundTask)
                 .take(signOut)
-                .call(AuthApi.signOut)
+                .call(AuthApi.signOut, signOutRequest)
                 .call(persistor.purge)
                 .take(requestActions)
                 .dispatch(action)
-                .dispatch(signOut())
+                .dispatch(signOut(signOutRequest))
                 .silentRun();
         });
 

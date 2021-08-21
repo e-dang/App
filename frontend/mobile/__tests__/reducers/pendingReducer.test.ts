@@ -1,7 +1,7 @@
+import {SignUpRequest} from '@api';
 import {RootAction} from '@src/actions/actionTypes';
 import {pendingReducer, PendingState} from '@src/reducers/pendingReducer';
 import {AuthToken} from '@src/types';
-import {SignUpRequest} from '@src/types';
 import {mock} from 'jest-mock-extended';
 
 describe('pendingReducer', () => {

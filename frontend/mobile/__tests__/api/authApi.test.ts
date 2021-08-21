@@ -6,6 +6,7 @@ import {
     SignInRequest,
     ForgotPasswordRequest,
     RefreshTokenRequest,
+    SignOutRequest,
 } from '@api';
 import Client from '@src/api/client';
 import {mock, MockProxy} from 'jest-mock-extended';
@@ -128,6 +129,7 @@ describe('authApi', () => {
     });
 
     test('signOut resolves to void when signOut is successful', async () => {
+        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
         const data: DetailResponse = {
             detail: 'Sign out successful',
         };
@@ -137,12 +139,13 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        const resp = await AuthApi.signOut();
+        const resp = await AuthApi.signOut(signOutRequest);
 
         expect(resp).toBe(undefined);
     });
 
     test('signOut calls clearAuthToken on client when signOut is successful', async () => {
+        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
         const data: DetailResponse = {
             detail: 'Sign out successful',
         };
@@ -152,12 +155,13 @@ describe('authApi', () => {
             statusText: 'Success',
         });
 
-        await AuthApi.signOut();
+        await AuthApi.signOut(signOutRequest);
 
         expect(client.clearAuthToken).toHaveBeenCalled();
     });
 
     test('signOut resolves to void when signOut is not successful', async () => {
+        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
         const data: DetailResponse = {
             detail: 'Server error',
         };
@@ -167,12 +171,13 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        const resp = await AuthApi.signOut();
+        const resp = await AuthApi.signOut(signOutRequest);
 
         expect(resp).toBe(undefined);
     });
 
     test('signOut calls clearAuthToken on client when signOut is not successful', async () => {
+        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
         const data: DetailResponse = {
             detail: 'Server error',
         };
@@ -182,7 +187,7 @@ describe('authApi', () => {
             statusText: 'Failure',
         });
 
-        await AuthApi.signOut();
+        await AuthApi.signOut(signOutRequest);
 
         expect(client.clearAuthToken).toHaveBeenCalled();
     });

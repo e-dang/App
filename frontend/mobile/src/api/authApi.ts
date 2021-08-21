@@ -16,6 +16,10 @@ export interface SignInRequest {
     password: Password;
 }
 
+export interface SignOutRequest {
+    refresh: Token;
+}
+
 export interface ForgotPasswordRequest {
     email: Email;
 }
@@ -57,11 +61,11 @@ export class AuthApi {
         return authToken;
     }
 
-    static async signOut(): Promise<void> {
+    static async signOut(request: SignOutRequest): Promise<void> {
         // signOut should never fail on the client side. If something causes the request to fail the backend
         // should invalidate old auth tokens upon successful re-signIn. This is why auth tokens shouldnt be valid
         // for long periods of time
-        await AuthApi.client.post<{}, DetailResponse>('/logout/', {});
+        await AuthApi.client.post<SignOutRequest, DetailResponse>('/logout/', request);
         AuthApi.client.clearAuthToken();
     }
 
