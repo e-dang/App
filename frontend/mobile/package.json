@@ -66,6 +66,7 @@
         "jest": "^27.0.0",
         "jest-mock-extended": "^1.0.18",
         "metro-react-native-babel-preset": "^0.64.0",
+        "mockdate": "^3.0.5",
         "react-native-flipper": "^0.102.0",
         "react-test-renderer": "17.0.1",
         "redux-flipper": "^2.0.0",
