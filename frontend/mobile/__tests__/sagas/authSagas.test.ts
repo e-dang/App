@@ -216,19 +216,21 @@ describe('authSagas', () => {
     describe('authFlowSaga', () => {
         const requestActions = [signUpAsync.request, signInAsync.request, forgotPasswordAsync.request];
         const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
+        const mockBackgroundTasks = jest.fn();
 
         test('after successful registration, background tasks are started, and waits for signOut', () => {
             const action = signUpAsync.request(signUpRequest);
-            return expectSaga(authFlowSaga)
+
+            return expectSaga(authFlowSaga, mockBackgroundTasks)
                 .provide([
                     [call(signUpSaga, action), true],
-                    [fork(backgroundTask), createMockTask()],
+                    [fork(mockBackgroundTasks), createMockTask()],
                     [call(AuthApi.signOut, signOutRequest), undefined],
                     [call(persistor.purge), undefined],
                 ])
                 .take(requestActions)
                 .call(signUpSaga, action)
-                .fork(backgroundTask)
+                .fork(mockBackgroundTasks)
                 .take(signOut)
                 .call(AuthApi.signOut, signOutRequest)
                 .call(persistor.purge)
@@ -240,16 +242,16 @@ describe('authSagas', () => {
 
         test('after successful signIn, background tasks are started, and waits for signOut', () => {
             const action = signInAsync.request(signInRequest);
-            return expectSaga(authFlowSaga)
+            return expectSaga(authFlowSaga, mockBackgroundTasks)
                 .provide([
                     [call(signInSaga, action), true],
-                    [fork(backgroundTask), createMockTask()],
+                    [fork(mockBackgroundTasks), createMockTask()],
                     [call(AuthApi.signOut, signOutRequest), undefined],
                     [call(persistor.purge), undefined],
                 ])
                 .take(requestActions)
                 .call(signInSaga, action)
-                .fork(backgroundTask)
+                .fork(mockBackgroundTasks)
                 .take(signOut)
                 .call(AuthApi.signOut, signOutRequest)
                 .call(persistor.purge)
@@ -261,7 +263,7 @@ describe('authSagas', () => {
 
         test('after successful password reset, the saga waits for user to make an auth request action', () => {
             const action = forgotPasswordAsync.request(forgotPasswordRequest);
-            return expectSaga(authFlowSaga)
+            return expectSaga(authFlowSaga, mockBackgroundTasks)
                 .provide([[call(forgotPasswordSaga, action), true]])
                 .take(requestActions)
                 .call(forgotPasswordSaga, action)

@@ -1,8 +1,8 @@
 import {all} from 'redux-saga/effects';
-import {authFlowSaga} from './authSagas';
+import {authFlowSaga, backgroundTaskRoot} from './authSagas';
 
 export * from './authSagas';
 
 export default function* root() {
-    yield all([authFlowSaga()]);
+    yield all([authFlowSaga(backgroundTaskRoot)]);
 }

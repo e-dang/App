@@ -1,6 +1,6 @@
 import {createAction, createAsyncAction} from 'typesafe-actions';
 import {AuthToken} from '@src/types';
-import {SignUpRequest, SignInRequest, ForgotPasswordRequest, SignOutRequest} from '@api';
+import {SignUpRequest, SignInRequest, ForgotPasswordRequest, RefreshTokenRequest, SignOutRequest} from '@api';
 
 export const signUpAsync = createAsyncAction('SIGN_UP_REQUEST', 'SIGN_UP_SUCCESS', 'SIGN_UP_FAILURE', 'SIGN_UP_CANCEL')<
     SignUpRequest,
@@ -23,3 +23,9 @@ export const forgotPasswordAsync = createAsyncAction(
     'FORGOT_PASSWORD_SUCCESS',
     'FORGOT_PASSWORD_FAILURE',
 )<ForgotPasswordRequest, string, Error>();
+
+export const refreshTokenAsync = createAsyncAction(
+    'REFRESH_TOKEN_REQUEST',
+    'REFRESH_TOKEN_SUCCESS',
+    'REFRESH_TOKEN_FAILURE',
+)<RefreshTokenRequest, AuthToken, Error>();
