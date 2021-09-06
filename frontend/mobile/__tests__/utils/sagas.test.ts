@@ -1,13 +1,12 @@
 import {refreshTokenAsync} from '@actions';
 import {AuthApi} from '@api';
-import {selectAuthToken} from '@selectors';
+import {isAuthTokenValid, selectAuthToken} from '@selectors';
 import {AuthToken} from '@src/types';
-import {refreshTokenSagaConsumer, refreshTokenSagaProducer, timeout, tokenIsValid} from '@utils';
+import {refreshTokenSagaConsumer, refreshTokenSagaProducer, timeout} from '@utils';
 import {mock} from 'jest-mock-extended';
 import {expectSaga} from 'redux-saga-test-plan';
 import {throwError} from 'redux-saga-test-plan/providers';
 import {call, race, select} from 'redux-saga/effects';
-import MockDate from 'mockdate';
 import {authReducer} from '@reducers';
 
 describe('saga utils', () => {
@@ -22,12 +21,8 @@ describe('saga utils', () => {
     describe('refreshTokenSagaProducer', () => {
         test('if token is valid it immediately returns', () => {
             return expectSaga(refreshTokenSagaProducer)
-                .provide([
-                    [select(selectAuthToken), token],
-                    [call(tokenIsValid, token), true],
-                ])
-                .select(selectAuthToken)
-                .call(tokenIsValid, token)
+                .provide([[select(isAuthTokenValid), true]])
+                .select(isAuthTokenValid)
                 .returns(undefined)
                 .silentRun();
         });
@@ -39,11 +34,11 @@ describe('saga utils', () => {
             };
             return expectSaga(refreshTokenSagaProducer)
                 .provide([
+                    [select(isAuthTokenValid), false],
                     [select(selectAuthToken), token],
-                    [call(tokenIsValid, token), false],
                 ])
+                .select(isAuthTokenValid)
                 .select(selectAuthToken)
-                .call(tokenIsValid, token)
                 .put(requestAction)
                 .take([refreshTokenAsync.success, refreshTokenAsync.failure])
                 .dispatch(refreshTokenAsync.success(newToken))
@@ -58,11 +53,11 @@ describe('saga utils', () => {
             const error = new Error('failure');
             return expectSaga(refreshTokenSagaProducer)
                 .provide([
+                    [select(isAuthTokenValid), false],
                     [select(selectAuthToken), token],
-                    [call(tokenIsValid, token), false],
                 ])
+                .select(isAuthTokenValid)
                 .select(selectAuthToken)
-                .call(tokenIsValid, token)
                 .put(requestAction)
                 .take([refreshTokenAsync.success, refreshTokenAsync.failure])
                 .dispatch(refreshTokenAsync.failure(error))
@@ -77,11 +72,11 @@ describe('saga utils', () => {
             return expectSaga(refreshTokenSagaConsumer, requestAction)
                 .withReducer(authReducer, {token})
                 .provide([
+                    [select(isAuthTokenValid), true],
                     [select(selectAuthToken), token],
-                    [call(tokenIsValid, token), true],
                 ])
+                .select(isAuthTokenValid)
                 .select(selectAuthToken)
-                .call(tokenIsValid, token)
                 .put(refreshTokenAsync.success(token))
                 .returns(undefined)
                 .hasFinalState({token})
@@ -97,12 +92,10 @@ describe('saga utils', () => {
             return expectSaga(refreshTokenSagaConsumer, requestAction)
                 .withReducer(authReducer, {token})
                 .provide([
-                    [select(selectAuthToken), token],
-                    [call(tokenIsValid, token), false],
+                    [select(isAuthTokenValid), false],
                     [race(raceObj), {response}],
                 ])
-                .select(selectAuthToken)
-                .call(tokenIsValid, token)
+                .select(isAuthTokenValid)
                 .race(raceObj)
                 .put(refreshTokenAsync.success(response))
                 .returns(undefined)
@@ -118,33 +111,14 @@ describe('saga utils', () => {
             };
             return expectSaga(refreshTokenSagaConsumer, requestAction)
                 .provide([
-                    [select(selectAuthToken), token],
-                    [call(tokenIsValid, token), false],
+                    [select(isAuthTokenValid), false],
                     [race(raceObj), throwError(error)],
                 ])
-                .select(selectAuthToken)
-                .call(tokenIsValid, token)
+                .select(isAuthTokenValid)
                 .race(raceObj)
                 .put(refreshTokenAsync.failure(error))
                 .returns(undefined)
                 .silentRun();
-        });
-    });
-
-    describe('tokenIsValid', () => {
-        test('it returns false when the provided auth token is expired', async () => {
-            const retVal = tokenIsValid(token);
-
-            expect(retVal).toBe(false);
-        });
-
-        test('it returns true when the provided auth token that isnt expired', async () => {
-            const expDate = 1629577338; // the expiration time of the token
-            MockDate.set(expDate - 5);
-
-            const retVal = tokenIsValid(token);
-
-            expect(retVal).toBe(true);
         });
     });
 });

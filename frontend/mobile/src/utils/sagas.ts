@@ -1,7 +1,6 @@
 import {refreshTokenAsync} from '@actions';
 import {AuthApi} from '@api';
-import {Buffer} from 'buffer';
-import {selectAuthToken} from '@selectors';
+import {isAuthTokenValid, selectAuthToken} from '@selectors';
 import {AuthToken} from '@src/types';
 import {AnyAction} from 'redux';
 import {call, put, race, select, take} from 'redux-saga/effects';
@@ -64,9 +63,9 @@ export function createAsyncSagaCreator<A, B, C>(preHook: () => Generator<A, B, C
 }
 
 export function* refreshTokenSagaProducer() {
-    const token: AuthToken = yield select(selectAuthToken);
-    const isValid: boolean = yield call(tokenIsValid, token);
+    const isValid: boolean = yield select(isAuthTokenValid);
     if (!isValid) {
+        const token: AuthToken = yield select(selectAuthToken);
         yield put(refreshTokenAsync.request({refresh: token.refreshToken}));
         const action: AnyAction = yield take([refreshTokenAsync.success, refreshTokenAsync.failure]);
 
@@ -77,9 +76,9 @@ export function* refreshTokenSagaProducer() {
 }
 
 export function* refreshTokenSagaConsumer(action: ReturnType<typeof refreshTokenAsync.request>) {
-    const token: AuthToken = yield select(selectAuthToken);
-    const isValid: boolean = yield call(tokenIsValid, token);
+    const isValid: boolean = yield select(isAuthTokenValid);
     if (isValid) {
+        const token: AuthToken = yield select(selectAuthToken);
         yield put(refreshTokenAsync.success(token));
         return;
     }
@@ -93,18 +92,6 @@ export function* refreshTokenSagaConsumer(action: ReturnType<typeof refreshToken
     } catch (e) {
         yield put(refreshTokenAsync.failure(e as Error));
     }
-}
-
-export function tokenIsValid(token: AuthToken) {
-    const tokenParts = token.accessToken.split('.');
-    const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
-    const currTime = new Date().getTime() / 1000; // convert to seconds
-
-    // must have more than 1 second to be valid
-    if (payload.exp - currTime <= 1) {
-        return false;
-    }
-    return true;
 }
 
 export const createApiSaga = createAsyncSagaCreator(function* () {
