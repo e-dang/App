@@ -1,5 +1,6 @@
 import {refreshTokenAsync} from '@actions';
 import {AuthApi} from '@api';
+import {Buffer} from 'buffer';
 import {selectAuthToken} from '@selectors';
 import {AuthToken} from '@src/types';
 import {AnyAction} from 'redux';
@@ -37,7 +38,7 @@ export function createAsyncSagaCreator<A, B, C>(preHook: () => Generator<A, B, C
         timeoutDuration: number,
     ) {
         return function* saga(action: ReturnType<typeof asyncActionGroup.request>) {
-            yield* preHook();
+            yield call(preHook);
 
             try {
                 const {response}: ApiRaceResult<P2> = isPayloadAction<P1>(action)
@@ -53,7 +54,7 @@ export function createAsyncSagaCreator<A, B, C>(preHook: () => Generator<A, B, C
                 yield put(asyncActionGroup.success(response));
                 return true;
             } catch (e) {
-                yield put(asyncActionGroup.failure(e));
+                yield put(asyncActionGroup.failure(e as P3));
                 return false;
             }
         };
@@ -90,7 +91,7 @@ export function* refreshTokenSagaConsumer(action: ReturnType<typeof refreshToken
         });
         yield put(refreshTokenAsync.success(response));
     } catch (e) {
-        yield put(refreshTokenAsync.failure(e));
+        yield put(refreshTokenAsync.failure(e as Error));
     }
 }
 

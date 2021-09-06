@@ -1,6 +1,6 @@
 import {forgotPasswordAsync, signInAsync, signOut, signUpAsync} from '@actions';
 import {authReducer, errorReducer} from '@reducers';
-import {signUpSaga, signInSaga, authFlowSaga, backgroundTask, forgotPasswordSaga} from '@sagas';
+import {signUpSaga, signInSaga, authFlowSaga, forgotPasswordSaga} from '@sagas';
 import {AuthToken} from '@src/types';
 import {timeout, TimeoutError} from '@utils';
 import {expectSaga} from 'redux-saga-test-plan';

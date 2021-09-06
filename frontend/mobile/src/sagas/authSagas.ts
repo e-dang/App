@@ -1,5 +1,5 @@
 import {AuthApi} from '@api';
-import {call, cancel, fork, delay, take, takeLeading, all} from 'redux-saga/effects';
+import {call, cancel, fork, take, takeLeading} from 'redux-saga/effects';
 import {forgotPasswordAsync, refreshTokenAsync, signInAsync, signOut, signUpAsync} from '@actions';
 import {createApiSaga, refreshTokenSagaConsumer} from '@utils';
 import {ActionType, getType} from 'typesafe-actions';
@@ -11,19 +11,8 @@ export const signUpSaga = createApiSaga(signUpAsync, AuthApi.signUp, AuthApi.tim
 export const signInSaga = createApiSaga(signInAsync, AuthApi.signIn, AuthApi.timeout);
 export const forgotPasswordSaga = createApiSaga(forgotPasswordAsync, AuthApi.forgotPassword, AuthApi.timeout);
 
-export function* backgroundTask() {
-    while (true) {
-        console.log('stuff');
-        yield delay(60000);
-    }
-}
-
 export function* watchRefreshToken() {
     yield takeLeading(refreshTokenAsync.request, refreshTokenSagaConsumer);
-}
-
-export function* backgroundTaskRoot() {
-    yield all([watchRefreshToken(), backgroundTask()]);
 }
 
 export function* authFlowSaga(backgroundTasks: () => Generator) {

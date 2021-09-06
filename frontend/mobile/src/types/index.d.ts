@@ -4,6 +4,8 @@ export type Email = string;
 export type Name = string;
 export type Password = string;
 export type Token = string;
+export type URL = string;
+export type UUID = string;
 
 export interface AuthToken {
     accessToken: Token;
@@ -11,8 +13,8 @@ export interface AuthToken {
 }
 
 export interface User {
-    id: string;
-    email: string;
-    phone: string;
-    name: string;
+    url: URL;
+    uuid: UUID;
+    name: Name;
+    email: Email;
 }
