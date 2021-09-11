@@ -10,7 +10,8 @@
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "e2e:ios": "detox test -c ios --cleanup",
-        "e2e:android": "detox test -c android"
+        "e2e:android": "detox test -c android",
+        "clean-cache": "rm -rf $TMPDIR/metro-cache"
     },
     "dependencies": {
         "@react-native-community/async-storage": "^1.12.1",
