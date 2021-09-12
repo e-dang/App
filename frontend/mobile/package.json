@@ -71,6 +71,7 @@
         "mockdate": "^3.0.5",
         "react-native-flipper": "^0.102.0",
         "react-test-renderer": "17.0.1",
+        "redux-devtools": "^3.7.0",
         "redux-flipper": "^2.0.0",
         "redux-saga-test-plan": "^4.0.3",
         "ts-jest": "^27.0.4",
