@@ -29,6 +29,11 @@ const sagaMiddleware = createSagaMiddleware();
 
 const middlewares = [sagaMiddleware];
 
+if (__DEV__) {
+    const createFlipperDebugger = require('redux-flipper').default;
+    middlewares.push(createFlipperDebugger());
+}
+
 export const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
@@ -38,16 +43,12 @@ export const store = configureStore({
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
         }).concat(middlewares),
-    devTools: process.env.NODE_ENV !== 'production',
+    devTools: __DEV__,
 });
 
 sagaMiddleware.run(sagas);
 
 export const persistor = persistStore(store);
-
-// if (process.env.NODE_ENV !== 'production' && module.hot) {
-//     module.hot.accept('./reducers', () => store.replaceReducer(rootReducer))
-//   }
 
 persistor.purge();
 
