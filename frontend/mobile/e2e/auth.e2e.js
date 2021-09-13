@@ -1,5 +1,3 @@
-import {AuthApi} from '@api';
-import Client from '@api/client';
 import {v4 as uuidv4} from 'uuid';
 import axios from 'axios';
 
@@ -10,12 +8,16 @@ function generateEmail() {
 }
 
 async function createUser(name, email, password) {
-    return await AuthApi.signUp({name, email, password1: password, password2: password});
+    return await axios.post('https://dev.erickdang.com/api/v1/registration/', {
+        name,
+        email,
+        password1: password,
+        password2: password,
+    });
 }
 
 async function signOut() {
     await element(by.id('masterSignOut')).tap();
-    Client.clearAuthToken();
 }
 
 async function checkForEmail(to, predicate) {
