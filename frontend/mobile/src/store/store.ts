@@ -1,7 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
-import {authReducer, AuthState} from './authSlice';
-import sagas from '@sagas';
+import {api, authReducer, AuthState} from './authSlice';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
     PersistConfig,
@@ -14,7 +12,7 @@ import {
     PURGE,
     REGISTER,
 } from 'redux-persist';
-import {combineReducers} from 'redux';
+import {AnyAction, combineReducers} from 'redux';
 
 const authPersistConfig: PersistConfig<AuthState, unknown, unknown, unknown> = {
     storage: AsyncStorage,
@@ -23,11 +21,19 @@ const authPersistConfig: PersistConfig<AuthState, unknown, unknown, unknown> = {
 
 export const rootReducer = combineReducers({
     auth: persistReducer(authPersistConfig, authReducer),
+    [api.reducerPath]: api.reducer,
 });
 
-const sagaMiddleware = createSagaMiddleware();
+const wrappedReducer: typeof rootReducer = (state: any, action: AnyAction) => {
+    if (action.type === 'signOut') {
+        persistor.purge();
+        return rootReducer(undefined, action);
+    }
 
-const middlewares = [sagaMiddleware];
+    return rootReducer(state, action);
+};
+
+const middlewares = [api.middleware];
 
 if (__DEV__) {
     const createFlipperDebugger = require('redux-flipper').default;
@@ -35,10 +41,9 @@ if (__DEV__) {
 }
 
 export const store = configureStore({
-    reducer: rootReducer,
+    reducer: wrappedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            thunk: false,
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
@@ -46,10 +51,7 @@ export const store = configureStore({
     devTools: __DEV__,
 });
 
-sagaMiddleware.run(sagas);
-
 export const persistor = persistStore(store);
 
-persistor.purge();
-
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
