@@ -3,8 +3,9 @@ import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, Nam
 import {Email, Name, Password} from '@src/types';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from '@src/hooks';
-import {setCredentials, useSignUpMutation} from '@store/authSlice';
+import {useDispatch} from '@hooks';
+import {setCredentials} from '@store';
+import {useSignUpMutation} from '@api';
 
 export function SignUp() {
     const [signUp, {data, error, isLoading}] = useSignUpMutation();

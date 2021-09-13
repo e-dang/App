@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
 import {Home, Settings, SignUp, Welcome, SignIn, ForgotPassword} from '@screens';
-import {useSelector} from './hooks';
+import {useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 
 export type AppTabParamList = {

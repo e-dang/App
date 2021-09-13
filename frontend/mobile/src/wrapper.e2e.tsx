@@ -2,8 +2,9 @@ import React from 'react';
 import {App as AppBase} from '@src/App';
 import {Box, Button} from 'native-base';
 import {selectAuthToken} from '@selectors';
-import {useDispatch, useSelector} from './hooks';
-import {useSignOutMutation, signOut} from '@store/authSlice';
+import {useDispatch, useSelector} from '@hooks';
+import {signOut} from '@store';
+import {useSignOutMutation} from '@api';
 
 export function App() {
     const authToken = useSelector(selectAuthToken);

@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {api, authReducer, AuthState} from './authSlice';
+import {authReducer, AuthState} from './authSlice';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
     PersistConfig,
@@ -13,6 +13,7 @@ import {
     REGISTER,
 } from 'redux-persist';
 import {AnyAction, combineReducers} from 'redux';
+import {baseApi} from '@api';
 
 const authPersistConfig: PersistConfig<AuthState, unknown, unknown, unknown> = {
     storage: AsyncStorage,
@@ -21,7 +22,7 @@ const authPersistConfig: PersistConfig<AuthState, unknown, unknown, unknown> = {
 
 export const rootReducer = combineReducers({
     auth: persistReducer(authPersistConfig, authReducer),
-    [api.reducerPath]: api.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
 });
 
 const wrappedReducer: typeof rootReducer = (state: any, action: AnyAction) => {
@@ -33,7 +34,7 @@ const wrappedReducer: typeof rootReducer = (state: any, action: AnyAction) => {
     return rootReducer(state, action);
 };
 
-const middlewares = [api.middleware];
+const middlewares = [baseApi.middleware];
 
 if (__DEV__) {
     const createFlipperDebugger = require('redux-flipper').default;

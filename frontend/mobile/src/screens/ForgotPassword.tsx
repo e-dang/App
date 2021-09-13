@@ -3,7 +3,7 @@ import {BackButton, EmailInput, Header, Screen} from '@components';
 import {Email} from '@src/types';
 import {Button, Center, Heading, HStack, Modal, Stack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
-import {useForgotPasswordMutation} from '@store/authSlice';
+import {useForgotPasswordMutation} from '@api';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState<Email>('');

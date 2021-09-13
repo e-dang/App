@@ -1,9 +1,10 @@
 import React, {memo} from 'react';
 import {Header, Screen} from '@components';
 import {Button, Center, Heading, Stack} from 'native-base';
-import {useDispatch, useSelector} from '@src/hooks';
+import {useDispatch, useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
-import {useSignOutMutation, signOut} from '@store/authSlice';
+import {signOut} from '@store';
+import {useSignOutMutation} from '@api';
 
 function SettingsScreen() {
     const authToken = useSelector(selectAuthToken);

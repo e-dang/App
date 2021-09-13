@@ -3,8 +3,9 @@ import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} fro
 import {Email, Password} from '@src/types';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from '@src/hooks';
-import {setCredentials, useSignInMutation} from '@store/authSlice';
+import {useDispatch} from '@hooks';
+import {setCredentials} from '@store';
+import {useSignInMutation} from '@api';
 
 export function SignIn() {
     const [email, setEmail] = useState<Email>('');
