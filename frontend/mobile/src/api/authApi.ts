@@ -1,9 +1,6 @@
 import {baseApi} from './baseApi';
-import {AuthToken, Email, Name, Password, Token, User} from '@src/types';
+import {Email, Name, Password, Token, User} from '@src/types';
 
-export interface DetailResponse {
-    detail?: string;
-}
 export interface SignUpRequest {
     name: Name;
     email: Email;
@@ -24,18 +21,9 @@ export interface ForgotPasswordRequest {
     email: Email;
 }
 
-export interface RefreshTokenRequest {
-    refresh: Token;
-}
-
-export interface TokenResponse extends DetailResponse {
-    access_token?: Token;
-    refresh_token?: Token;
-}
-
 export interface AuthenticationResponse {
-    access_token: string;
-    refresh_token: string;
+    access_token: Token;
+    refresh_token: Token;
     user: User;
 }
 
