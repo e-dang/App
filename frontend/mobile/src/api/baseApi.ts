@@ -6,9 +6,10 @@ import {
     FetchBaseQueryError,
 } from '@reduxjs/toolkit/dist/query/react';
 import {selectAuthToken} from '@selectors';
-import {refreshToken, RootState, signOut} from '@store';
+import {refreshToken, signOut} from '@store/authSlice'; // avoid circular import
+import {RootState} from '@store';
 
-const BASE_URL = 'https://dev.erickdang.com/api/v1/';
+export const BASE_URL = 'https://dev.erickdang.com/api/v1/';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: BASE_URL,
@@ -17,6 +18,7 @@ const baseQuery = fetchBaseQuery({
         if (token) {
             headers.set('Authorization', `Bearer ${token.accessToken}`);
         }
+        headers.set('Accept', 'application/json');
         return headers;
     },
 });

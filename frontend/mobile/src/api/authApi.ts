@@ -39,7 +39,7 @@ export interface AuthenticationResponse {
     user: User;
 }
 
-const extendedApi = baseApi.injectEndpoints({
+export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         signIn: builder.mutation<AuthenticationResponse, SignInRequest>({
             query: (credentials) => ({
@@ -72,4 +72,4 @@ const extendedApi = baseApi.injectEndpoints({
     }),
 });
 
-export const {useSignInMutation, useSignUpMutation, useSignOutMutation, useForgotPasswordMutation} = extendedApi;
+export const {useSignInMutation, useSignUpMutation, useSignOutMutation, useForgotPasswordMutation} = authApi;
