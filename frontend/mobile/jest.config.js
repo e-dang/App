@@ -10,7 +10,8 @@ module.exports = {
             },
         },
     },
-    testRegex: '(/__tests__/.*|(test|spec))\\.(ts|tsx|js)$',
+    testRegex: '(/__tests__/.*(test|spec))\\.(ts|tsx|js)$',
     testPathIgnorePatterns: ['\\.snap$', 'e2e', '<rootDir>/node_modules/'],
     cacheDirectory: '.jest/cache',
+    setupFiles: ['./setupJest.js'],
 };
