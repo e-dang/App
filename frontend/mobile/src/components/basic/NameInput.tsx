@@ -1,10 +1,20 @@
 import React, {FC} from 'react';
-import {FormControl, Icon as NBIcon, IInputProps, Input} from 'native-base';
+import {FormControl, Icon as NBIcon, Input} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {FetchBaseQueryError} from '@reduxjs/toolkit/dist/query/react';
+import {isFetchBaseQueryError, isObj} from '@src/types';
+import {InputProps} from './types';
 
-export const NameInput: FC<IInputProps> = ({isInvalid, ...props}) => {
+type NameError = Omit<FetchBaseQueryError, 'data'> & {
+    data: {name: string[]};
+};
+
+const isNameError = (error: any): error is NameError =>
+    isFetchBaseQueryError(error) && isObj(error.data) && 'name' in error.data;
+
+export const NameInput: FC<InputProps> = ({error, ...props}) => {
     return (
-        <FormControl isRequired isInvalid={isInvalid}>
+        <FormControl isRequired isInvalid={isNameError(error)}>
             <Input
                 {...props}
                 testID="nameInput"
@@ -26,6 +36,9 @@ export const NameInput: FC<IInputProps> = ({isInvalid, ...props}) => {
                     />
                 }
             />
+            {isNameError(error) && (
+                <FormControl.ErrorMessage pl={4}>{error.data.name.join('\n')}</FormControl.ErrorMessage>
+            )}
         </FormControl>
     );
 };

@@ -1,10 +1,20 @@
 import React, {FC} from 'react';
-import {FormControl, Icon as NBIcon, IInputProps, Input} from 'native-base';
+import {FormControl, Icon as NBIcon, Input} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {isFetchBaseQueryError, isObj} from '@src/types';
+import {FetchBaseQueryError} from '@reduxjs/toolkit/dist/query/react';
+import {InputProps} from './types';
 
-export const PasswordInput: FC<IInputProps> = ({isInvalid, ...props}) => {
+type PasswordError = Omit<FetchBaseQueryError, 'data'> & {
+    data: {password1: string[]};
+};
+
+const isPasswordError = (error: any): error is PasswordError =>
+    isFetchBaseQueryError(error) && isObj(error.data) && 'password1' in error.data;
+
+export const PasswordInput: FC<InputProps> = ({error, ...props}) => {
     return (
-        <FormControl isRequired isInvalid={isInvalid}>
+        <FormControl isRequired isInvalid={isPasswordError(error)}>
             <Input
                 {...props}
                 testID="passwordInput"
@@ -26,6 +36,9 @@ export const PasswordInput: FC<IInputProps> = ({isInvalid, ...props}) => {
                     />
                 }
             />
+            {isPasswordError(error) && (
+                <FormControl.ErrorMessage pl={4}>{error.data.password1.join('\n')}</FormControl.ErrorMessage>
+            )}
         </FormControl>
     );
 };

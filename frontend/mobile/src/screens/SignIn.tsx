@@ -69,8 +69,8 @@ export function SignIn() {
                 </Center>
                 <Center flex={3}>
                     <Stack width="90%" space={2}>
-                        <EmailInput onChangeText={(value) => setEmail(value)} value={email} />
-                        <PasswordInput onChangeText={(value) => setPassword(value)} value={password} />
+                        <EmailInput error={error} onChangeText={(value) => setEmail(value)} value={email} />
+                        <PasswordInput error={error} onChangeText={(value) => setPassword(value)} value={password} />
                         <Button testID="signInBtn" colorScheme="primary" borderRadius={100} onPress={handleSignIn}>
                             Sign In
                         </Button>
