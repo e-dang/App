@@ -36,11 +36,6 @@ const wrappedReducer: typeof rootReducer = (state: any, action: AnyAction) => {
 
 const middlewares = [baseApi.middleware];
 
-if (__DEV__) {
-    const createFlipperDebugger = require('redux-flipper').default;
-    middlewares.push(createFlipperDebugger());
-}
-
 export const store = configureStore({
     reducer: wrappedReducer,
     middleware: (getDefaultMiddleware) =>
