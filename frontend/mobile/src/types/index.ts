@@ -1,4 +1,4 @@
-declare module 'redux-persist/lib/*';
+export * from './utils';
 
 export type Email = string;
 export type Name = string;

@@ -1,4 +1,5 @@
 import {BASE_URL} from '@api';
+import fetchMock from 'jest-fetch-mock';
 import {AnyAction, combineReducers, configureStore, EnhancedStore, Middleware, Reducer} from '@reduxjs/toolkit';
 
 export function setupApiStore<
@@ -8,7 +9,7 @@ export function setupApiStore<
         middleware: Middleware;
         util: {resetApiState(): any};
     },
-    R extends Record<string, Reducer<any, any>> = Record<never, never>
+    R extends Record<string, Reducer<any, any>> = Record<never, never>,
 >(api: A, extraReducers?: R): {api: any; store: EnhancedStore} {
     /*
      * Modified version of RTK Query's helper function:
