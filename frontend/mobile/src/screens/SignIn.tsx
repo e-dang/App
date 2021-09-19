@@ -28,10 +28,6 @@ export function SignIn() {
         signIn({email, password});
     };
 
-    const cancelSignIn = () => {
-        // dispatch(signInAsync.cancel());
-    };
-
     const handleBack = () => {
         navigation.navigate('welcome');
     };
@@ -63,7 +59,7 @@ export function SignIn() {
                 }
             />
             <Screen testID="signInScreen">
-                <LoadingModal isLoading={isLoading} onClose={cancelSignIn} />
+                <LoadingModal isLoading={isLoading} />
                 <Center flex={4}>
                     <Heading>Sign In</Heading>
                 </Center>

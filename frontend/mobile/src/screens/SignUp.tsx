@@ -29,10 +29,6 @@ export function SignUp() {
         signUp({name, email, password1: password, password2: password});
     };
 
-    const cancelSignUp = () => {
-        // dispatch(signUpAsync.cancel());
-    };
-
     const handleBack = () => {
         navigation.navigate('welcome');
     };
@@ -51,7 +47,7 @@ export function SignUp() {
                 }
             />
             <Screen testID="emailSignUpScreen">
-                <LoadingModal isLoading={isLoading} onClose={cancelSignUp} />
+                <LoadingModal isLoading={isLoading} />
                 <Center flex={4}>
                     <Heading>Sign Up</Heading>
                 </Center>
