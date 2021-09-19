@@ -3,9 +3,13 @@ import {Center, Button, Icon as NativeIcon, Stack, Box, Heading, Text, Divider} 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Header, Screen} from '@components';
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {AuthStackParamList} from '@src/App';
+
+export type WelcomeNavProps = StackNavigationProp<AuthStackParamList, 'welcome'>;
 
 export function Welcome() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<WelcomeNavProps>();
 
     const handleSignUpWithEmail = () => {
         navigation.navigate('signUp');

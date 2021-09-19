@@ -1,11 +1,11 @@
 import {NavigationContainer} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/lib/integration/react';
 import {App} from '@src/wrapper';
 import {persistor, store} from '@store';
-import {NavigationService, navigationRef} from '@utils/navigationService';
+import {navigationRef} from '@utils/navigationService';
 import '@i18n';
 import {enableScreens} from 'react-native-screens';
 import {NativeBaseProvider} from 'native-base';
@@ -16,18 +16,11 @@ import {NativeBaseProvider} from 'native-base';
 enableScreens();
 
 export default function Root() {
-    useEffect(() => {
-        NavigationService.isReady = false;
-    }, []);
     return (
         <NativeBaseProvider>
             <Provider store={store}>
                 <PersistGate loading={<View />} persistor={persistor}>
-                    <NavigationContainer
-                        ref={navigationRef}
-                        onReady={() => {
-                            NavigationService.isReady = true;
-                        }}>
+                    <NavigationContainer ref={navigationRef}>
                         <App />
                     </NavigationContainer>
                 </PersistGate>

@@ -6,11 +6,15 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from '@hooks';
 import {setCredentials} from '@store';
 import {useSignUpMutation} from '@api';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {AuthStackParamList} from '@src/App';
+
+export type SignUpNavProps = StackNavigationProp<AuthStackParamList, 'signUp'>;
 
 export function SignUp() {
     const [signUp, {data, error, isLoading}] = useSignUpMutation();
     const dispatch = useDispatch();
-    const navigation = useNavigation();
+    const navigation = useNavigation<SignUpNavProps>();
     const [name, setName] = useState<Name>('');
     const [email, setEmail] = useState<Email>('');
     const [password, setPassword] = useState<Password>('');
@@ -19,7 +23,7 @@ export function SignUp() {
         if (data !== undefined) {
             dispatch(setCredentials(data));
         }
-    }, [data]);
+    }, [data, dispatch]);
 
     const handleSignUp = () => {
         signUp({name, email, password1: password, password2: password});
@@ -53,9 +57,9 @@ export function SignUp() {
                 </Center>
                 <Center flex={3}>
                     <Stack width="90%" space={2}>
-                        <NameInput onChangeText={(value) => setName(value)} value={name} />
-                        <EmailInput onChangeText={(value) => setEmail(value)} value={email} />
-                        <PasswordInput onChangeText={(value) => setPassword(value)} value={password} />
+                        <NameInput error={error} onChangeText={(value) => setName(value)} value={name} />
+                        <EmailInput error={error} onChangeText={(value) => setEmail(value)} value={email} />
+                        <PasswordInput error={error} onChangeText={(value) => setPassword(value)} value={password} />
                         <Button testID="signUpBtn" colorScheme="primary" borderRadius={100} onPress={handleSignUp}>
                             Sign Up
                         </Button>

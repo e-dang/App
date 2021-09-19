@@ -8,12 +8,21 @@ import {useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 
 export type AppTabParamList = {
-    Home: undefined;
-    Settings: {userID?: string};
+    home: undefined;
+    settings: undefined;
 };
 
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+export type AuthStackParamList = {
+    welcome: undefined;
+    signUp: undefined;
+    signIn: undefined;
+    forgotPassword: undefined;
+};
+
+export type RootStackParamList = AppTabParamList & AuthStackParamList;
+
+const Tab = createBottomTabNavigator<AppTabParamList>();
+const Stack = createStackNavigator<AuthStackParamList>();
 
 export const App = () => {
     const token = useSelector(selectAuthToken);

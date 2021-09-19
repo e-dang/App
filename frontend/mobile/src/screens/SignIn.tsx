@@ -6,11 +6,15 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from '@hooks';
 import {setCredentials} from '@store';
 import {useSignInMutation} from '@api';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {AuthStackParamList} from '@src/App';
+
+export type SignInNavProps = StackNavigationProp<AuthStackParamList, 'signIn'>;
 
 export function SignIn() {
     const [email, setEmail] = useState<Email>('');
     const [password, setPassword] = useState<Password>('');
-    const navigation = useNavigation();
+    const navigation = useNavigation<SignInNavProps>();
     const dispatch = useDispatch();
     const [signIn, {data, error, isLoading}] = useSignInMutation();
 
@@ -18,7 +22,7 @@ export function SignIn() {
         if (data !== undefined) {
             dispatch(setCredentials(data));
         }
-    }, [data]);
+    }, [data, dispatch]);
 
     const handleSignIn = () => {
         signIn({email, password});
