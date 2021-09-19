@@ -1,4 +1,5 @@
 import {BASE_URL} from '@api';
+import fetchMock from 'jest-fetch-mock';
 import {AnyAction, combineReducers, configureStore, EnhancedStore, Middleware, Reducer} from '@reduxjs/toolkit';
 
 export function setupApiStore<
