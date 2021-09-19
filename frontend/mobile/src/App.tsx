@@ -28,7 +28,7 @@ export const App = () => {
     }, []);
 
     return token !== null ? (
-        <Tab.Navigator>
+        <Tab.Navigator screenOptions={{headerShown: false}}>
             <Tab.Screen
                 name="home"
                 component={Home}
@@ -63,7 +63,7 @@ export const App = () => {
             />
         </Tab.Navigator>
     ) : (
-        <Stack.Navigator initialRouteName="welcome" headerMode="none">
+        <Stack.Navigator initialRouteName="welcome" screenOptions={{headerShown: false}}>
             <Stack.Screen name="welcome" component={Welcome} />
             <Stack.Screen name="signUp" component={SignUp} />
             <Stack.Screen name="signIn" component={SignIn} />
