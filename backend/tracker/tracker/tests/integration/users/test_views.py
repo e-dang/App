@@ -2,12 +2,16 @@ import re
 
 import pytest
 from allauth.account.models import EmailAddress
-from dj_rest_auth.models import TokenModel
 from dj_rest_auth.serializers import PasswordResetSerializer
 from django.test import RequestFactory
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient, APIRequestFactory
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken,
+    OutstandingToken,
+)
+from rest_framework_simplejwt.tokens import RefreshToken
 from tracker.tests.assertions import assert_json_contains_model_instance_data
 from tracker.tests.factories import UserFactory
 from tracker.users.models import User
@@ -27,18 +31,19 @@ def unverified_user(user_factory: UserFactory, test_password: str) -> User:
 
 
 @pytest.fixture
-def auth_token(verified_user: User) -> TokenModel:
-    return TokenModel.objects.create(user=verified_user)
+def auth_token(verified_user: User) -> RefreshToken:
+    token = RefreshToken.for_user(verified_user)
+    return token
 
 
 @pytest.fixture
-def auth_user(auth_token: TokenModel) -> User:
-    return auth_token.user
+def auth_user(auth_token: RefreshToken, verified_user: User) -> User:
+    return verified_user
 
 
 @pytest.fixture
-def auth_client(api_client: APIClient, auth_token: TokenModel) -> APIClient:
-    api_client.credentials(HTTP_AUTHORIZATION="Token " + auth_token.key)
+def auth_client(api_client: APIClient, auth_token: RefreshToken) -> APIClient:
+    api_client.credentials(HTTP_AUTHORIZATION="Bearer " + str(auth_token.access_token))
     return api_client
 
 
@@ -103,8 +108,8 @@ class TestLoginView:
         response = self.api_client.post(self.url, data=data)
 
         verified_user.refresh_from_db()
+        assert OutstandingToken.objects.filter(user=verified_user).exists()
         assert response.status_code == status.HTTP_200_OK
-        assert str(verified_user.auth_token) == response.data["key"]
 
     def test_unsuccessful_login_doesnt_create_token_for_user(self, verified_user: User, test_password: str) -> None:
         data = {"email": verified_user.email, "password": test_password + "incorrect"}
@@ -113,28 +118,24 @@ class TestLoginView:
 
         verified_user.refresh_from_db()
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "key" not in response.data
-        with pytest.raises(User.auth_token.RelatedObjectDoesNotExist):
-            verified_user.auth_token
+        assert not OutstandingToken.objects.filter(user=verified_user).exists()
 
-    def test_user_cant_login_until_email_is_verified(self, unverified_user: User, test_password: str) -> None:
+    def test_user_can_login_with_unverified_email(self, unverified_user: User, test_password: str) -> None:
         data = {"email": unverified_user.email, "password": test_password}
 
         response = self.api_client.post(self.url, data=data)
 
         unverified_user.refresh_from_db()
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "key" not in response.data
-        with pytest.raises(User.auth_token.RelatedObjectDoesNotExist):
-            unverified_user.auth_token
+        assert response.status_code == status.HTTP_200_OK
+        assert OutstandingToken.objects.filter(user=unverified_user).exists()
 
     def test_login_for_non_existing_user_fails(self, user_json: dict) -> None:
+        num_before = OutstandingToken.objects.all().count()
         response = self.api_client.post(self.url, data=user_json)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "key" not in response.data
         assert len(User.objects.all()) == 0
-        assert len(TokenModel.objects.all()) == 0
+        assert num_before == OutstandingToken.objects.all().count()
 
 
 class TestLogoutView:
@@ -143,22 +144,24 @@ class TestLogoutView:
         self.api_client = auth_client
         self.url = reverse("rest_logout")
 
-    def test_successful_logout_deletes_token_for_user(self, auth_user: User) -> None:
-        response = self.api_client.post(self.url)
+    def test_successful_logout_blacklists_token_for_user(self, auth_user: User, auth_token: RefreshToken) -> None:
+        data = {"refresh": str(auth_token)}
 
-        auth_user.refresh_from_db()
+        response = self.api_client.post(self.url, data=data)
+
+        print(data)
+        token = OutstandingToken.objects.get(user=auth_user)
         assert response.status_code == status.HTTP_200_OK
-        with pytest.raises(User.auth_token.RelatedObjectDoesNotExist):
-            auth_user.auth_token
+        assert BlacklistedToken.objects.filter(token=token).exists()
 
     def test_unsuccessful_logout_doesnt_delete_any_tokens_for_other_users(self) -> None:
         api_client = APIClient()
-        prev_num_tokens = TokenModel.objects.all().count()
+        prev_num_tokens = BlacklistedToken.objects.all().count()
 
         response = api_client.post(self.url)
 
-        assert response.status_code == status.HTTP_200_OK
-        assert prev_num_tokens == TokenModel.objects.all().count()
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert prev_num_tokens == BlacklistedToken.objects.all().count()
 
 
 class TestRegisterView:
