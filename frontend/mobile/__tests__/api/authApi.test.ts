@@ -1,275 +1,183 @@
+import fetchMock, {enableFetchMocks} from 'jest-fetch-mock';
+enableFetchMocks();
 import {
-    AuthApi,
-    DetailResponse,
-    SignUpRequest,
-    TokenResponse,
-    SignInRequest,
+    authApi,
+    AuthenticationResponse,
     ForgotPasswordRequest,
-    RefreshTokenRequest,
+    SignInRequest,
     SignOutRequest,
+    SignUpRequest,
 } from '@api';
-import Client from '@src/api/client';
-import {mock, MockProxy} from 'jest-mock-extended';
-import {Response} from '@api/client';
-import {AuthToken} from '@src/types';
+import {authReducer} from '@store/authSlice';
+import {expectCorrectRequest, setupApiStore} from '@tests/utils';
+import {User} from '@src/types';
 
-describe('authApi', () => {
-    let client: MockProxy<typeof Client>;
-    const regInfo: SignUpRequest = {
-        name: 'test name',
-        email: 'example@demo.com',
-        password1: 'testpassword123',
-        password2: 'testpassword123',
-    };
+describe('auth endpoints', () => {
+    let storeRef: ReturnType<typeof setupApiStore>;
+    let response: AuthenticationResponse;
+    let mockError: Error;
 
     beforeEach(() => {
-        client = mock<typeof Client>();
-        AuthApi['client'] = client;
-    });
-
-    test('signUp throws error when response status is not 201', async () => {
-        const data: DetailResponse = {detail: 'Fail'};
-        client.post.mockResolvedValue({
-            data,
-            status: 500,
-            statusText: 'Server Error',
-        } as Response<DetailResponse>);
-
-        await expect(() => AuthApi.signUp(regInfo)).rejects.toThrowError(data.detail);
-    });
-
-    test('signUp returns an AuthToken when response status is 201', async () => {
-        const data: TokenResponse = {
-            access_token: 'aaajafiuh89q247qy7ea90djkl',
-            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
+        storeRef = setupApiStore(authApi, {auth: authReducer});
+        fetchMock.resetMocks();
+        response = {
+            access_token: 'test-access-token',
+            refresh_token: 'test-refresh-token',
+            user: {
+                url: 'test-url',
+                uuid: 'test-id',
+                name: 'test-name',
+                email: 'test-email',
+            } as User,
         };
-        client.post.mockResolvedValue({
-            data,
-            status: 201,
-            statusText: 'Created',
+        mockError = new Error('Internal Server Error');
+    });
+
+    describe('signUp', () => {
+        let request: SignUpRequest;
+
+        beforeEach(() => {
+            request = {
+                name: 'test name',
+                email: 'test@demo.com',
+                password1: 'testpassword123',
+                password2: 'testpassword123',
+            };
         });
 
-        const resp = await AuthApi.signUp(regInfo);
+        test('request is correct', async () => {
+            fetchMock.mockResponse(JSON.stringify({}));
 
-        expect(resp).toEqual({accessToken: data.access_token, refreshToken: data.refresh_token} as AuthToken);
-    });
+            await storeRef.store.dispatch<any>(authApi.endpoints.signUp.initiate(request));
 
-    test('signUp calls setAuthToken on client when response status is 201', async () => {
-        const data: TokenResponse = {
-            access_token: 'aaajafiuh89q247qy7ea90djkl',
-            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 201,
-            statusText: 'Created',
+            expectCorrectRequest('POST', 'registration/');
         });
 
-        const resp = await AuthApi.signUp(regInfo);
+        test('successful response', async () => {
+            fetchMock.mockResponse(JSON.stringify(response));
 
-        expect(client.setAuthToken).toHaveBeenCalledWith(resp);
-    });
+            const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signUp.initiate(request));
 
-    test('signIn returns AuthToken object when signIn is successful', async () => {
-        const signInRequest: SignInRequest = {
-            email: 'example@demo.com',
-            password: 'password123',
-        };
-        const data: TokenResponse = {
-            access_token: 'aaajafiuh89q247qy7ea90djkl',
-            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
+            expect(data).toStrictEqual(response);
         });
 
-        const resp = await AuthApi.signIn(signInRequest);
+        test('unsuccessful response', async () => {
+            fetchMock.mockReject(mockError);
 
-        expect(resp).toEqual({accessToken: data.access_token, refreshToken: data.refresh_token} as AuthToken);
+            const {
+                error: {status, error},
+            } = await storeRef.store.dispatch<any>(authApi.endpoints.signUp.initiate(request));
+
+            expect(status).toEqual('FETCH_ERROR');
+            expect(error).toContain(mockError.message);
+        });
     });
 
-    test('signIn calls setAuthToken on client when signIn is successful', async () => {
-        const signInRequest: SignInRequest = {
-            email: 'example@demo.com',
-            password: 'password123',
-        };
-        const data: TokenResponse = {
-            access_token: 'aaajafiuh89q247qy7ea90djkl',
-            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
+    describe('signIn', () => {
+        let request: SignInRequest;
+
+        beforeEach(() => {
+            request = {
+                email: 'test-email',
+                password: 'test-password',
+            };
         });
 
-        const resp = await AuthApi.signIn(signInRequest);
+        test('request is correct', async () => {
+            fetchMock.mockResponse(JSON.stringify({}));
 
-        expect(client.setAuthToken).toHaveBeenCalledWith(resp);
+            await storeRef.store.dispatch<any>(authApi.endpoints.signIn.initiate(request));
+
+            expectCorrectRequest('POST', 'login/');
+        });
+
+        test('successful response', async () => {
+            fetchMock.mockResponse(JSON.stringify(response));
+
+            const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signIn.initiate(request));
+
+            expect(data).toStrictEqual(response);
+        });
+
+        test('unsuccessful response', async () => {
+            fetchMock.mockReject(mockError);
+
+            const {
+                error: {status, error},
+            } = await storeRef.store.dispatch<any>(authApi.endpoints.signIn.initiate(request));
+
+            expect(status).toEqual('FETCH_ERROR');
+            expect(error).toContain(mockError.message);
+        });
     });
 
-    test('signIn throws error when response status is not 200', async () => {
-        const signInRequest: SignInRequest = {
-            email: 'dne@dne.com',
-            password: 'password123',
-        };
-        const data: DetailResponse = {
-            detail: 'failure',
-        };
+    describe('signOut', () => {
+        let request: SignOutRequest;
 
-        client.post.mockResolvedValue({
-            data,
-            status: 400,
-            statusText: 'Failure',
+        beforeEach(() => {
+            request = {
+                refresh: 'test-refresh-token',
+            };
         });
 
-        await expect(() => AuthApi.signIn(signInRequest)).rejects.toThrowError(data.detail);
+        test('request is correct', async () => {
+            fetchMock.mockResponse(JSON.stringify({}));
+
+            await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate(request));
+
+            expectCorrectRequest('POST', 'logout/');
+        });
+
+        test('successful response', async () => {
+            const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate(request));
+
+            expect(data).toBeUndefined();
+        });
+
+        test('unsuccessful response', async () => {
+            fetchMock.mockReject(mockError);
+
+            const {
+                error: {status, error},
+            } = await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate(request));
+
+            expect(status).toEqual('FETCH_ERROR');
+            expect(error).toContain(mockError.message);
+        });
     });
 
-    test('signOut resolves to void when signOut is successful', async () => {
-        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
-        const data: DetailResponse = {
-            detail: 'Sign out successful',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
+    describe('forgotPassword', () => {
+        let request: ForgotPasswordRequest;
+
+        beforeEach(() => {
+            request = {
+                email: 'test-email',
+            };
         });
 
-        const resp = await AuthApi.signOut(signOutRequest);
+        test('request is correct', async () => {
+            fetchMock.mockResponse(JSON.stringify({}));
 
-        expect(resp).toBe(undefined);
-    });
+            await storeRef.store.dispatch<any>(authApi.endpoints.forgotPassword.initiate(request));
 
-    test('signOut calls clearAuthToken on client when signOut is successful', async () => {
-        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
-        const data: DetailResponse = {
-            detail: 'Sign out successful',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
+            expectCorrectRequest('POST', 'password/reset/');
         });
 
-        await AuthApi.signOut(signOutRequest);
+        test('successful response', async () => {
+            const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.forgotPassword.initiate(request));
 
-        expect(client.clearAuthToken).toHaveBeenCalled();
-    });
-
-    test('signOut resolves to void when signOut is not successful', async () => {
-        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
-        const data: DetailResponse = {
-            detail: 'Server error',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 500,
-            statusText: 'Failure',
+            expect(data).toBeUndefined();
         });
 
-        const resp = await AuthApi.signOut(signOutRequest);
+        test('unsuccessful response', async () => {
+            fetchMock.mockReject(mockError);
 
-        expect(resp).toBe(undefined);
-    });
+            const {
+                error: {status, error},
+            } = await storeRef.store.dispatch<any>(authApi.endpoints.forgotPassword.initiate(request));
 
-    test('signOut calls clearAuthToken on client when signOut is not successful', async () => {
-        const signOutRequest: SignOutRequest = {refresh: 'adiahjfiueh902i0sef.awdfijasefhe8900'};
-        const data: DetailResponse = {
-            detail: 'Server error',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 500,
-            statusText: 'Failure',
+            expect(status).toEqual('FETCH_ERROR');
+            expect(error).toContain(mockError.message);
         });
-
-        await AuthApi.signOut(signOutRequest);
-
-        expect(client.clearAuthToken).toHaveBeenCalled();
-    });
-
-    test('forgotPassword returns message string when successful', async () => {
-        const request: ForgotPasswordRequest = {email: 'test@demo.com'};
-        const data: DetailResponse = {
-            detail: 'Success',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
-        });
-
-        const resp = await AuthApi.forgotPassword(request);
-
-        expect(resp).toBe(data.detail);
-    });
-
-    test('forgotPassword throws error when unsuccessful', async () => {
-        const request: ForgotPasswordRequest = {email: 'test@demo.com'};
-        const data: DetailResponse = {
-            detail: 'Failure',
-        };
-        client.post.mockResolvedValue({
-            data,
-            status: 500,
-            statusText: 'Failure',
-        });
-
-        await expect(() => AuthApi.forgotPassword(request)).rejects.toThrowError(data.detail);
-    });
-
-    test('refreshToken returns new auth token when successful', async () => {
-        const request: RefreshTokenRequest = {refresh: 'adnafuihsefiuhawodj'};
-        const data: TokenResponse = {
-            access_token: 'aaajafiuh89q247qy7ea90djkl',
-            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
-        };
-
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
-        });
-
-        const resp = await AuthApi.refreshToken(request);
-
-        expect(resp).toEqual({accessToken: data.access_token, refreshToken: data.refresh_token} as AuthToken);
-    });
-
-    test('refreshToken calls setAuthToken on client when successful', async () => {
-        const request: RefreshTokenRequest = {refresh: 'adnafuihsefiuhawodj'};
-        const data: TokenResponse = {
-            access_token: 'aaajafiuh89q247qy7ea90djkl',
-            refresh_token: 'egaihjdfa3it52t-0sfawdljaiofhjjg0',
-        };
-
-        client.post.mockResolvedValue({
-            data,
-            status: 200,
-            statusText: 'Success',
-        });
-
-        const resp = await AuthApi.refreshToken(request);
-
-        expect(client.setAuthToken).toHaveBeenCalledWith(resp);
-    });
-
-    test('refreshToken throws error when unsuccessful', async () => {
-        const request: RefreshTokenRequest = {refresh: 'afme3fhq2389u7aiodjaopdk'};
-        const data: TokenResponse = {
-            detail: 'Token is invalid or expired',
-        };
-
-        client.post.mockResolvedValue({
-            data,
-            status: 401,
-            statusText: 'Failure',
-        });
-
-        await expect(() => AuthApi.refreshToken(request)).rejects.toThrowError(data.detail);
     });
 });

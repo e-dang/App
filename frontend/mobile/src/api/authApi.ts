@@ -1,9 +1,6 @@
-import Client from '@api/client';
-import {AuthToken, Email, Name, Password, Token} from '@src/types';
+import {baseApi} from './baseApi';
+import {Email, Name, Password, Token, User} from '@src/types';
 
-export interface DetailResponse {
-    detail?: string;
-}
 export interface SignUpRequest {
     name: Name;
     email: Email;
@@ -24,70 +21,43 @@ export interface ForgotPasswordRequest {
     email: Email;
 }
 
-export interface RefreshTokenRequest {
-    refresh: Token;
+export interface AuthenticationResponse {
+    access_token: Token;
+    refresh_token: Token;
+    user: User;
 }
 
-export interface TokenResponse extends DetailResponse {
-    access_token?: Token;
-    refresh_token?: Token;
-}
+export const authApi = baseApi.injectEndpoints({
+    endpoints: (builder) => ({
+        signIn: builder.mutation<AuthenticationResponse, SignInRequest>({
+            query: (credentials) => ({
+                url: 'login/',
+                method: 'POST',
+                body: credentials,
+            }),
+        }),
+        signUp: builder.mutation<AuthenticationResponse, SignUpRequest>({
+            query: (credentials) => ({
+                url: 'registration/',
+                method: 'POST',
+                body: credentials,
+            }),
+        }),
+        signOut: builder.mutation<void, SignOutRequest>({
+            query: (refreshToken) => ({
+                url: 'logout/',
+                method: 'POST',
+                body: refreshToken,
+            }),
+        }),
+        forgotPassword: builder.mutation<void, ForgotPasswordRequest>({
+            query: (email) => ({
+                url: 'password/reset/',
+                method: 'POST',
+                body: email,
+            }),
+        }),
+    }),
+});
 
-export class AuthApi {
-    static readonly timeout = 60000;
-    private static client = Client;
-
-    static async signUp(request: SignUpRequest): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<SignUpRequest, TokenResponse>('/registration/', request);
-
-        if (resp.status !== 201) {
-            throw new Error(resp.data.detail);
-        }
-
-        const authToken = {accessToken: resp.data.access_token, refreshToken: resp.data.refresh_token} as AuthToken;
-        AuthApi.client.setAuthToken(authToken);
-        return authToken;
-    }
-
-    static async signIn(request: SignInRequest): Promise<AuthToken> {
-        const resp = await AuthApi.client.post<SignInRequest, TokenResponse>('/login/', request);
-
-        if (resp.status !== 200) {
-            throw new Error(resp.data.detail);
-        }
-
-        const authToken = {accessToken: resp.data.access_token, refreshToken: resp.data.refresh_token} as AuthToken;
-        AuthApi.client.setAuthToken(authToken);
-        return authToken;
-    }
-
-    static async signOut(request: SignOutRequest): Promise<void> {
-        // signOut should never fail on the client side. If something causes the request to fail the backend
-        // should invalidate old auth tokens upon successful re-signIn. This is why auth tokens shouldnt be valid
-        // for long periods of time
-        await AuthApi.client.post<SignOutRequest, DetailResponse>('/logout/', request);
-        AuthApi.client.clearAuthToken();
-    }
-
-    static async forgotPassword(request: ForgotPasswordRequest): Promise<string> {
-        const resp = await AuthApi.client.post<ForgotPasswordRequest, DetailResponse>('/password/reset/', request);
-
-        if (resp.status !== 200) {
-            throw new Error(resp.data.detail);
-        }
-
-        return resp.data.detail as string;
-    }
-
-    static async refreshToken(request: RefreshTokenRequest) {
-        const resp = await AuthApi.client.post<RefreshTokenRequest, TokenResponse>('/token/refresh/', request);
-
-        if (resp.status !== 200) {
-            throw new Error(resp.data.detail);
-        }
-
-        const authToken = {accessToken: resp.data.access_token, refreshToken: resp.data.refresh_token} as AuthToken;
-        AuthApi.client.setAuthToken(authToken);
-        return authToken;
-    }
-}
+export const {useSignInMutation, useSignUpMutation, useSignOutMutation, useForgotPasswordMutation} = authApi;

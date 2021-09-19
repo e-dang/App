@@ -1,27 +1,32 @@
 import React, {useState} from 'react';
-import {signUpAsync} from '@actions';
 import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, NameInput} from '@components';
 import {Email, Name, Password} from '@src/types';
-import {useSelector} from '@utils';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
-import {useDispatch} from 'react-redux';
-import {get} from 'lodash';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from '@hooks';
+import {setCredentials} from '@store';
+import {useSignUpMutation} from '@api';
 
 export function SignUp() {
-    const isPending = useSelector((state) => get(state.pendingStates, 'SIGN_UP.pending', false) as boolean);
+    const [signUp, {data, error, isLoading}] = useSignUpMutation();
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [name, setName] = useState<Name>('');
     const [email, setEmail] = useState<Email>('');
     const [password, setPassword] = useState<Password>('');
 
+    React.useEffect(() => {
+        if (data !== undefined) {
+            dispatch(setCredentials(data));
+        }
+    }, [data]);
+
     const handleSignUp = () => {
-        dispatch(signUpAsync.request({name, email, password1: password, password2: password}));
+        signUp({name, email, password1: password, password2: password});
     };
 
     const cancelSignUp = () => {
-        dispatch(signUpAsync.cancel());
+        // dispatch(signUpAsync.cancel());
     };
 
     const handleBack = () => {
@@ -42,7 +47,7 @@ export function SignUp() {
                 }
             />
             <Screen testID="emailSignUpScreen">
-                <LoadingModal isLoading={isPending} onClose={cancelSignUp} />
+                <LoadingModal isLoading={isLoading} onClose={cancelSignUp} />
                 <Center flex={4}>
                     <Heading>Sign Up</Heading>
                 </Center>

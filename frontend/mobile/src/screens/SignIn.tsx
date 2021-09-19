@@ -1,27 +1,31 @@
 import React, {useState} from 'react';
-import {signInAsync} from '@actions';
 import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} from '@components';
 import {Email, Password} from '@src/types';
-import {useSelector} from '@utils';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
-import {useDispatch} from 'react-redux';
-import {get} from 'lodash';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from '@hooks';
+import {setCredentials} from '@store';
+import {useSignInMutation} from '@api';
 
 export function SignIn() {
     const [email, setEmail] = useState<Email>('');
     const [password, setPassword] = useState<Password>('');
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const error = useSelector((state) => get(state.errorStates, 'SIGN_IN.error', '') as string);
-    const isPending = useSelector((state) => get(state.pendingStates, 'SIGN_IN.pending', false) as boolean);
+    const [signIn, {data, error, isLoading}] = useSignInMutation();
+
+    React.useEffect(() => {
+        if (data !== undefined) {
+            dispatch(setCredentials(data));
+        }
+    }, [data]);
 
     const handleSignIn = () => {
-        dispatch(signInAsync.request({email, password}));
+        signIn({email, password});
     };
 
     const cancelSignIn = () => {
-        dispatch(signInAsync.cancel());
+        // dispatch(signInAsync.cancel());
     };
 
     const handleBack = () => {
@@ -55,7 +59,7 @@ export function SignIn() {
                 }
             />
             <Screen testID="signInScreen">
-                <LoadingModal isLoading={isPending} onClose={cancelSignIn} />
+                <LoadingModal isLoading={isLoading} onClose={cancelSignIn} />
                 <Center flex={4}>
                     <Heading>Sign In</Heading>
                 </Center>

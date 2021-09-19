@@ -1,18 +1,20 @@
 import React from 'react';
 import {App as AppBase} from '@src/App';
 import {Box, Button} from 'native-base';
-import {useDispatch} from 'react-redux';
-import {signOut} from '@actions';
-import {useSelector} from '@utils';
-import {RootState} from './store';
+import {selectAuthToken} from '@selectors';
+import {useDispatch, useSelector} from '@hooks';
+import {signOut} from '@store';
+import {useSignOutMutation} from '@api';
 
 export function App() {
-    const authToken = useSelector((state: RootState) => state.auth.token);
+    const authToken = useSelector(selectAuthToken);
     const dispatch = useDispatch();
+    const [callSignOut] = useSignOutMutation();
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         if (authToken) {
-            dispatch(signOut({refresh: authToken.refreshToken}));
+            await callSignOut({refresh: authToken.refreshToken});
+            dispatch(signOut());
         }
     };
 

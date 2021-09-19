@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/lib/integration/react';
 import {App} from '@src/wrapper';
-import {persistor, store} from '@src/store';
+import {persistor, store} from '@store';
 import {NavigationService, navigationRef} from '@utils/navigationService';
 import '@i18n';
 import {enableScreens} from 'react-native-screens';
