@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: main
+    branch: database
   secretRef:
     name: flux-system
   url: ssh://git@github.com/e-dang/App.git
@@ -16,7 +16,7 @@ spec:
     !/flux
     !/charts
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
   name: flux-system
