@@ -1,6 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as authorization from '@pulumi/azure-native/authorization';
 import * as containerservice from '@pulumi/azure-native/containerservice';
+import {execSync} from 'child_process';
 import {config} from './config';
 
 const env = pulumi.getStack();
@@ -65,3 +66,42 @@ const creds = pulumi.secret(
 
 export const clusterId = cluster.id;
 export const kubeConfig = creds.kubeconfigs[0].value.apply((enc) => Buffer.from(enc, 'base64').toString());
+
+// This section is running the cluster only on spot nodes in order to decrease the price for development
+if (env == 'dev') {
+    // Add spot node pool
+    const spotNodes = new containerservice.AgentPool('spot-nodes', {
+        agentPoolName: 'spotnodepool',
+        resourceGroupName: config.resourceGroupName,
+        resourceName: cluster.name,
+        scaleSetPriority: 'Spot',
+        vmSize: 'Standard_A2_v2',
+        vnetSubnetID: config.subnetId,
+        enableAutoScaling: true,
+        count: 1,
+        minCount: 1,
+        maxCount: 3,
+        scaleSetEvictionPolicy: 'Delete',
+        spotMaxPrice: -1,
+        osDiskSizeGB: 32,
+    });
+
+    // Delete default node pool and remove spot node taints
+    pulumi.all([kubeConfig, spotNodes.id]).apply(([kubeConfig, _]) => {
+        const nodes = execSync(`kubectl get nodes -o=name --kubeconfig <(echo "${kubeConfig}")`, {
+            shell: '/bin/bash',
+        }).toString();
+
+        nodes
+            .split('\n')
+            .filter((name) => name.match(/default/))
+            .forEach((defaultNode) =>
+                execSync(`kubectl delete ${defaultNode} --kubeconfig <(echo "${kubeConfig}")`, {shell: '/bin/bash'}),
+            );
+
+        execSync(
+            `kubectl taint nodes --all "kubernetes.azure.com/scalesetpriority-" --kubeconfig <(echo "${kubeConfig}") 2>/dev/null || true`,
+            {shell: '/bin/bash'},
+        );
+    });
+}
