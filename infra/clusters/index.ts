@@ -8,6 +8,7 @@ const env = pulumi.getStack();
 
 const cluster = new containerservice.ManagedCluster('aks', {
     aadProfile: {
+        adminGroupObjectIDs: [config.adminGroupId],
         enableAzureRBAC: true,
         managed: true,
     },
@@ -46,13 +47,6 @@ const clusterKeyVaultAccess = new authorization.RoleAssignment('cluster-keyvault
     principalType: 'ServicePrincipal',
     roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/12338af0-0e69-4776-bea7-57ae8d297424', // Key Vault Crypto User
     scope: config.vaultId,
-});
-
-const adminAccess = new authorization.RoleAssignment('admin-access', {
-    principalId: config.adminGroupId,
-    principalType: 'Group',
-    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/b1ff04bb-8a4e-4dc4-8eb5-8693973ce19b', // Azure Kubernetes Service RBAC Cluster Admin
-    scope: cluster.id,
 });
 
 const devAccess = new authorization.RoleAssignment('dev-access', {
