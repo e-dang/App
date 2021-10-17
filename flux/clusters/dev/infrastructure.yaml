@@ -13,5 +13,3 @@ spec:
   validation: client
   decryption:
     provider: sops
-    secretRef:
-      name: sops-gpg
