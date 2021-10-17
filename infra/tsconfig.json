@@ -12,5 +12,6 @@
         "noImplicitReturns": true,
         "forceConsistentCasingInFileNames": true
     },
-    "files": ["index.ts"]
+    "exclude": ["node_modules"],
+    "include": ["identity/*", "networks/*", "keys/*", "clusters/*", "cluster-configs/*"]
 }
