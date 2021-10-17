@@ -34,5 +34,5 @@ const devs = new azuread.Group('devs', {
     securityEnabled: true,
 });
 
-export const adGroupAdmins = admins.objectId;
-export const adGroupDevs = devs.objectId;
+export const adminGroupId = admins.objectId;
+export const devGroupId = devs.objectId;
