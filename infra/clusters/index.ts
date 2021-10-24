@@ -42,13 +42,6 @@ const cluster = new containerservice.ManagedCluster('aks', {
     },
 });
 
-const clusterKeyVaultAccess = new authorization.RoleAssignment('cluster-keyvault', {
-    principalId: cluster.identity.apply((id) => id?.principalId || ''),
-    principalType: 'ServicePrincipal',
-    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/12338af0-0e69-4776-bea7-57ae8d297424', // Key Vault Crypto User
-    scope: config.vaultId,
-});
-
 const devAccess = new authorization.RoleAssignment('dev-access', {
     principalId: config.devGroupId,
     principalType: 'Group',

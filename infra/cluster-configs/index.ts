@@ -1,8 +1,12 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as k8s from '@pulumi/kubernetes';
 import * as github from '@pulumi/github';
+import * as authorization from '@pulumi/azure-native/authorization';
 import {execSync} from 'child_process';
 import {config} from './config';
+
+const env = pulumi.getStack();
+const tenantId = authorization.getClientConfig().then((config) => config.tenantId);
 
 const provider = new k8s.Provider('k8s', {
     kubeconfig: config.kubeConfig,
@@ -70,6 +74,32 @@ spec:
     strategy: Setters
 `;
 
+const gotkPatchesRaw = `
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kustomize-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        envFrom:
+        - secretRef:
+            name: sops-akv-decryptor-service-principal
+`;
+
+const gotkKustomizationRaw = `
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - gotk-components.yaml
+  - gotk-sync.yaml
+patchesStrategicMerge:
+  - gotk-patches.yaml
+`;
+
 const gotkComponentsManifests = new k8s.yaml.ConfigGroup(
     'gotk-components',
     {
@@ -90,11 +120,13 @@ const sopsSecret = new k8s.core.v1.Secret(
     'sops-key',
     {
         metadata: {
-            name: 'sops-gpg',
+            name: 'sops-akv-decryptor-service-principal',
             namespace: 'flux-system',
         },
         stringData: {
-            'sops.asc': config.sopsSecret,
+            AZURE_TENANT_ID: tenantId,
+            AZURE_CLIENT_ID: config.akvClientId,
+            AZURE_CLIENT_SECRET: config.akvClientSecret,
         },
     },
     {dependsOn: [gotkComponentsManifests]},
@@ -119,7 +151,7 @@ const githubSshSecret = new k8s.core.v1.Secret(
 const gotkComponentsFile = new github.RepositoryFile('gotk-components', {
     repository: 'App',
     branch: config.branch,
-    file: 'flux/clusters/dev/flux-system/gotk-components.yaml',
+    file: `flux/clusters/${env}/flux-system/gotk-components.yaml`,
     content: gotkComponentsRaw,
     overwriteOnCreate: true,
 });
@@ -127,8 +159,24 @@ const gotkComponentsFile = new github.RepositoryFile('gotk-components', {
 const gotkSyncFile = new github.RepositoryFile('gotk-sync', {
     repository: 'App',
     branch: config.branch,
-    file: 'flux/clusters/dev/flux-system/gotk-sync.yaml',
+    file: `flux/clusters/${env}/flux-system/gotk-sync.yaml`,
     content: gotkSyncRaw,
+    overwriteOnCreate: true,
+});
+
+const gotkPatchesFile = new github.RepositoryFile('gotk-patches', {
+    repository: 'App',
+    branch: config.branch,
+    file: `flux/clusters/${env}/flux-system/gotk-patches.yaml`,
+    content: gotkPatchesRaw,
+    overwriteOnCreate: true,
+});
+
+const gotkKustomizationFile = new github.RepositoryFile('gotk-kustomization', {
+    repository: 'App',
+    branch: config.branch,
+    file: `flux/clusters/${env}/flux-system/kustomization.yaml`,
+    content: gotkKustomizationRaw,
     overwriteOnCreate: true,
 });
 

@@ -2,8 +2,10 @@ import * as pulumi from '@pulumi/pulumi';
 import * as keyvault from '@pulumi/azure-native/keyvault';
 import * as authorization from '@pulumi/azure-native/authorization';
 import * as random from '@pulumi/random';
+import * as azuread from '@pulumi/azuread';
 import {config} from './config';
 
+const currentPrincipal = azuread.getClientConfig().then((config) => config.objectId);
 const tenantId = authorization.getClientConfig().then((config) => config.tenantId);
 const env = pulumi.getStack();
 
@@ -40,6 +42,28 @@ const key = new keyvault.Key('key', {
     },
 });
 
+const akvApplication = new azuread.Application('akv-application', {
+    displayName: 'akv-sops-decryption',
+    owners: [currentPrincipal],
+});
+
+const akvServicePrincipal = new azuread.ServicePrincipal('akv-serviceprincipal', {
+    applicationId: akvApplication.applicationId,
+    appRoleAssignmentRequired: false,
+    owners: [currentPrincipal],
+});
+
+const akvServicePrincipalPassword = new azuread.ServicePrincipalPassword('akv-serviceprincipal-password', {
+    servicePrincipalId: akvServicePrincipal.id,
+});
+
+const akvKeyVaultAccess = new authorization.RoleAssignment('akv-keyvault', {
+    principalId: akvServicePrincipal.id,
+    principalType: 'ServicePrincipal',
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/12338af0-0e69-4776-bea7-57ae8d297424', // Key Vault Crypto User
+    scope: vault.id,
+});
+
 const adminAccess = new authorization.RoleAssignment('admin-access', {
     principalId: config.adminGroupId,
     principalType: 'Group',
@@ -56,3 +80,5 @@ const devAccess = new authorization.RoleAssignment('dev-access', {
 
 export const vaultId = vault.id;
 export const keyUri = key.keyUri;
+export const akvServicePrincipleId = akvApplication.applicationId;
+export const akvServicePrincipleSecret = akvServicePrincipalPassword.value;
