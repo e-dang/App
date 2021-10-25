@@ -3,4 +3,5 @@ creation_rules:
     pgp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
   - path_regex: ./flux/.*.yaml
     encrypted_regex: ^(data|stringData)$
+    azure_keyvault: https://dev-df9335ce19e9bea0.vault.azure.net/keys/tracker-sops/6c40b271f7bd4fbebb4f906e1f3abe68
     pgp: A9D0E9EDCEA9201EA6214063FE9E4A501304255A

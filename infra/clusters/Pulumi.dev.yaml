@@ -1,0 +1,3 @@
+config:
+  azure-native:location: WestUS
+  clusters:networkStackRef: e-dang/networks/dev

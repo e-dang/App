@@ -1,0 +1,15 @@
+import * as pulumi from '@pulumi/pulumi';
+
+const env = pulumi.getStack();
+
+const identityStackRef = new pulumi.StackReference('e-dang/identity/base');
+const networkStackRef = new pulumi.StackReference(`e-dang/networks/${env}`);
+const vaultStackRef = new pulumi.StackReference(`e-dang/keys/${env}`);
+
+export const config = {
+    resourceGroupName: networkStackRef.getOutput('resourceGroupName'),
+    subnetId: networkStackRef.getOutput('clusterSubnetId'),
+    adminGroupId: identityStackRef.getOutput('adminGroupId'),
+    devGroupId: identityStackRef.getOutput('devGroupId'),
+    vaultId: vaultStackRef.getOutput('vaultId'),
+};

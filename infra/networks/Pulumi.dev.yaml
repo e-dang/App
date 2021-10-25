@@ -1,0 +1,5 @@
+config:
+  azure-native:location: WestUS
+  networks:vnetAddresses:
+    - 10.1.0.0/16
+  networks:clusterSubnetPrefix: 10.1.0.0/24
