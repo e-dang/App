@@ -3,3 +3,4 @@ config:
   networks:vnetAddresses:
     - 10.1.0.0/16
   networks:clusterSubnetPrefix: 10.1.0.0/24
+  networks:trackerDbSubnetPrefix: 10.1.1.0/24
