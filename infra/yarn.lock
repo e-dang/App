@@ -67,31 +67,31 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@pulumi/azure-native@^1.0.0":
-  version "1.39.0"
-  resolved "https://registry.yarnpkg.com/@pulumi/azure-native/-/azure-native-1.39.0.tgz#395990a7893b70d9653b766d87b6831b1ef243dc"
-  integrity sha512-OJTne7SiBuC0QvOH61WNcqKU1MWOotxz+DmYtwMJpoP8L86I6SUe/mMNNkIeBbVn8hhDwaXPUeAu5vb3wVyBdg==
+"@pulumi/azure-native@^1.43.0":
+  version "1.43.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/azure-native/-/azure-native-1.43.0.tgz#a8e11dc2fecac6b2c08aca7e66fe3af6c31524d2"
+  integrity sha512-jvxxNwLFWa0L6zG35Hhx4DA/kdS1S9ipZnnKWhXLkM01IEZpWTI1GFgOnwN7l/fc85Vpe4xfC6tUny72t/wAzA==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
-"@pulumi/azuread@^5.5.0":
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@pulumi/azuread/-/azuread-5.5.0.tgz#66283387acc32c9d7a8387d05e147d2043501597"
-  integrity sha512-zwvx+aQ0QFX4tfRRjalGYAKhx+4hVCj2SRUw7xe83efvFPv+SU6moiQPk9WMAKxWBGkvNrcFwtKddL2pFVIkMg==
+"@pulumi/azuread@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/azuread/-/azuread-5.7.0.tgz#93216bee6012ac2e0433af44644aa4f56b768dce"
+  integrity sha512-I4sCslc5HO4zjvAqedERFK9gEBiQPgCpQSSVAbyVikIBmNv9YimsroRT1CWWgolNzZ5wphmV/aASBoloBMCeaQ==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
-"@pulumi/github@^4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@pulumi/github/-/github-4.5.0.tgz#8dd191d8605cd56176dbba522ba7e8ce7dbd7cf1"
-  integrity sha512-gxQ0TMM7hwbF7MawQW6BtfeeEmerV6p+08W6bYicuoLAn6A32JCXGCOPrpAVQmldifgqg5oeGCucd+eOV2FMVw==
+"@pulumi/github@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/github/-/github-4.6.0.tgz#7437c417e507470203b591b906104267852f51c6"
+  integrity sha512-f/bv5UrmnfSbIrmyMIS0yhQ7Sj+BT3jrQgcwHVL0RItTzwRTpNXeuckWZ++vpX+Hkj2XlgKRkcYMBlFrD2RKmw==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
-"@pulumi/kubernetes@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@pulumi/kubernetes/-/kubernetes-3.8.1.tgz#c94043dccfb76b1dac08670a09ba5e964e3fc475"
-  integrity sha512-Qa53AlQRTdguWQdA5bTO8aSb3wSbOoHG/Ig3EXZ15pUNk7S6lglHogA8UsjhFCdB0gmayc7z9S6I5vX93bzrYA==
+"@pulumi/kubernetes@^3.8.3":
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/@pulumi/kubernetes/-/kubernetes-3.8.3.tgz#b9bb51c875d83e0d6cec8f7dfeba8d0fa87845d8"
+  integrity sha512-YK1g41mtiFIVe8UeuiKg6Ao7OF3wmTDPD/nSnLzxPFNjWcSH0xfOLnu70AaDJoI05pvaIh4WEQS5fAthvRwJxA==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
     "@types/glob" "^5.0.35"
@@ -106,6 +106,27 @@
   version "3.15.0"
   resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.15.0.tgz#b501947506d072b03397117673337cbb13431372"
   integrity sha512-df5aB8syBeiiGgCbGIDvszFXkJw+py5Eb0h+mpqd2ZDZ9QaxGkldf18Dl2v0coBUdVPc/wL0Kb+aVVrG5Qr74A==
+  dependencies:
+    "@grpc/grpc-js" "~1.3.8"
+    "@logdna/tail-file" "^2.0.6"
+    "@pulumi/query" "^0.3.0"
+    google-protobuf "^3.5.0"
+    js-yaml "^3.14.0"
+    minimist "^1.2.0"
+    normalize-package-data "^2.4.0"
+    protobufjs "^6.8.6"
+    read-package-tree "^5.3.1"
+    require-from-string "^2.0.1"
+    semver "^6.1.0"
+    source-map-support "^0.4.16"
+    ts-node "^7.0.1"
+    typescript "~3.7.3"
+    upath "^1.1.0"
+
+"@pulumi/pulumi@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.16.0.tgz#08ac7fa655477c100d56c15e7692dea7649eff3f"
+  integrity sha512-pAZE/sLHg9xZ01H7pACi6STNwyg4A0ZhR9SK9lrRKgaJt30j8K855AhurXB0/3jVN7Y9dIbbSir70XKRDNKHOg==
   dependencies:
     "@grpc/grpc-js" "~1.3.8"
     "@logdna/tail-file" "^2.0.6"
