@@ -7,8 +7,9 @@ assignees: ''
 
 ---
 
-# Task Description
+**Task Description**
+What needs to be done for this task? List possible steps for completing it.
 
-# Why
+**Why Is This Important?**
 
-# Additional Context
+**Additional Context**
