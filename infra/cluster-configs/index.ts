@@ -100,12 +100,30 @@ patchesStrategicMerge:
   - gotk-patches.yaml
 `;
 
+const fluxSystemNamespace = new k8s.core.v1.Namespace(
+    'flux-system',
+    {
+        metadata: {
+            name: 'flux-system',
+            labels: {
+                'app.kubernetes.io/instance': 'flux-system',
+                'app.kubernetes.io/part-of': 'flux',
+                'app.kubernetes.io/version': config.fluxVersion,
+            },
+        },
+    },
+    {provider},
+);
+
 const gotkComponentsManifests = new k8s.yaml.ConfigGroup(
     'gotk-components',
     {
-        yaml: gotkComponentsRaw,
+        yaml: gotkComponentsRaw
+            .split('---')
+            .filter((val) => !val.includes('kind: Namespace')) // remove flux-system namespace and apply it manually
+            .join('---'),
     },
-    {provider},
+    {provider, dependsOn: [fluxSystemNamespace]},
 );
 
 const gotkSyncManifests = new k8s.yaml.ConfigGroup(
@@ -129,7 +147,7 @@ const sopsDecryptionSecret = new k8s.core.v1.Secret(
             AZURE_CLIENT_SECRET: config.akvClientSecret,
         },
     },
-    {dependsOn: [gotkComponentsManifests]},
+    {dependsOn: [fluxSystemNamespace]},
 );
 
 const githubSshSecret = new k8s.core.v1.Secret(
