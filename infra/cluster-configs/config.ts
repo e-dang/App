@@ -19,6 +19,7 @@ export const config = {
     githubIdentity: githubDeployKey.identity,
     githubIdentityPub: githubDeployKey.identityPub,
     githubKnownHosts: githubDeployKey.knownHosts,
+    fluxVersion: pulumiConfig.require('fluxVersion'),
     kubeConfig: clusterStackRef.getOutput('kubeConfig'),
     akvClientId: keyStackRef.getOutput('akvFluxServicePrincipleId'),
     akvClientSecret: keyStackRef.getOutput('akvFluxServicePrincipleSecret'),

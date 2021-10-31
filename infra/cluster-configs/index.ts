@@ -13,7 +13,7 @@ const provider = new k8s.Provider('k8s', {
 });
 
 const gotkComponentsRaw = execSync(
-    'flux install --version=0.18.3 --namespace=flux-system --components-extra="image-reflector-controller,image-automation-controller" --export',
+    `flux install --version=${config.fluxVersion} --namespace=flux-system --components-extra="image-reflector-controller,image-automation-controller" --export`,
 ).toString();
 
 const gotkSyncRaw = `
