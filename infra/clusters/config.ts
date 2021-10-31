@@ -1,5 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 
+const pulumiConfig = new pulumi.Config();
 const env = pulumi.getStack();
 
 const identityStackRef = new pulumi.StackReference('e-dang/identity/base');
@@ -10,4 +11,6 @@ export const config = {
     subnetId: networkStackRef.getOutput('clusterSubnetId'),
     adminGroupId: identityStackRef.getOutput('adminGroupId'),
     devGroupId: identityStackRef.getOutput('devGroupId'),
+    domainResourceGroup: pulumiConfig.require('domainResourceGroup'),
+    dnsZone: pulumiConfig.require('dnsZone'),
 };
