@@ -1,0 +1,38 @@
+adminLogin: ENC[AES256_GCM,data:lKvaPzkPxle7KkDNeo9Y6Q3p0u4NRkKimwiJ4iRqCGs=,iv:X32ZNO4zAlH+iKgPUGF5i0woyJh3lptrzAJKw5G5ITo=,tag:rLGtC3j8omw3jm3R91iiGA==,type:str]
+adminPassword: ENC[AES256_GCM,data:fwyxXoBeeSKVBjmfUWnCNqcoml7xcuUlOkc/XQFVVYw=,iv:cs71c17+D34+Nna2ZFjk/MjL/45QMuuN/auxY+7lxEU=,tag:6O9FcogqseysHBwdMf0z+w==,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv:
+    - vault_url: https://infra-dev-b0607c347c.vault.azure.net
+      name: tracker-db-sops
+      version: 753199b366914513be1bbcf1354bf0b7
+      created_at: '2021-10-30T23:58:07Z'
+      enc: CTPxjxM9ZbtennJOx69evwzUjZ-72fUxtaw6Qa5BEkR5wl2otRKJACXmBZent6lsR8FPJnepDnJwyeBOABTsisMr-ASO4PYtkxP8SoZ3Y5HlWE-V1lNGP0Hdv1iE4g753xtD6Lq1FBVaiG87Khy-i_6hnOzD6z62sPm4t4Uzyqk4q8GcpIP1564dsX4jQ2RI8cAdl4IJN_FpcBb13h0PpThJrfjMbTXWVNTaIX4p0BXNNlNiXoTjNLJNuItTyyhYz4MB1kKE2EKkXTkD_iA0QZW8MIin4wKy366HnqZD3bqW2b6hPTknWktZUnSZOOPmA6m6vw7WL9n_ypsrIpu30Q
+  hc_vault: []
+  age: []
+  lastmodified: '2021-10-30T23:58:11Z'
+  mac: ENC[AES256_GCM,data:2cL2FdbPFyca8T2StW0LlEl80+zaWkQpY85D0NNYg3DWSSEewwYNDLoOvn6q24RiBfEofGdu1N5LmtdHy0qNMvzkzMhAj3zful4uiCmF8NbuP8b8gsE+vfvfNte21K34EJYKt2OSp1jZfRnKivEu0CC4W5p1e1uozwJqxA1kxYE=,iv:JhCgI5DBvshK92qZEzy43JPONKyLG2PDWlhAppknmKw=,tag:y1Sv7eVmmMMGdyMy/MJDPQ==,type:str]
+  pgp:
+    - created_at: '2021-10-30T23:58:07Z'
+      enc: |
+        -----BEGIN PGP MESSAGE-----
+
+        hQIMA7PyFoPS23feAQ/9GBj7zTYvQjYvh+Sztw4hAaHzXDiVMqkytbmn+D/1f8nh
+        uAA6fFqcIiSraTXGmNVYXAs9G9tdI14PxxiIfktPNTeQuzKLhoUeSgmeAyjomKqc
+        cyLyoMgAKaMMGG9pVWR7eJO+yiCT5EjVwFVzGqQU0iaGYLK3OQhwnWUn3Xv0r3rl
+        snVuOBLbvg1d/UsUczhfSNhqkPatpnq2wMwWJpYGW409O7ZYJTJHo56O177Rbzpr
+        ftZfIdI9wKfyIPEYotpD/U0dI8bUCWMJllJCt+hXCUWznvUIc27nsy0m+ZIp/0Zw
+        NvNv0tDP/XBAhYwND7YiqAqkyzyZ0Vtky4/wvMZ7PL+3D1SFIAoOjU+3fahlxNRA
+        dp4BnWOhmT8LWtvNuLAWl1TL4/S0gcB1RvknUKpMgyHhOobFrmhxx9ulXeyngKB/
+        qmeDNHsrVSsgM6bhcdjGH++1RITvzafB3OXuky5b3Ten/bO3tmXgBdgWDVQkHJjP
+        ITqc8VId3cQPzYhiljSONMbrDaUZwiJvyiWq4pAPqI+qX7u428ZCDWSrKghfDCTM
+        lwx36ogNH4CuPrW21jZoTTxFLqkNr3ZywZc1wiZqPgOZDsSl02HgwEQzs1xqioZ5
+        2ttnyNX9zS65AaJHktRB9BFqbvbOT+Y5JMMlYfEWYq7jXYlSC6GfTlmQhXQaOCrS
+        XAHkjnBC3HRG5Fc+FyHv6QCZFCW3TiO3pAXF+kX7zzMFFYuEKPXuebwuN28tQ37h
+        diNetCnKxg6Q45Nk0jSQnaqRU9z3tQl4s2ujFKzdwmNBflsy7Jl29twgo+Q1
+        =A+bx
+        -----END PGP MESSAGE-----
+      fp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
+  unencrypted_suffix: _unencrypted
+  version: 3.7.1
