@@ -1,6 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as authorization from '@pulumi/azure-native/authorization';
 import * as containerservice from '@pulumi/azure-native/containerservice';
+import * as azure from '@pulumi/azure-native';
 import {execSync} from 'child_process';
 import {config} from './config';
 
@@ -47,6 +48,27 @@ const clusterSubnetAccess = new authorization.RoleAssignment('cluster-subnet-acc
     principalType: 'ServicePrincipal',
     roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7', // Network Contributor
     scope: config.subnetId,
+});
+
+const domainResourceGroup = azure.resources.getResourceGroup({resourceGroupName: config.domainResourceGroup});
+
+const dnsZone = azure.network.getZone({
+    resourceGroupName: config.domainResourceGroup,
+    zoneName: config.dnsZone,
+});
+
+const kubeletResourceGroupReaderAccess = new azure.authorization.RoleAssignment('kubelet-domain-resouce-group-access', {
+    principalId: cluster.identityProfile.apply((config) => config?.kubeletidentity.objectId || ''),
+    principalType: 'ServicePrincipal',
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7', // Reader Role,
+    scope: domainResourceGroup.then((config) => config.id),
+});
+
+const kubeletDnsContributorAccess = new authorization.RoleAssignment('kubelet-dns-zone-access', {
+    principalId: cluster.identityProfile.apply((config) => config?.kubeletidentity.objectId || ''),
+    principalType: 'ServicePrincipal',
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/befefa01-2a29-4197-83a8-272ff33ce314', // DNS Contributor
+    scope: dnsZone.then((config) => config.id),
 });
 
 const devAccess = new authorization.RoleAssignment('dev-access', {
