@@ -25,24 +25,5 @@ jobs:
         with:
           version: latest
 
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v1
-        with:
-          tflint_version: v0.29.0
-
-      - name: Install Terraform Docs
-        run: |
-          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | \
-          grep -o -E "https://.+?-linux-amd64.tar.gz")" > terraform-docs.tgz && \
-          tar xzf terraform-docs.tgz && \
-          chmod +x terraform-docs && \
-          sudo mv terraform-docs /usr/bin/
-
-      - name: Install TFSec
-        run: |
-          wget https://github.com/aquasecurity/tfsec/releases/download/v0.47.0/tfsec-linux-amd64 && \
-          chmod +x tfsec-linux-amd64 && \
-          sudo mv tfsec-linux-amd64 /usr/bin/tfsec
-
       - name: Install and Run Pre-commit
         uses: pre-commit/action@v2.0.3
