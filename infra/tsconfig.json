@@ -13,5 +13,5 @@
         "forceConsistentCasingInFileNames": true
     },
     "exclude": ["node_modules"],
-    "include": ["identity/*", "networks/*", "keys/*", "clusters/*", "cluster-configs/*", "./utils.ts"]
+    "include": ["identity/*", "networks/*", "keys/*", "clusters/*", "cluster-configs/*", "databases/*", "./utils.ts"]
 }
