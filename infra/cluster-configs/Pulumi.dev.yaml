@@ -1,0 +1,5 @@
+config:
+  azure-native:location: WestUS
+  cluster-configs:branch: database
+  cluster-configs:fluxVersion: 0.18.3
+  cluster-configs:githubOwner: e-dang

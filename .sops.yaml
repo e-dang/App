@@ -1,6 +1,22 @@
 creation_rules:
-  - path_regex: ./infra/.*.yaml
+  - path_regex: ./infra/databases/files/db-creds-dev.yaml
+    azure_keyvault: https://infra-dev-b0607c347c.vault.azure.net/keys/tracker-db-sops/753199b366914513be1bbcf1354bf0b7
     pgp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
-  - path_regex: ./flux/.*.yaml
+
+  - path_regex: ./infra/cluster-configs/files/github-deploy-key.yaml
+    azure_keyvault: https://infra-dev-b0607c347c.vault.azure.net/keys/github-deploy-key-sops/82198930cfad4d01a0bbdf6b8bf4085b
+    pgp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
+
+  - path_regex: ./infra/cluster-configs/files/github-token.yaml
+    azure_keyvault: https://infra-dev-b0607c347c.vault.azure.net/keys/github-token-sops/db8622e811f749048ac41d1ad5fbaf9a
+    pgp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
+
+  - path_regex: ./flux/apps/dev/tracker/secret.yaml
     encrypted_regex: ^(data|stringData)$
+    azure_keyvault: https://flux-dev-b4bcd66564.vault.azure.net/keys/tracker-sops/48a5df9a35584e8a87780f9ff63e77bf
+    pgp: A9D0E9EDCEA9201EA6214063FE9E4A501304255A
+
+  - path_regex: ./flux/infrastructure/dev/external-dns/secret.yaml
+    encrypted_regex: ^(data|stringData)$
+    azure_keyvault: https://flux-dev-b4bcd66564.vault.azure.net/keys/external-dns-sops/4b084cc5367a42f88367fd1b1a5cc995
     pgp: A9D0E9EDCEA9201EA6214063FE9E4A501304255A

@@ -1,0 +1,37 @@
+token: ENC[AES256_GCM,data:9vZMINX/AqULsRfm+IEqedMlqz75kyxWdzzK3n90nqePHGe13BkHkw==,iv:Voc14hXMKUGLWBl9yStsbk9Q3j1T5xwuq0uw6FIUxSo=,tag:ye/Dg5gP5JVyplzClc57ZA==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv:
+        - vault_url: https://infra-dev-b0607c347c.vault.azure.net
+          name: github-token-sops
+          version: db8622e811f749048ac41d1ad5fbaf9a
+          created_at: "2021-10-31T00:49:02Z"
+          enc: SgVi-Br6lKJeNfl4rNkV2g4h2RwS8TQz-WrWYptNJM7H_9C1P7GyXc1v-wxzwobxAh-b1mCdu0V8476IAceFPp45M7_Vnpe0YIvM9i3D3jeoqv2AB-85uyHXDaY5BkCUAtaLpPdqlfGpsxwfmAy3znkqrWGzZIE6ZSoshBNdDWrF8S_JjWpk63o5vt3-StkVMzM1a8iTEDwFBkrEUkA_H9bxNpHcT_MrpIy0Bx5qB_hS5CVi9bZPKJyQA77s_jWes0dC5hayTLTEhHxP9mOwSzus8Gwlv0aiVHtFbxUqsEiKNhKDSyRsS-7HOPvWpskf6jQyGgrb6kmxBew-j_H_Mw
+    hc_vault: []
+    age: []
+    lastmodified: "2021-10-31T00:49:04Z"
+    mac: ENC[AES256_GCM,data:IFOUmEI62lPzL0Fudna2rgg/7OzWseyOluFwR9Cxhccw11mz+ZMG5sKUCMWlzFZBuqAuawzqWS+C5Yq7t9c1MOJxZ003GUe32oNtZs8b2jIoHj3J7HL6O6SXUHnOax8ej2fJcPPJ/7waIGc74oTDpLem9jL52ytg0F001dFgg54=,iv:kX+PIutshA2xU1aGC8yQyEPGeR19bI0YIN9eNsx2dz4=,tag:wi7RJxXkx6FgFhclr8mlpw==,type:str]
+    pgp:
+        - created_at: "2021-10-31T00:49:02Z"
+          enc: |
+            -----BEGIN PGP MESSAGE-----
+
+            hQIMA7PyFoPS23feAQ//ZezV5gjrapNs4avJ9g5L5r7hLkaYzrFJQLrzHK2RO/wA
+            C8/TqtRE8P8eN7wmGM9RL54BmaOB/0d4xkhXwXxPMnF/+M2q1pGJh62Pg2TOtj/C
+            7LO7ypHjYUTylhdg8L1z0t5pfcS6V8iYa+nW1nvr08b/H01Mq0WX9PBmASi1qW9S
+            Yc3qOZ45CJcb68NSa6CP/7aM2zPDw+RK2N6AmvBkLwZ1jl0lgl2GlyauVQojvBj6
+            NOG5PV4dhb/KCWIqsnNiICj79F0Wuk5yAxJg69hrbqpHm5jYUg0ZDnj41SME+tJy
+            WxTA3AwZy+CjX/FmDucRpURmDMz6vnKE0CNl5IaAFKxQb8YO32pJH5wfsoXIRfNv
+            G2Ls4Thq5/nquKMPL+zVc09hvgSC7gp7S8v/CJLVHbSczvQVGt/evm6VFu6U/H64
+            utJQjFUnZgO1coxpdcibbhNOJL0nWaZz2iKiFq8Hko20RpMaQNcHnMjscasGNJGJ
+            qgpWgw/49h9L3cRIREjwYdMlJ5Zx6rFl7lEs/iq+eevZKYbA9V9v4xnVLJ82peHp
+            3js6V0YWF3Yr+zrTIBMtQF2gMRGBX+c9/dNihSFVd7LfOqam3OLD7GULn3OLu0QL
+            uHIZ2mHfNBg5LMpHuXpnM6T5/Voe5aPO6lwX2mvPrZHuLamfGmjw/OvXCYKQdU/S
+            XgHJBqJ7/2fu1aCRygsb+C2lfxjKCqgAxNY+ZQHU3l2jcNW0Glq9k5OBi74IMBc/
+            9RR0XDnQtI7WPjJczfCUiWEy26yQTQcLPMdNOJoYEugmx1ffkDx8OaRdoPCOL7g=
+            =wixd
+            -----END PGP MESSAGE-----
+          fp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
+    unencrypted_suffix: _unencrypted
+    version: 3.7.1

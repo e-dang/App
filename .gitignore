@@ -1,2 +1,3 @@
 .creds
 backups/
+**/node_modules/
