@@ -148,37 +148,58 @@ const githubSshSecret = new k8s.core.v1.Secret(
     {dependsOn: [gotkComponentsManifests]},
 );
 
-const gotkComponentsFile = new github.RepositoryFile('gotk-components', {
-    repository: 'App',
-    branch: config.branch,
-    file: `flux/clusters/${env}/flux-system/gotk-components.yaml`,
-    content: gotkComponentsRaw,
-    overwriteOnCreate: true,
+const githubProvider = new github.Provider('github-provider', {
+    owner: config.githubOwner,
+    token: config.githubToken,
 });
 
-const gotkSyncFile = new github.RepositoryFile('gotk-sync', {
-    repository: 'App',
-    branch: config.branch,
-    file: `flux/clusters/${env}/flux-system/gotk-sync.yaml`,
-    content: gotkSyncRaw,
-    overwriteOnCreate: true,
-});
+const gotkComponentsFile = new github.RepositoryFile(
+    'gotk-components',
+    {
+        repository: 'App',
+        branch: config.branch,
+        file: `flux/clusters/${env}/flux-system/gotk-components.yaml`,
+        content: gotkComponentsRaw,
+        overwriteOnCreate: true,
+    },
+    {provider: githubProvider},
+);
 
-const gotkPatchesFile = new github.RepositoryFile('gotk-patches', {
-    repository: 'App',
-    branch: config.branch,
-    file: `flux/clusters/${env}/flux-system/gotk-patches.yaml`,
-    content: gotkPatchesRaw,
-    overwriteOnCreate: true,
-});
+const gotkSyncFile = new github.RepositoryFile(
+    'gotk-sync',
+    {
+        repository: 'App',
+        branch: config.branch,
+        file: `flux/clusters/${env}/flux-system/gotk-sync.yaml`,
+        content: gotkSyncRaw,
+        overwriteOnCreate: true,
+    },
+    {provider: githubProvider},
+);
 
-const gotkKustomizationFile = new github.RepositoryFile('gotk-kustomization', {
-    repository: 'App',
-    branch: config.branch,
-    file: `flux/clusters/${env}/flux-system/kustomization.yaml`,
-    content: gotkKustomizationRaw,
-    overwriteOnCreate: true,
-});
+const gotkPatchesFile = new github.RepositoryFile(
+    'gotk-patches',
+    {
+        repository: 'App',
+        branch: config.branch,
+        file: `flux/clusters/${env}/flux-system/gotk-patches.yaml`,
+        content: gotkPatchesRaw,
+        overwriteOnCreate: true,
+    },
+    {provider: githubProvider},
+);
+
+const gotkKustomizationFile = new github.RepositoryFile(
+    'gotk-kustomization',
+    {
+        repository: 'App',
+        branch: config.branch,
+        file: `flux/clusters/${env}/flux-system/kustomization.yaml`,
+        content: gotkKustomizationRaw,
+        overwriteOnCreate: true,
+    },
+    {provider: githubProvider},
+);
 
 const devRole = new k8s.rbac.v1.ClusterRole(
     'dev-role',

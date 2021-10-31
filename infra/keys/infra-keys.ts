@@ -50,6 +50,16 @@ const githubDeployKeySops = new keyvault.Key('github-deploy-key-sops', {
     },
 });
 
+const githubTokenSops = new keyvault.Key('github-token-sops', {
+    keyName: 'github-token-sops',
+    resourceGroupName: config.resourceGroupName,
+    vaultName: infraVault.name,
+    properties: {
+        keySize: 2048,
+        kty: 'RSA',
+    },
+});
+
 const adminAccess = new authorization.RoleAssignment('infra-kv-admin-access', {
     principalId: config.adminGroupId,
     principalType: 'Group',
@@ -59,3 +69,4 @@ const adminAccess = new authorization.RoleAssignment('infra-kv-admin-access', {
 
 export const dbCredsSopsUri = dbCredsSops.keyUriWithVersion;
 export const githubDeployKeySopsUri = githubDeployKeySops.keyUriWithVersion;
+export const githubTokenSopsUri = githubTokenSops.keyUriWithVersion;
