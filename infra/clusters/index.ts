@@ -42,6 +42,13 @@ const cluster = new containerservice.ManagedCluster('aks', {
     },
 });
 
+const clusterSubnetAccess = new authorization.RoleAssignment('cluster-subnet-access', {
+    principalId: cluster.identity.apply((id) => id?.principalId || ''),
+    principalType: 'ServicePrincipal',
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7', // Network Contributor
+    scope: config.subnetId,
+});
+
 const devAccess = new authorization.RoleAssignment('dev-access', {
     principalId: config.devGroupId,
     principalType: 'Group',
