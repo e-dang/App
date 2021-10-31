@@ -1,6 +1,6 @@
 config:
   azure-native:location: WestUS
-  cluster-configs:branch: pulumi
+  cluster-configs:branch: database
   cluster-configs:githubIdentity:
     secure: AAABAFLdRNmWe07Ao4hDlffU51TvfB1X/Y3z4NwS6EJR3qvT5WuMS1L9rJAwjpFFKXUZNdjpRABOFJAzp0LmbJzGRK7kESu/GzN8QisA/pSrj3OAFPiKL49LE9sil1Hh8a8L8+/PCEvMhYvybW6Y64GhBExQ9N8+VVrN9FzCvjVfwFaEsF0NvLRMFSdT55jpjxu7Dc3YpGRTXHm8CYh5OcgGkkUX6LgdpwW04c0xEMqwcfy6Omuf4pxyE6dGjVlNIlZMb1+D5qQHrn36duHQDWkNipOKeC0xdHcKQbmYe+BeaBkfXy65vc3Tv0sxG0yaVxGR7SBii/nLYRxq/YqFZyLtZTvQwScMZVBqEyugrA6YRN3ZF+5janoQDfqEJQAmvWiDNBT5PTJNsMx55lzo4RnpZzAHFleyIow9+g7PBRLDmhctJfS+Mpd9AFJWNSfnO/0ooVWSy2W7V8juNjRsRLOlkVEfRWc0XfLbAUdIDlbrIHHJCOXAAPV45d79OMXAfDYVP6p4piGXVS9ArUqMjzWzjtWME0/lDyNcHv6AloDQZagzJ9/dp/ccT+m9tQ==
   cluster-configs:githubIdentityPub:

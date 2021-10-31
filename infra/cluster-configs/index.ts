@@ -116,8 +116,8 @@ const gotkSyncManifests = new k8s.yaml.ConfigGroup(
     {provider, dependsOn: [gotkComponentsManifests]},
 );
 
-const sopsSecret = new k8s.core.v1.Secret(
-    'sops-key',
+const sopsDecryptionSecret = new k8s.core.v1.Secret(
+    'sops-decryption-secret',
     {
         metadata: {
             name: 'sops-akv-decryptor-service-principal',

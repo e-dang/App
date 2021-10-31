@@ -1,0 +1,39 @@
+identity: ENC[AES256_GCM,data:WIAnCJh4yhPO25bpIBx7TmhdMs14xinUwKwkT2+eZfRPXh49XGX52VR6sZm1TmJB8EJT/rfH101q7QvGgpRwUKulrSiD4IW9g2cjwRDAdW97z+FRXPEw6SWLwpQ78UrbieWkX7H6Z8pY7LlEBSsmRnEyMJrvZosTRFM3YWDniqcXfTwaOF6wAszdeZAS8yUhXOtGc8y3y9oc7oyGKFegXFZLpXp2ov36PYn6teA4APSIgxnFr105VRiuka1DCp9aLFgk8w9qSjZDdAlx8Rq0gpaUGAbU8BZYKI1wPdQ3C3H9lhSTApEvh/jDt3QsmEov6zYMt9rXc9H9snmilzWDbKzGGb7xM5WhNjF8mcPYLoRKCwuquYayVkxFVvlduZBZACSOU2/C3GPxU47EY3Hji2exsnyIIwY3ZAp6NyJpPy7qPO5mFCAIH/52439NTXzp7C8H3ULWTJA/az0+el8jQ16ZVzZwkSltXe7pTD84Y5uZtUCTy2xBsRZG9cTzAFVHAB1yCHSeg1QGFxW4mqDr,iv:8k+q7ijrEFbhtDzm90ZTOPgnRWrxZcbRk4PGHRCqxjk=,tag:BchKN4dQs8P2y0TrsNNJ4A==,type:str]
+identity.pub: ENC[AES256_GCM,data:QTFMnVFKrulFXX+iBspfTqzm0ykyxnHTeqFjtVOT+GDWmIrgVo+d9xAiZzAg5fVoLIFGApFv7Kxl0OyMb9f2KTBOXBfsf03aCeJxo2O69XG+/pdUFg42lO5egkrz,iv:nrm3NMgRq6rIEeUr43MNbXnozWwJV3EFhSPtyUPxWAQ=,tag:CZoPK4IHUj7VeRW1D5YCAg==,type:str]
+known_hosts: ENC[AES256_GCM,data:4ajyGu/Cql3OOSuE9BsxQuuEk/yg6dEH2R5diFNP5tSthHndcQUgWIlVVLWKsIyhHxC/8plJlRxH4IUFHg1kOrVTndVntbRdlb8WAf2CHIS9v9xaiMWqrnXRs0/C5aIf5a+fy9vLwiQTFBfbLp5tMrrh0eALKrYga1mu4qsu884sMxU4q3VVgpMAJ6r9LUbiVG48VgFda59NLURkA8ORcYpnBipUdBFDJSf7mvKaEbRTch3qlREwdR4/k/zP900OotzF0CzK8O2xiWpLKRL6J4tuEkQuPI4WMtA8hMYEtxITabPtsNRXfuwHx27efmdjYLacBI6G0NYDiaJDZFBth7gwWOMI5EnvTm3PMcD8DKYP5hHIHSVULeTnoTll6bHpzQIgKdiLc7KUwO/1Hv7XQObEnQPOBZ0ohFCLMygeyR0e1syklAdnt1fKzBNfMd4TuJUzfZut0KUdZLOSFw8lRliRx/rk3wxVlVMtj5WoT52Uyq/GF+awOZkAAHa5M6zwEPw8iG/hopE=,iv:1ivttFJFYVBt9SxvRrP7300ZYI3OqFJAIUSzmF3jubM=,tag:iLrVsxCwvDlu6TJNPk+2Wg==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv:
+        - vault_url: https://infra-dev-b0607c347c.vault.azure.net
+          name: github-deploy-key-sops
+          version: 82198930cfad4d01a0bbdf6b8bf4085b
+          created_at: "2021-10-31T00:30:43Z"
+          enc: g6Pgfxp8VOHstf5jrFcmF13ysJBuetpCqFEz-NV533L4aVU7EoEtcDHEfLPTftdVe9kgOJ6hzGHFqtjTJMUVUXabiEEWF5zSpjjvlYR-Jwj9MrnCo9-qDRJqrTz1gNR29pgt-kgsjWgXBxteMHhQn7KmZMQ2u3OTNoiYSpPHhzcYvtByTqa-yjSHSDjhUbOSd91mH99NvBidXtNUQdQLshvevbAw0Dy5ISDw-CcK-4pEzoLl4EDCxqj7DCp8P4SoYk9yERLmvrdpbDU8_E2gtTA8MqbYIsg_4zPGlzgAktnPoKCX5tDTGSqo39rP3cinNHbd6uBY03toxX48EH_54Q
+    hc_vault: []
+    age: []
+    lastmodified: "2021-10-31T00:30:46Z"
+    mac: ENC[AES256_GCM,data:9DGKm1HIQmAYSrI6E7cX/qDCbgMi8CGxBW/7asCu9Pv1MXtUZiZ4D11+hAzlv41xfj3Mplb19VkzQ9/pr6mTK+cwJ/wLCGKZOWYN6TKwNBfLMJcRyiRgCke8e+5Cc2DpZdWCrfoQ21WMUFoPnIi/9mm3PG61v6dc0dQSAlordmE=,iv:z86/SmrliBo48x8zzhZEiJcMjExbsWHncVKNnFRYQDc=,tag:hYqu4xWJGhrV/BMQfi0PjA==,type:str]
+    pgp:
+        - created_at: "2021-10-31T00:30:43Z"
+          enc: |
+            -----BEGIN PGP MESSAGE-----
+
+            hQIMA7PyFoPS23feAQ//VVt9fxBg4zgO1nVlk33V96VEeT8XhJhGCGfDR5XVQ7Rk
+            sPhe8MUvjrI2sXAMFaDaPhCKD8HpAFWbBrO66r9xhcUsaYWe8JioQm/hriOvG/wm
+            JSwXH6os3ikPzZN8IpeaJphHB7RxVyuvK1XeknDuqw8B2E81fX/I9Q7zekYh/Mqn
+            3S9ZU2vjoKbsqu318NCCiTKx9rgbDGvOqdaWcRkMvuhicfO61fuG40RhnU1TfKiB
+            xXvGL4mxEvUCpiuEvwtO44jqUiF0P9/6mOslgAXT0pCHh4SsIiijQn4JyS4b9KwU
+            YI32fYtr44RuBfwcsL+l1uziBdSHZBiouCOTE6f37W3TwVMPi+WyJpY00jn8+yDg
+            4AXD8R554NAoc8L9YODBEp1ev9XGRMHnvtoTh7RQIzT2lJ+TcXT3ZDEi8xGy6KEw
+            g3ZTeAI3akxBwgwoisJ2wbK7mz0H0NQuI5ph6moqz7l2IVADF23+tbagIjGRVq3H
+            0V2Fx/wHSzVHlGju+lm/OkXGP84dtsQh1zdTxvFuOmzxZfCPAAy4+NRzF5QWkGSz
+            VV42xSRpBVC9ppTDs8Z2513QAAuPUjktdc09LMvwr7kbTpAmZcr8b8hM5LZ3Wda8
+            mXbJTK9F/6g6WhnsyviRG3u8qwY/bha8TYRqomUoPRICK+E5yUbiWuJ9cIphlJXS
+            XgHsti4Y4rH2HABEge1TVWdE0b5vMp0RXzS+BwV5UYiBYUiaAoTU7bOszDQrbMhV
+            iRj/kppe//JePrELB5Ut9QhLEQRrQBeYSwsRMehOh9hr4z6Tjuft64bUqaCWRH4=
+            =mnty
+            -----END PGP MESSAGE-----
+          fp: 3CB573B2BE41C4C5B9671855B61E7387809D1F74
+    unencrypted_suffix: _unencrypted
+    version: 3.7.1
