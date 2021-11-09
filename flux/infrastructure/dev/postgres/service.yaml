@@ -7,7 +7,7 @@ metadata:
     app: postgres-db
 spec:
   type: ExternalName
-  externalName: dev.postgres.database.azure.com
+  externalName: tracker-dev.postgres.database.azure.com
   selector:
     app: postgres-db
 status:
