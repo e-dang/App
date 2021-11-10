@@ -41,7 +41,7 @@ const vpnGatewaySubnet = new azure.network.Subnet('GatewaySubnet', {
     name: 'vpn-gateway-subnet',
     virtualNetworkName: vnet.name,
     resourceGroupName: resourceGroup.name,
-    addressPrefix: '10.1.2.0/24',
+    addressPrefix: config.require('vpnGatewaySubnetPrefix'),
 });
 
 const publicIp = new azure.network.PublicIPAddress('vpn-gateway-public-ip', {
