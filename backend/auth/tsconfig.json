@@ -7,6 +7,18 @@
         "outDir": "./build",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "sourceMap": true
-    }
+        "sourceMap": true,
+        "baseUrl": "./",
+        "paths": {
+            "@api": ["src/api"],
+            "@api/*": ["src/api/*"],
+            "@entities": ["src/entities"],
+            "@entities/*": ["src/entities/*"],
+            "@auth": ["src/auth"],
+            "@auth/*": ["src/auth/*"],
+            "@config": ["./config"],
+            "@config/*": ["./config/*"]
+        }
+    },
+    "exclude": ["node_modules"]
 }
