@@ -6,7 +6,11 @@ import {app} from '@src/app';
 
 createConnection({
     type: 'postgres', // WHY MUST I HARDCODE STUPID ASS TYPESCRIPT
-    url: config.dbUrl,
+    host: config.dbHost,
+    port: config.dbPort,
+    username: config.dbUser,
+    password: config.dbPassword,
+    database: config.dbName,
     synchronize: true,
     logging: false,
     entities: [User],
@@ -18,7 +22,6 @@ createConnection({
     },
 })
     .then(async (connection) => {
-        // start express server
         app.listen(config.httpPort);
 
         console.log('Express server has started on port 3000');
