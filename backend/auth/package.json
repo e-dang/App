@@ -8,6 +8,7 @@
         "jest": "^27.3.1",
         "nodemon": "^2.0.15",
         "ts-node": "3.3.0",
+        "tsconfig-paths": "^3.11.0",
         "typescript": "3.3.3333"
     },
     "dependencies": {
@@ -21,7 +22,16 @@
         "typeorm": "0.2.39"
     },
     "scripts": {
-        "start": "nodemon --exec ts-node src/index.ts",
+        "start": "tsnode src/index.ts",
+        "dev": "nodemon",
         "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "**/*.test.ts",
+            "**/*.spec.ts",
+            "node_modules"
+        ],
+        "exec": "ts-node -r tsconfig-paths/register ./src/index.ts"
     }
 }
