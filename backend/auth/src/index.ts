@@ -1,11 +1,8 @@
 import 'reflect-metadata';
 import {config} from '@config';
 import {createConnection} from 'typeorm';
-import * as express from 'express';
 import {User} from '@entities';
-import * as passport from 'passport';
-import {strategy} from './passport';
-import {authRouter, userRouter} from '@api';
+import {app} from '@src/app';
 
 createConnection({
     type: 'postgres', // WHY MUST I HARDCODE STUPID ASS TYPESCRIPT
@@ -21,18 +18,6 @@ createConnection({
     },
 })
     .then(async (connection) => {
-        // intialize components
-        const app = express();
-        passport.use(strategy);
-
-        // middleware
-        app.use(express.json());
-        app.use(passport.initialize());
-
-        // add apis
-        app.use(authRouter);
-        app.use(userRouter);
-
         // start express server
         app.listen(config.httpPort);
 
