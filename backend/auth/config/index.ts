@@ -9,6 +9,7 @@ interface Config {
     jwtAccessTokenExp: string;
     jwtRefreshTokenExp: string;
     httpPort: number;
+    apiVersion: string;
 }
 
 const createDbUrl = () => {
@@ -28,4 +29,5 @@ export const config: Config = {
     jwtAccessTokenExp: process.env.JWT_ACCESS_TOKEN_EXP,
     jwtRefreshTokenExp: process.env.JWT_REFRESH_TOKEN_EXP,
     httpPort: parseInt(process.env.HTTP_PORT),
+    apiVersion: 'v1',
 };
