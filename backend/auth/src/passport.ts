@@ -1,15 +1,11 @@
 import {ExtractJwt, Strategy, VerifiedCallback} from 'passport-jwt';
-import {readFileSync} from 'fs';
-import {join} from 'path';
 import {User} from '@entities';
 import {Request} from 'express';
-
-const pathToKey = join(__dirname, '..', 'id_rsa_pub.pem');
-const PUB_KEY = readFileSync(pathToKey, 'utf8');
+import {config} from '@config';
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: PUB_KEY,
+    secretOrKey: config.accessTokenPublicKey,
     algorithms: ['RS256'],
     passReqToCallback: true,
 };

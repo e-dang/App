@@ -1,3 +1,4 @@
 .creds
 backups/
 **/node_modules/
+id_rsa*

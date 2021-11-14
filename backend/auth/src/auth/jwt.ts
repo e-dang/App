@@ -1,10 +1,6 @@
 import {sign, verify} from 'jsonwebtoken';
 import {User} from '@entities';
-import * as fs from 'fs';
-import * as path from 'path';
 import {config} from '@config';
-
-const PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '..', '..', 'id_rsa_priv.pem'), 'utf-8');
 
 export function createAccessToken(user: User) {
     return {
@@ -12,7 +8,7 @@ export function createAccessToken(user: User) {
             {
                 userId: user.id,
             },
-            PRIVATE_KEY,
+            config.accessTokenPrivateKey,
             {
                 expiresIn: config.jwtAccessTokenExp,
                 algorithm: 'RS256',
@@ -28,7 +24,7 @@ export function createRefreshToken(user: User) {
                 userId: user.id,
                 tokenVersion: user.tokenVersion,
             },
-            PRIVATE_KEY,
+            config.refreshTokenPrivateKey,
             {
                 expiresIn: config.jwtRefreshTokenExp,
             },
@@ -41,5 +37,5 @@ export function createJwt(user: User) {
 }
 
 export function verifyRefreshToken(token: string) {
-    return verify(token, PRIVATE_KEY);
+    return verify(token, config.refreshTokenPrivateKey);
 }
