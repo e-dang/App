@@ -1,7 +1,16 @@
 import * as express from 'express';
 import * as passport from 'passport';
 import {strategy} from '@src/passport';
-import {authRouter, userRouter} from '@api';
+import {ApiGroup, apis} from '@api';
+import {config} from '@config';
+
+function createApiPath(api: ApiGroup) {
+    let path = `/api/${config.apiVersion}`;
+    if (api.pathPrefix) {
+        return `${path}/${api.pathPrefix}`;
+    }
+    return path;
+}
 
 // intialize components
 export const app = express();
@@ -12,5 +21,6 @@ app.use(express.json());
 app.use(passport.initialize());
 
 // add apis
-app.use(authRouter);
-app.use(userRouter);
+apis.forEach((api) => {
+    app.use(createApiPath(api), api.router);
+});
