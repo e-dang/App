@@ -19,7 +19,9 @@
             "@config": ["config"],
             "@config/*": ["config/*"],
             "@src": ["src"],
-            "@src/*": ["src/*"]
+            "@src/*": ["src/*"],
+            "@tests": ["tests"],
+            "@tests/*": ["tests/*"]
         }
     },
     "exclude": ["node_modules"]
