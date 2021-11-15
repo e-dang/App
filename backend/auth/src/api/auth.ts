@@ -1,4 +1,4 @@
-import {createJwt, hashPassword, passwordIsValid} from '@auth';
+import {createJwt, passwordIsValid} from '@auth';
 import {User} from '@entities';
 import {Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
@@ -6,13 +6,28 @@ import {body, validationResult} from 'express-validator';
 
 const authRouter = Router();
 
-authRouter.post('/signin', async (req: Request, res: Response) => {
-    const user = await User.findOne({where: {email: req.body.email}});
-    if (passwordIsValid(req.body.password, user.password)) {
-        return res.status(200).json(createJwt(user));
-    }
-    return res.status(401);
-});
+authRouter.post(
+    '/signin',
+    body('email').isEmail(),
+    body('password').isLength({min: 1}),
+    async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+
+        const user = await User.findOne({email: req.body.email});
+        if (!user) {
+            return res.status(400).json({error: 'The user with that email and/or password does not exist.'});
+        }
+
+        if (passwordIsValid(req.body.password, user.password)) {
+            return res.status(200).json(createJwt(user));
+        }
+
+        return res.status(400).json({error: 'The user with that email and/or password does not exist.'});
+    },
+);
 
 authRouter.post('/signout', async (req: Request, res: Response) => {
     // if (!req.user) {
@@ -35,15 +50,7 @@ authRouter.post(
             return res.status(400).json({errors: errors.array()});
         }
 
-        const hashedPassword = hashPassword(req.body.password);
-
-        let user = new User();
-        user.email = req.body.email;
-        user.name = req.body.name;
-        user.password = hashedPassword;
-        user.lastLogin = new Date().toUTCString();
-        user.isActive = true;
-        user = await user.save();
+        const user = await User.createUser(req.body.name, req.body.email, req.body.password);
 
         return res.status(201).json(createJwt(user));
     },

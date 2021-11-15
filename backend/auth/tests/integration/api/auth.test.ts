@@ -4,11 +4,12 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 
 describe('auth apis', () => {
+    const name = 'Test User';
+    const email = 'email@demo.com';
+    const password = 'Mytestpassword123!';
+
     describe('signup', () => {
         const url = '/api/v1/auth/signup';
-        const name = 'Test User';
-        const email = 'email@demo.com';
-        const password = 'Mytestpassword123!';
         const signUpData = {
             name,
             email,
@@ -84,6 +85,77 @@ describe('auth apis', () => {
                 email,
                 password,
             });
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        // test('returns XXX when email is already in use', async () => {
+
+        // });
+    });
+
+    describe('signin', () => {
+        const url = '/api/v1/auth/signin';
+        let user: User;
+        const signInData = {
+            email,
+            password,
+        };
+
+        beforeEach(async () => {
+            user = await User.createUser(name, email, password);
+        });
+
+        test('returns 200 status code on success', async () => {
+            const res = await supertest(app).post(url).send(signInData);
+
+            expect(res.statusCode).toBe(200);
+        });
+
+        test('returns an accessToken with userId in payload', async () => {
+            const res = await supertest(app).post(url).send(signInData);
+
+            const payload: any = decode(res.body.accessToken);
+            expect(payload.userId).not.toBeUndefined();
+            expect(user.id).toBe(payload.userId);
+        });
+
+        test('returns a refreshToken with userId in payload', async () => {
+            const res = await supertest(app).post(url).send(signInData);
+
+            const payload: any = decode(res.body.refreshToken);
+            expect(payload.userId).not.toBeUndefined();
+            expect(user.id).toBe(payload.userId);
+        });
+
+        test('returns a refreshToken with tokenVersion in payload', async () => {
+            const res = await supertest(app).post(url).send(signInData);
+
+            const payload: any = decode(res.body.refreshToken);
+            expect(payload.tokenVersion).not.toBeUndefined();
+            expect(user.tokenVersion).toBe(payload.tokenVersion);
+        });
+
+        test('returns 400 status code when email is missing', async () => {
+            const res = await supertest(app).post(url).send({password});
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 status code when password is missing', async () => {
+            const res = await supertest(app).post(url).send({email});
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 status code when email and password dont match', async () => {
+            const res = await supertest(app).post(url).send({email, password: 'wrongpassword'});
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 status code when email does not exist in the database', async () => {
+            const res = await supertest(app).post(url).send({email: 'dne@demo.com', password});
 
             expect(res.statusCode).toBe(400);
         });
