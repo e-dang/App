@@ -3,6 +3,7 @@ import {User} from '@entities';
 import {Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
 import {body, validationResult} from 'express-validator';
+import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
 
 const authRouter = Router();
 
@@ -50,7 +51,14 @@ authRouter.post(
             return res.status(400).json({errors: errors.array()});
         }
 
-        const user = await User.createUser(req.body.name, req.body.email, req.body.password);
+        let user: User;
+        try {
+            user = await User.createUser(req.body.name, req.body.email, req.body.password);
+        } catch (err) {
+            if (err.detail.includes('(email)=') && err.code == PG_UNIQUE_CONSTRAINT_VIOLATION) {
+                return res.status(409).json({error: 'A user with that email has already been registered.'});
+            }
+        }
 
         return res.status(201).json(createJwt(user));
     },

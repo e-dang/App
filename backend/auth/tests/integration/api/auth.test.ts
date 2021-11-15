@@ -89,9 +89,13 @@ describe('auth apis', () => {
             expect(res.statusCode).toBe(400);
         });
 
-        // test('returns XXX when email is already in use', async () => {
+        test('returns 409 status code when email has already been registered to a user', async () => {
+            const res1 = await supertest(app).post(url).send(signUpData);
+            const res2 = await supertest(app).post(url).send({email, name: 'Different Name', password});
 
-        // });
+            expect(res1.statusCode).toBe(201);
+            expect(res2.statusCode).toBe(409);
+        });
     });
 
     describe('signin', () => {
