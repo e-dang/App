@@ -164,4 +164,41 @@ describe('auth apis', () => {
             expect(res.statusCode).toBe(400);
         });
     });
+
+    describe('signout', () => {
+        const url = '/api/v1/auth/signout';
+        let accessToken: string;
+        let refreshToken: string;
+
+        beforeEach(async () => {
+            const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
+            accessToken = res.body.accessToken;
+            refreshToken = res.body.refreshToken;
+        });
+
+        test('returns 200 status code on success', async () => {
+            console.log(accessToken);
+            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(200);
+        });
+
+        test("increments user's tokenVersion on success", async () => {
+            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+
+            const payload: any = decode(refreshToken);
+            const user = await User.findOne({email});
+            expect(payload.tokenVersion).toBe(user.tokenVersion - 1);
+        });
+
+        // test("can't use the refresh token after successful logout", async () => {
+
+        // })
+
+        test('returns 401 status code when access code is not attached to authorization header', async () => {
+            const res = await supertest(app).post(url).send();
+
+            expect(res.statusCode).toBe(401);
+        });
+    });
 });

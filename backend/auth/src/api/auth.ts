@@ -4,6 +4,8 @@ import {Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
 import {body, validationResult} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
+import {getConnection} from 'typeorm';
+import * as passport from 'passport';
 
 const authRouter = Router();
 
@@ -30,14 +32,12 @@ authRouter.post(
     },
 );
 
-authRouter.post('/signout', async (req: Request, res: Response) => {
-    // if (!req.user) {
-    //     return res.status(404);
-    // }
-    // await getConnection()
-    //     .getRepository(User)
-    //     .increment({id: (req.user as User).id}, 'tokenVersion', 1);
-    // return res.status(200);
+authRouter.post('/signout', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
+    await getConnection()
+        .getRepository(User)
+        .increment({id: (req.user as User).id}, 'tokenVersion', 1);
+
+    return res.status(200).json();
 });
 
 authRouter.post(
