@@ -2,13 +2,14 @@ import {app} from '@src/app';
 import * as supertest from 'supertest';
 import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
+import MockDate from 'mockdate';
 
 describe('auth apis', () => {
     const name = 'Test User';
     const email = 'email@demo.com';
     const password = 'Mytestpassword123!';
 
-    describe('signup', () => {
+    describe('/signup', () => {
         const url = '/api/v1/auth/signup';
         const signUpData = {
             name,
@@ -98,7 +99,7 @@ describe('auth apis', () => {
         });
     });
 
-    describe('signin', () => {
+    describe('/signin', () => {
         const url = '/api/v1/auth/signin';
         let user: User;
         const signInData = {
@@ -165,7 +166,7 @@ describe('auth apis', () => {
         });
     });
 
-    describe('signout', () => {
+    describe('/signout', () => {
         const url = '/api/v1/auth/signout';
         let accessToken: string;
         let refreshToken: string;
@@ -177,7 +178,6 @@ describe('auth apis', () => {
         });
 
         test('returns 200 status code on success', async () => {
-            console.log(accessToken);
             const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
 
             expect(res.statusCode).toBe(200);
@@ -191,14 +191,86 @@ describe('auth apis', () => {
             expect(payload.tokenVersion).toBe(user.tokenVersion - 1);
         });
 
-        // test("can't use the refresh token after successful logout", async () => {
-
-        // })
-
         test('returns 401 status code when access code is not attached to authorization header', async () => {
             const res = await supertest(app).post(url).send();
 
             expect(res.statusCode).toBe(401);
+        });
+    });
+
+    describe('/token/refresh', () => {
+        const url = '/api/v1/auth/token/refresh';
+        let refreshToken: string;
+        let user: User;
+
+        beforeEach(async () => {
+            const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
+            user = await User.findOne({email});
+            refreshToken = res.body.refreshToken;
+        });
+
+        afterEach(() => {
+            MockDate.reset();
+        });
+
+        test('returns 200 status code when successful', async () => {
+            const res = await supertest(app).post(url).send({refreshToken});
+
+            expect(res.statusCode).toBe(200);
+        });
+
+        test('returns an accessToken with userId in payload', async () => {
+            const res = await supertest(app).post(url).send({refreshToken});
+
+            const payload: any = decode(res.body.accessToken);
+            expect(payload.userId).not.toBeUndefined();
+            expect(user.id).toBe(payload.userId);
+        });
+
+        test('returns a refreshToken with userId in payload', async () => {
+            const res = await supertest(app).post(url).send({refreshToken});
+
+            const payload: any = decode(res.body.refreshToken);
+            expect(payload.userId).not.toBeUndefined();
+            expect(user.id).toBe(payload.userId);
+        });
+
+        test('returns a refreshToken with tokenVersion in payload', async () => {
+            const res = await supertest(app).post(url).send({refreshToken});
+
+            const payload: any = decode(res.body.refreshToken);
+            expect(payload.tokenVersion).not.toBeUndefined();
+            expect(user.tokenVersion).toBe(payload.tokenVersion);
+        });
+
+        test('returns 400 status code when refresh token signature is invalid', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .send({refreshToken: refreshToken + 'invalidate'});
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 status code when refresh token is not included in body', async () => {
+            const res = await supertest(app).post(url).send();
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 status code when refresh token is expired', async () => {
+            const payload: any = decode(refreshToken);
+            MockDate.set(payload.exp * 1000 + 2000);
+            const res = await supertest(app).post(url).send({refreshToken});
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 status code when refresh token does not have the same tokenVersion as the user', async () => {
+            user.tokenVersion++;
+            await user.save();
+            const res = await supertest(app).post(url).send({refreshToken});
+
+            expect(res.statusCode).toBe(400);
         });
     });
 });

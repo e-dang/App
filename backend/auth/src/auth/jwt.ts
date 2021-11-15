@@ -37,5 +37,5 @@ export function createJwt(user: User) {
 }
 
 export function verifyRefreshToken(token: string) {
-    return verify(token, config.refreshTokenPrivateKey);
+    return verify(token, config.refreshTokenPrivateKey, {ignoreExpiration: false});
 }

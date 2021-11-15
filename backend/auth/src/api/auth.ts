@@ -1,4 +1,4 @@
-import {createJwt, passwordIsValid} from '@auth';
+import {createJwt, passwordIsValid, verifyRefreshToken} from '@auth';
 import {User} from '@entities';
 import {Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
@@ -70,17 +70,28 @@ authRouter.post('/password/reset/confirm', async (req: Request, res: Response) =
 
 authRouter.post('/password/change', async (req: Request, res: Response) => {});
 
-authRouter.post('/token/refresh', async (req: Request, res: Response) => {
-    // const payload: any = verifyRefreshToken(req.body.refreshToken);
-    //     const user = await User.findOne({
-    //         where: {
-    //             id: payload.userId,
-    //         },
-    //     });
-    //     if (!user) {
-    //         return {errors: ['']};
-    //     }
-    //     return createJwt(user);
+authRouter.post('/token/refresh', body('refreshToken').isJWT(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()});
+    }
+
+    let payload: any;
+    try {
+        payload = verifyRefreshToken(req.body.refreshToken);
+    } catch (err) {
+        return res.status(400).json({errors: 'This jwt is no longer valid'});
+    }
+
+    const user = await User.findOne({id: payload.userId});
+
+    if (!user) {
+        return res.status(400).json({errors: 'This user no longer exists.'});
+    } else if (user.tokenVersion != payload.tokenVersion) {
+        return res.status(400).json({errors: 'This token has been revoked.'});
+    }
+
+    return res.status(200).json(createJwt(user));
 });
 
 export const authApis: ApiGroup = {
