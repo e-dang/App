@@ -2,6 +2,7 @@ import {createJwt, hashPassword, passwordIsValid} from '@auth';
 import {User} from '@entities';
 import {Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
+import {body, validationResult} from 'express-validator';
 
 const authRouter = Router();
 
@@ -23,19 +24,30 @@ authRouter.post('/signout', async (req: Request, res: Response) => {
     // return res.status(200);
 });
 
-authRouter.post('/signup', async (req: Request, res: Response) => {
-    const hashedPassword = hashPassword(req.body.password);
+authRouter.post(
+    '/signup',
+    body('name').isLength({min: 1}),
+    body('email').isEmail(),
+    body('password').isStrongPassword(),
+    async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
 
-    let user = new User();
-    user.email = req.body.email;
-    user.name = req.body.name;
-    user.password = hashedPassword;
-    user.lastLogin = new Date().toUTCString();
-    user.isActive = true;
-    user = await user.save();
+        const hashedPassword = hashPassword(req.body.password);
 
-    return res.status(201).json(createJwt(user));
-});
+        let user = new User();
+        user.email = req.body.email;
+        user.name = req.body.name;
+        user.password = hashedPassword;
+        user.lastLogin = new Date().toUTCString();
+        user.isActive = true;
+        user = await user.save();
+
+        return res.status(201).json(createJwt(user));
+    },
+);
 
 authRouter.post('/password/reset', async (req: Request, res: Response) => {});
 
