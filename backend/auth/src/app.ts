@@ -5,7 +5,7 @@ import {ApiGroup, apis} from '@api';
 import {config} from '@config';
 
 function createApiPath(api: ApiGroup) {
-    let path = `/api/${config.apiVersion}`;
+    const path = `/api/${config.apiVersion}`;
     if (api.pathPrefix) {
         return `${path}/${api.pathPrefix}`;
     }
