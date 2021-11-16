@@ -1,9 +1,9 @@
-import * as express from 'express';
-import * as passport from 'passport';
+import express from 'express';
+import passport from 'passport';
 import {strategy} from '@src/passport';
 import {ApiGroup, apis} from '@api';
 import {config} from '@config';
-import * as morgan from 'morgan';
+import morgan from 'morgan';
 
 function createApiPath(api: ApiGroup) {
     const path = `/api/${config.apiVersion}`;

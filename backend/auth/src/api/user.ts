@@ -1,7 +1,7 @@
 import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
-import * as passport from 'passport';
+import passport from 'passport';
 
 const userRouter = Router();
 

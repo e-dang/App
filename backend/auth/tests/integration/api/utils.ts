@@ -1,5 +1,5 @@
 import {User} from '@entities';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import {Express} from 'express';
 
 export const createUser = async (app: Express, email: string, name: string, password: string) => {

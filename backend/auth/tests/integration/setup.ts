@@ -1,6 +1,6 @@
-import {config} from '../../config';
+import {config} from '@config';
 import {Connection, createConnection, getConnection} from 'typeorm';
-import {User} from '../../src/entities';
+import {User} from '@entities';
 
 import {TransactionalTestContext} from 'typeorm-transactional-tests';
 

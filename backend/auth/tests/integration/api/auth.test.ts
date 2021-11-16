@@ -1,5 +1,5 @@
 import {app} from '@src/app';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';

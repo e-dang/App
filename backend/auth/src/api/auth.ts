@@ -5,7 +5,7 @@ import {ApiGroup} from './types';
 import {body, validationResult} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
 import {getConnection} from 'typeorm';
-import * as passport from 'passport';
+import passport from 'passport';
 
 const authRouter = Router();
 
