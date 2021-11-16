@@ -12,7 +12,7 @@ const authRouter = Router();
 authRouter.post(
     '/signin',
     body('email').isEmail(),
-    body('password').isLength({min: 1}),
+    body('password').not().isEmpty(),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -42,7 +42,7 @@ authRouter.post('/signout', passport.authenticate('jwt', {session: false}), asyn
 
 authRouter.post(
     '/signup',
-    body('name').isLength({min: 1}),
+    body('name').not().isEmpty(),
     body('email').isEmail(),
     body('password').isStrongPassword(),
     async (req: Request, res: Response) => {
