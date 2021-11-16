@@ -1,12 +1,14 @@
 import {User} from '@entities';
-import {Request, Response, Router} from 'express';
+import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
 import * as passport from 'passport';
 
 const userRouter = Router();
 
+userRouter.use(passport.authenticate('jwt', {session: false}));
+
 // get auth user
-userRouter.get('/', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
+userRouter.get('/', async (req: Request, res: Response) => {
     const user = await User.findOne({id: (req.user as User).id});
     if (!user) {
         return res.status(404).json({error: 'That user no longer exists.'});
@@ -16,7 +18,7 @@ userRouter.get('/', passport.authenticate('jwt', {session: false}), async (req: 
 });
 
 // update auth user
-userRouter.patch('/', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
+userRouter.patch('/', async (req: Request, res: Response) => {
     const user = await User.findOne({id: (req.user as User).id});
     if (!user) {
         return res.status(404).json({error: 'That user no longer exists.'});
@@ -30,7 +32,7 @@ userRouter.patch('/', passport.authenticate('jwt', {session: false}), async (req
 });
 
 // delete auth user
-userRouter.delete('/', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
+userRouter.delete('/', async (req: Request, res: Response) => {
     const user = await User.findOne({id: (req.user as User).id});
     if (!user) {
         return res.status(404).json({error: 'That user no longer exists.'});
