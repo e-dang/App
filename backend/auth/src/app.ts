@@ -3,6 +3,7 @@ import * as passport from 'passport';
 import {strategy} from '@src/passport';
 import {ApiGroup, apis} from '@api';
 import {config} from '@config';
+import * as morgan from 'morgan';
 
 function createApiPath(api: ApiGroup) {
     const path = `/api/${config.apiVersion}`;
@@ -19,6 +20,7 @@ passport.use(strategy);
 // middleware
 app.use(express.json());
 app.use(passport.initialize());
+app.use(morgan('combined'));
 
 // add apis
 apis.forEach((api) => {
