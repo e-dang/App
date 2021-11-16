@@ -36,4 +36,12 @@ export class User extends BaseEntity {
         user.isActive = true;
         return await user.save();
     }
+
+    serialize() {
+        return {
+            id: this.id,
+            name: this.name,
+            email: this.email,
+        };
+    }
 }

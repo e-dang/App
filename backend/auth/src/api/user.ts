@@ -12,7 +12,7 @@ userRouter.get('/', passport.authenticate('jwt', {session: false}), async (req: 
         return res.status(404).json({error: 'That user no longer exists.'});
     }
 
-    return res.status(200).json({data: JSON.stringify(user)});
+    return res.status(200).json({data: user.serialize()});
 });
 
 // update auth user
@@ -26,7 +26,7 @@ userRouter.patch('/', passport.authenticate('jwt', {session: false}), async (req
     user.email = req.body.email || user.email;
     await user.save();
 
-    return res.status(200).json({data: user});
+    return res.status(200).json({data: user.serialize()});
 });
 
 // delete auth user

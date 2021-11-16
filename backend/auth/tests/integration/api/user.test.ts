@@ -33,7 +33,7 @@ describe('user apis', () => {
         test('returns the user whose id is contained in the access token', async () => {
             const res = await supertest(app).get(url).set('Authorization', `Bearer ${accessToken}`).send();
 
-            expect(res.body.data).toEqual(JSON.stringify(user));
+            expect(res.body.data).toEqual(user.serialize());
         });
 
         test('returns 401 status code if no access token is provided', async () => {
@@ -89,12 +89,6 @@ describe('user apis', () => {
             const updatedUser = await User.findOne({id: user.id});
             expect(updatedUser.email).toBe(newEmail);
             expect(res.body.data.email).toBe(newEmail);
-        });
-
-        test('returns the user whose id is contained in the access token', async () => {
-            const res = await supertest(app).get(url).set('Authorization', `Bearer ${accessToken}`).send();
-
-            expect(res.body.data).toEqual(JSON.stringify(user));
         });
 
         test('returns 401 status code if no access token is provided', async () => {
