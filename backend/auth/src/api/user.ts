@@ -16,8 +16,17 @@ userRouter.get('/', passport.authenticate('jwt', {session: false}), async (req: 
 });
 
 // update auth user
-userRouter.patch('/', async (req: Request, res: Response) => {
-    return res.status(200).json({});
+userRouter.patch('/', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
+    const user = await User.findOne({id: (req.user as User).id});
+    if (!user) {
+        return res.status(404).json({error: 'That user no longer exists.'});
+    }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    await user.save();
+
+    return res.status(200).json({data: user});
 });
 
 // delete auth user
