@@ -111,6 +111,10 @@ describe('auth apis', () => {
             user = await User.createUser(name, email, password);
         });
 
+        afterEach(() => {
+            MockDate.reset();
+        });
+
         test('returns 200 status code on success', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
@@ -139,6 +143,15 @@ describe('auth apis', () => {
             const payload: any = decode(res.body.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
+        });
+
+        test('updates last login time for the user', async () => {
+            const prevLastLoginTime = new Date(user.lastLogin);
+            MockDate.set(prevLastLoginTime.getTime() * 1000 + 2000);
+            const res = await supertest(app).post(url).send(signInData);
+
+            await user.reload();
+            expect(new Date(user.lastLogin) > prevLastLoginTime).toBe(true);
         });
 
         test('returns 400 status code when email is missing', async () => {
