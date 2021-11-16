@@ -109,4 +109,33 @@ describe('user apis', () => {
             expect(res.statusCode).toBe(401);
         });
     });
+
+    describe('DELETE /user', () => {
+        test('returns 202 status code on success', async () => {
+            const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(202);
+        });
+
+        test('sets isActive field on user to false on success', async () => {
+            const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
+
+            await user.reload();
+            expect(user.isActive).toBe(false);
+        });
+
+        test('returns 401 status code if no access token is provided', async () => {
+            const res = await supertest(app).delete(url).send();
+
+            expect(res.statusCode).toBe(401);
+        });
+
+        test('returns 401 status code if access token is expired', async () => {
+            const payload: any = decode(accessToken);
+            MockDate.set(payload.exp * 1000 + 2000);
+            const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(401);
+        });
+    });
 });

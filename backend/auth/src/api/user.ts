@@ -30,8 +30,16 @@ userRouter.patch('/', passport.authenticate('jwt', {session: false}), async (req
 });
 
 // delete auth user
-userRouter.delete('/', async (req: Request, res: Response) => {
-    return res.status(202).json({});
+userRouter.delete('/', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
+    const user = await User.findOne({id: (req.user as User).id});
+    if (!user) {
+        return res.status(404).json({error: 'That user no longer exists.'});
+    }
+
+    user.isActive = false;
+    await user.save();
+
+    return res.status(202).json();
 });
 
 export const userApis: ApiGroup = {
