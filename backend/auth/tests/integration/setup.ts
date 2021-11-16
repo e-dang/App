@@ -1,23 +1,22 @@
-import {config} from '@config';
-import {Connection, createConnection} from 'typeorm';
-import {User} from '@entities';
+import {config} from '../../config';
+import {Connection, createConnection, getConnection} from 'typeorm';
+import {User} from '../../src/entities';
+
 import {TransactionalTestContext} from 'typeorm-transactional-tests';
 
-let connection: Connection;
-let transactionalContext: TransactionalTestContext;
+let connection: {[x: string]: Connection} = {};
+let transactionalContext: {[x: string]: TransactionalTestContext} = {};
 
 beforeAll(async () => {
-    connection = await createConnection({
+    connection[expect.getState().testPath] = await createConnection({
         type: 'postgres',
         host: config.dbHost,
         port: config.dbPort,
         username: config.dbUser,
         password: config.dbPassword,
         database: 'tests',
-        dropSchema: true,
         logging: false,
         synchronize: true,
-        migrationsRun: true,
         entities: [User],
         ssl: true,
         extra: {
@@ -29,14 +28,14 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await connection.close();
+    await connection[expect.getState().testPath].close();
 });
 
 beforeEach(async () => {
-    transactionalContext = new TransactionalTestContext(connection);
-    await transactionalContext.start();
+    transactionalContext[expect.getState().currentTestName] = new TransactionalTestContext(getConnection());
+    await transactionalContext[expect.getState().currentTestName].start();
 });
 
 afterEach(async () => {
-    await transactionalContext.finish();
+    await transactionalContext[expect.getState().currentTestName].finish();
 });
