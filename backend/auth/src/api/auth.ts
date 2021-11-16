@@ -2,23 +2,18 @@ import {createJwt, passwordIsValid, verifyRefreshToken} from '@auth';
 import {User} from '@entities';
 import {Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
-import {body, validationResult} from 'express-validator';
+import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
 import {getConnection} from 'typeorm';
 import passport from 'passport';
+import {validate} from './schema';
 
 const authRouter = Router();
 
 authRouter.post(
     '/signin',
-    body('email').isEmail(),
-    body('password').not().isEmpty(),
+    validate([body('email').isEmail(), body('password').not().isEmpty()]),
     async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()});
-        }
-
         const user = await User.findOne({email: req.body.email});
         if (!user) {
             return res.status(400).json({error: 'The user with that email and/or password does not exist.'});
@@ -44,15 +39,8 @@ authRouter.post('/signout', passport.authenticate('jwt', {session: false}), asyn
 
 authRouter.post(
     '/signup',
-    body('name').not().isEmpty(),
-    body('email').isEmail(),
-    body('password').isStrongPassword(),
+    validate([body('name').not().isEmpty(), body('email').isEmail(), body('password').isStrongPassword()]),
     async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()});
-        }
-
         let user: User;
         try {
             user = await User.createUser(req.body.name, req.body.email, req.body.password);
@@ -72,12 +60,7 @@ authRouter.post('/password/reset/confirm', async (req: Request, res: Response) =
 
 authRouter.post('/password/change', async (req: Request, res: Response) => {});
 
-authRouter.post('/token/refresh', body('refreshToken').isJWT(), async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
-    }
-
+authRouter.post('/token/refresh', validate([body('refreshToken').isJWT()]), async (req: Request, res: Response) => {
     let payload: any;
     try {
         payload = verifyRefreshToken(req.body.refreshToken);
