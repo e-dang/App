@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import {readFileSync, existsSync, unlinkSync} from 'fs';
 import {join} from 'path';
 
@@ -22,7 +22,12 @@ function readKey(filepath: string, _delete: boolean = false) {
     return key;
 }
 
+function isDevEnv(env: string) {
+    return env === 'development' || env === 'test';
+}
+
 interface Config {
+    env: string;
     dbHost: string;
     dbPort: number;
     dbUser: string;
@@ -40,6 +45,7 @@ interface Config {
 }
 
 export const config: Config = {
+    env: process.env.NODE_ENV,
     dbHost: process.env.DATABASE_HOST,
     dbPort: parseInt(process.env.DATABASE_PORT),
     dbUser: process.env.DATABASE_USER,
@@ -49,8 +55,8 @@ export const config: Config = {
     passwordIterations: parseInt(process.env.PASSWORD_ITERATIONS),
     jwtAccessTokenExp: process.env.JWT_ACCESS_TOKEN_EXP,
     jwtRefreshTokenExp: process.env.JWT_REFRESH_TOKEN_EXP,
-    refreshTokenPrivateKey: readKey(join(__dirname, 'id_rsa_refresh'), process.env.ENV !== 'dev'),
-    accessTokenPrivateKey: readKey(join(__dirname, 'id_rsa_access'), process.env.ENV !== 'dev'),
+    refreshTokenPrivateKey: readKey(join(__dirname, 'id_rsa_refresh'), !isDevEnv(process.env.NODE_ENV)),
+    accessTokenPrivateKey: readKey(join(__dirname, 'id_rsa_access'), !isDevEnv(process.env.NODE_ENV)),
     accessTokenPublicKey: readKey(join(__dirname, 'id_rsa_access.pub')),
     httpPort: parseInt(process.env.HTTP_PORT),
     apiVersion: 'v1',

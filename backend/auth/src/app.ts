@@ -21,7 +21,9 @@ passport.use(strategy);
 // middleware
 app.use(express.json());
 app.use(passport.initialize());
-app.use(morgan('combined'));
+if (config.env === 'test') {
+    app.use(morgan('combined'));
+}
 
 // add apis
 apis.forEach((api) => {
