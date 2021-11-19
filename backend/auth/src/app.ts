@@ -21,7 +21,7 @@ passport.use(strategy);
 // middleware
 app.use(express.json());
 app.use(passport.initialize());
-if (config.env === 'test') {
+if (config.env !== 'test') {
     app.use(morgan('combined'));
 }
 
