@@ -1,22 +1,23 @@
 import {createJwt, passwordIsValid, verifyRefreshToken} from '@auth';
 import {User} from '@entities';
-import {Request, Response, Router} from 'express';
+import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup} from './types';
 import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
 import {getConnection} from 'typeorm';
 import passport from 'passport';
 import {validate} from './schema';
+import {SignInError} from '@src/errors';
 
 const authRouter = Router();
 
 authRouter.post(
     '/signin',
     validate([body('email').isEmail(), body('password').not().isEmpty()]),
-    async (req: Request, res: Response) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const user = await User.findOne({email: req.body.email});
         if (!user) {
-            return res.status(400).json({error: 'The user with that email and/or password does not exist.'});
+            return next(new SignInError());
         }
 
         if (passwordIsValid(req.body.password, user.password)) {
@@ -25,7 +26,7 @@ authRouter.post(
             return res.status(200).json(createJwt(user));
         }
 
-        return res.status(400).json({error: 'The user with that email and/or password does not exist.'});
+        return next(new SignInError());
     },
 );
 

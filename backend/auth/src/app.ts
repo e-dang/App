@@ -4,6 +4,7 @@ import {strategy} from '@src/passport';
 import {ApiGroup, apis} from '@api';
 import {config} from '@config';
 import morgan from 'morgan';
+import {errorHandler} from './middleware';
 
 function createApiPath(api: ApiGroup) {
     const path = `/api/${config.apiVersion}`;
@@ -26,3 +27,6 @@ app.use(morgan('combined'));
 apis.forEach((api) => {
     app.use(createApiPath(api), api.router);
 });
+
+// error handlers
+app.use(errorHandler);

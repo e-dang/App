@@ -166,16 +166,16 @@ describe('auth apis', () => {
             expect(res.statusCode).toBe(400);
         });
 
-        test('returns 400 status code when email and password dont match', async () => {
+        test('returns 400 status code when email and password dont match any records in the database', async () => {
             const res = await supertest(app).post(url).send({email, password: 'wrongpassword'});
 
-            expect(res.statusCode).toBe(400);
+            expect(res.statusCode).toBe(404);
         });
 
         test('returns 400 status code when email does not exist in the database', async () => {
             const res = await supertest(app).post(url).send({email: 'dne@demo.com', password});
 
-            expect(res.statusCode).toBe(400);
+            expect(res.statusCode).toBe(404);
         });
     });
 
