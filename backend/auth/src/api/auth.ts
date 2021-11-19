@@ -1,10 +1,9 @@
 import {createJwt, passwordIsValid, verifyRefreshToken} from '@auth';
 import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
-import {ApiGroup} from './types';
+import {ApiGroup, AuthenticatedRequest} from './types';
 import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {getConnection} from 'typeorm';
 import passport from 'passport';
 import {validate} from './schema';
 import {SignInError} from '@src/errors';
@@ -30,13 +29,15 @@ authRouter.post(
     },
 );
 
-authRouter.post('/signout', passport.authenticate('jwt', {session: false}), async (req: Request, res: Response) => {
-    await getConnection()
-        .getRepository(User)
-        .increment({id: (req.user as User).id}, 'tokenVersion', 1);
-
-    return res.status(200).json();
-});
+authRouter.post(
+    '/signout',
+    passport.authenticate('jwt', {session: false}),
+    async (req: AuthenticatedRequest, res: Response) => {
+        req.user.tokenVersion++;
+        await req.user.save();
+        return res.status(200).json();
+    },
+);
 
 authRouter.post(
     '/signup',
