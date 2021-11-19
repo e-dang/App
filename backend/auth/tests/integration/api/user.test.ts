@@ -108,6 +108,22 @@ describe('user apis', () => {
 
             expect(res.statusCode).toBe(401);
         });
+
+        test('returns 400 error when email is malformed', async () => {
+            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+                email: 'malformed email',
+            });
+
+            expect(res.statusCode).toBe(400);
+        });
+
+        test('returns 400 error when name is an empty string', async () => {
+            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+                name: '',
+            });
+
+            expect(res.statusCode).toBe(400);
+        });
     });
 
     describe('DELETE /user', () => {

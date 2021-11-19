@@ -2,6 +2,8 @@ import {User} from '@entities';
 import {Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import passport from 'passport';
+import {validate} from './schema';
+import {body} from 'express-validator';
 
 const userRouter = Router();
 
@@ -13,13 +15,17 @@ userRouter.get('/', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // update auth user
-userRouter.patch('/', async (req: AuthenticatedRequest, res: Response) => {
-    req.user.name = req.body.name || req.user.name;
-    req.user.email = req.body.email || req.user.email;
-    await req.user.save();
+userRouter.patch(
+    '/',
+    validate([body('email').optional().isEmail(), body('name').optional().not().isEmpty()]),
+    async (req: AuthenticatedRequest, res: Response) => {
+        req.user.name = req.body.name || req.user.name;
+        req.user.email = req.body.email || req.user.email;
+        await req.user.save();
 
-    return res.status(200).json({data: req.user.serialize()});
-});
+        return res.status(200).json({data: req.user.serialize()});
+    },
+);
 
 // delete auth user
 userRouter.delete('/', async (req: AuthenticatedRequest, res: Response) => {
