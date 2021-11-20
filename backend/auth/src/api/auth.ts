@@ -4,7 +4,6 @@ import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import passport from 'passport';
 import {validate} from './schema';
 import {
     ExpiredTokenError,
@@ -14,6 +13,7 @@ import {
     UserAlreadyExistsError,
     UserNotFoundError,
 } from '@src/errors';
+import {verifyAuthN} from '@src/middleware';
 
 const authRouter = Router();
 
@@ -36,15 +36,11 @@ authRouter.post(
     },
 );
 
-authRouter.post(
-    '/signout',
-    passport.authenticate('jwt', {session: false}),
-    async (req: AuthenticatedRequest, res: Response) => {
-        req.user.tokenVersion++;
-        await req.user.save();
-        return res.status(200).json();
-    },
-);
+authRouter.post('/signout', verifyAuthN, async (req: AuthenticatedRequest, res: Response) => {
+    req.user.tokenVersion++;
+    await req.user.save();
+    return res.status(200).json();
+});
 
 authRouter.post(
     '/signup',
@@ -69,7 +65,7 @@ authRouter.post('/password/reset/confirm', async (req: Request, res: Response) =
 
 authRouter.post(
     '/password/change',
-    passport.authenticate('jwt', {session: false}),
+    verifyAuthN,
     validate([
         body('oldPassword').not().isEmpty(),
         body('newPassword').isStrongPassword(),

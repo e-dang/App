@@ -1,13 +1,12 @@
-import {User} from '@entities';
 import {Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
-import passport from 'passport';
 import {validate} from './schema';
 import {body} from 'express-validator';
+import {verifyAuthN} from '@src/middleware';
 
 const userRouter = Router();
 
-userRouter.use(passport.authenticate('jwt', {session: false}));
+userRouter.use(verifyAuthN);
 
 // get auth user
 userRouter.get('/', async (req: AuthenticatedRequest, res: Response) => {

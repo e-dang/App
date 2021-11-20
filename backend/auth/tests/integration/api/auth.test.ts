@@ -4,12 +4,16 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
-import {InvalidOldPasswordError, PasswordsMismatchError} from '@src/errors';
+import {AuthenticationError, InvalidOldPasswordError, PasswordsMismatchError} from '@src/errors';
 
 describe('auth apis', () => {
     const name = 'Test User';
     const email = 'email@demo.com';
     const password = 'Mytestpassword123!';
+
+    afterEach(() => {
+        MockDate.reset();
+    });
 
     describe('/signup', () => {
         const url = '/api/v1/auth/signup';
@@ -113,10 +117,6 @@ describe('auth apis', () => {
             user = await User.createUser(name, email, password);
         });
 
-        afterEach(() => {
-            MockDate.reset();
-        });
-
         test('returns 200 status code on success', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
@@ -206,10 +206,20 @@ describe('auth apis', () => {
             expect(payload.tokenVersion).toBe(user.tokenVersion - 1);
         });
 
-        test('returns 401 status code when access code is not attached to authorization header', async () => {
+        test('returns 401 status code when access token is not attached to authorization header', async () => {
             const res = await supertest(app).post(url).send();
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 401 status code when access token is expired', async () => {
+            const payload: any = decode(accessToken);
+            MockDate.set(payload.exp * 1000 + 2000);
+            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
     });
 
@@ -222,10 +232,6 @@ describe('auth apis', () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
             refreshToken = res.body.refreshToken;
-        });
-
-        afterEach(() => {
-            MockDate.reset();
         });
 
         test('returns 200 status code when successful', async () => {
@@ -299,10 +305,6 @@ describe('auth apis', () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
             accessToken = res.body.accessToken;
-        });
-
-        afterEach(() => {
-            MockDate.reset();
         });
 
         test('returns 200 on success', async () => {
@@ -400,6 +402,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 401 status code when access token is expired', async () => {
@@ -412,6 +415,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
     });
 });

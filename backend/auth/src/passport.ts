@@ -10,20 +10,18 @@ const options = {
     passReqToCallback: true,
 };
 
-export const strategy = new Strategy(options, (req: Request, payload: any, done: VerifiedCallback) => {
-    User.findOne({
-        where: {
-            id: payload.userId,
-        },
-    })
-        .then((user) => {
-            if (user) {
-                req.user = user;
-                return done(null, user);
-            }
-            return done(null, false);
-        })
-        .catch((err) => {
-            return done(err, false);
-        });
+export const strategy = new Strategy(options, async (req: Request, payload: any, done: VerifiedCallback) => {
+    let user: User;
+    try {
+        user = await User.findOne({id: payload.userId});
+    } catch (err) {
+        return done(err, false);
+    }
+
+    if (!user) {
+        return done(null, false);
+    }
+
+    req.user = user;
+    return done(null, user);
 });

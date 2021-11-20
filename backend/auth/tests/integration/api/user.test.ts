@@ -4,6 +4,7 @@ import supertest from 'supertest';
 import {createUser} from './utils';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
+import {AuthenticationError} from '@src/errors';
 
 describe('user apis', () => {
     const url = '/api/v1/user';
@@ -40,6 +41,7 @@ describe('user apis', () => {
             const res = await supertest(app).get(url).send();
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 401 status code if access token is expired', async () => {
@@ -48,6 +50,7 @@ describe('user apis', () => {
             const res = await supertest(app).get(url).set('Authorization', `Bearer ${accessToken}`).send();
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
     });
 
@@ -97,6 +100,7 @@ describe('user apis', () => {
             });
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 401 status code if access token is expired', async () => {
@@ -107,6 +111,7 @@ describe('user apis', () => {
             });
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 400 error when email is malformed', async () => {
@@ -144,6 +149,7 @@ describe('user apis', () => {
             const res = await supertest(app).delete(url).send();
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 401 status code if access token is expired', async () => {
@@ -152,6 +158,7 @@ describe('user apis', () => {
             const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
 
             expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
         });
     });
 });

@@ -71,3 +71,9 @@ export class PasswordsMismatchError extends InternalError {
         super(400, "Password confirmation doesn't match the password.");
     }
 }
+
+export class AuthenticationError extends InternalError {
+    constructor() {
+        super(401, 'Please signin to continue.');
+    }
+}
