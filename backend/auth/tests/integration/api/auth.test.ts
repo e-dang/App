@@ -4,12 +4,7 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
-import {
-    AuthenticationError,
-    InvalidOldPasswordError,
-    PasswordsMismatchError,
-    UserAlreadyExistsError,
-} from '@src/errors';
+import {AuthenticationError, UserAlreadyExistsError} from '@src/errors';
 
 describe('auth apis', () => {
     const name = 'Test User';
@@ -360,23 +355,15 @@ describe('auth apis', () => {
             expect(passwordsAreTheSame).toBe(true);
         });
 
-        test('returns 400 status code when new password is not a strong password', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
-                oldPassword: password,
-                newPassword: 'password123',
-                confirmPassword: 'password123',
-            });
-
-            expect(res.statusCode).toBe(400);
-        });
-
-        test('returns 400 status code when old password is missing', async () => {
+        test('returns 400 status code when oldPassword is missing', async () => {
             const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
                 newPassword,
                 confirmPassword: newPassword,
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('oldPassword');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
         test('returns 400 status code when newPassword is missing', async () => {
@@ -386,6 +373,8 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('newPassword');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
         test('returns 400 status code when confirmPassword is missing', async () => {
@@ -395,6 +384,22 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('confirmPassword');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when new password is not a strong password', async () => {
+            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+                oldPassword: password,
+                newPassword: 'password123',
+                confirmPassword: 'password123',
+            });
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('newPassword');
+            expect(res.body.errors[0].msg).toEqual(
+                'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
+            );
         });
 
         test('returns 400 status code when newPassword and confirmPassword are mismatching', async () => {
@@ -408,7 +413,8 @@ describe('auth apis', () => {
                 });
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new PasswordsMismatchError().json);
+            expect(res.body.errors[0].param).toEqual('confirmPassword');
+            expect(res.body.errors[0].msg).toEqual("Password confirmation doesn't match the password.");
         });
 
         test('returns 400 status code when old password doesnt match the old password in database', async () => {
@@ -422,7 +428,8 @@ describe('auth apis', () => {
                 });
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidOldPasswordError().json);
+            expect(res.body.errors[0].param).toEqual('oldPassword');
+            expect(res.body.errors[0].msg).toEqual('The old password is incorrect.');
         });
 
         test('returns 401 status code when access token is not present', async () => {

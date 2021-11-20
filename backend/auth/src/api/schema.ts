@@ -1,3 +1,4 @@
+import {passwordIsValid} from '@auth';
 import {NextFunction, Request, Response} from 'express';
 import {validationResult, ValidationChain, checkSchema} from 'express-validator';
 
@@ -22,6 +23,13 @@ const notEmptyValidator = {
     },
 };
 
+const strongPasswordValidator = {
+    isStrongPassword: {
+        errorMessage:
+            'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
+    },
+};
+
 export const signUpSchema = checkSchema({
     name: {
         in: ['body'],
@@ -37,9 +45,38 @@ export const signUpSchema = checkSchema({
     password: {
         in: ['body'],
         ...notEmptyValidator,
-        isStrongPassword: {
-            errorMessage:
-                'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
+        ...strongPasswordValidator,
+    },
+});
+
+export const changePasswordSchema = checkSchema({
+    oldPassword: {
+        in: ['body'],
+        ...notEmptyValidator,
+        custom: {
+            options: (val: string, {req}) => {
+                if (!passwordIsValid(val, req.user.password)) {
+                    throw new Error('The old password is incorrect.');
+                }
+                return true;
+            },
+        },
+    },
+    newPassword: {
+        in: ['body'],
+        ...notEmptyValidator,
+        ...strongPasswordValidator,
+    },
+    confirmPassword: {
+        in: ['body'],
+        ...notEmptyValidator,
+        custom: {
+            options: (val: string, {req}) => {
+                if (val !== req.body.newPassword) {
+                    throw new Error("Password confirmation doesn't match the password.");
+                }
+                return true;
+            },
         },
     },
 });
