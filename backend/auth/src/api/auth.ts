@@ -4,7 +4,7 @@ import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {validate} from './schema';
+import {signUpSchema, validate} from './schema';
 import {
     ExpiredTokenError,
     InvalidOldPasswordError,
@@ -42,22 +42,18 @@ authRouter.post('/signout', verifyAuthN, async (req: AuthenticatedRequest, res: 
     return res.status(200).json();
 });
 
-authRouter.post(
-    '/signup',
-    validate([body('name').not().isEmpty(), body('email').isEmail(), body('password').isStrongPassword()]),
-    async (req: Request, res: Response, next: NextFunction) => {
-        let user: User;
-        try {
-            user = await User.createUser(req.body.name, req.body.email, req.body.password);
-        } catch (err) {
-            if (err.detail.includes('(email)=') && err.code == PG_UNIQUE_CONSTRAINT_VIOLATION) {
-                return next(new UserAlreadyExistsError(req.body.email));
-            }
+authRouter.post('/signup', validate(signUpSchema), async (req: Request, res: Response, next: NextFunction) => {
+    let user: User;
+    try {
+        user = await User.createUser(req.body.name, req.body.email, req.body.password);
+    } catch (err) {
+        if (err.detail.includes('(email)=') && err.code == PG_UNIQUE_CONSTRAINT_VIOLATION) {
+            return next(new UserAlreadyExistsError(req.body.email));
         }
+    }
 
-        return res.status(201).json(createJwt(user));
-    },
-);
+    return res.status(201).json(createJwt(user));
+});
 
 authRouter.post('/password/reset', async (req: Request, res: Response) => {});
 

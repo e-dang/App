@@ -4,7 +4,12 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
-import {AuthenticationError, InvalidOldPasswordError, PasswordsMismatchError} from '@src/errors';
+import {
+    AuthenticationError,
+    InvalidOldPasswordError,
+    PasswordsMismatchError,
+    UserAlreadyExistsError,
+} from '@src/errors';
 
 describe('auth apis', () => {
     const name = 'Test User';
@@ -75,6 +80,19 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].msg).toEqual(
+                'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
+            );
+        });
+
+        test('returns 400 status code when password is not given', async () => {
+            const res = await supertest(app).post(url).send({
+                email,
+                name,
+            });
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
         test('returns 400 status code when email is invalid', async () => {
@@ -85,6 +103,17 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].msg).toEqual('The provided email address is invalid.');
+        });
+
+        test('returns 400 status code when email is not given', async () => {
+            const res = await supertest(app).post(url).send({
+                name,
+                password,
+            });
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
         test('returns 400 status code when name is not given', async () => {
@@ -94,6 +123,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
         test('returns 409 status code when email has already been registered to a user', async () => {
@@ -102,6 +132,7 @@ describe('auth apis', () => {
 
             expect(res1.statusCode).toBe(201);
             expect(res2.statusCode).toBe(409);
+            expect(res2.body).toEqual(new UserAlreadyExistsError(email).json);
         });
     });
 
