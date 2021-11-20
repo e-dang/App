@@ -2,6 +2,7 @@ import {ExtractJwt, Strategy, VerifiedCallback} from 'passport-jwt';
 import {User} from '@entities';
 import {Request} from 'express';
 import {config} from '@config';
+import {AccessTokenPayload} from '@auth';
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -10,18 +11,21 @@ const options = {
     passReqToCallback: true,
 };
 
-export const strategy = new Strategy(options, async (req: Request, payload: any, done: VerifiedCallback) => {
-    let user: User;
-    try {
-        user = await User.findOne({id: payload.userId});
-    } catch (err) {
-        return done(err, false);
-    }
+export const strategy = new Strategy(
+    options,
+    async (req: Request, payload: AccessTokenPayload, done: VerifiedCallback) => {
+        let user: User;
+        try {
+            user = await User.findOne({id: payload.userId});
+        } catch (err) {
+            return done(err, false);
+        }
 
-    if (!user) {
-        return done(null, false);
-    }
+        if (!user) {
+            return done(null, false);
+        }
 
-    req.user = user;
-    return done(null, user);
-});
+        req.user = user;
+        return done(null, user);
+    },
+);

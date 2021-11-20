@@ -1,4 +1,4 @@
-import {createJwt, hashPassword, passwordIsValid, verifyRefreshToken} from '@auth';
+import {createJwt, hashPassword, passwordIsValid, RefreshTokenPayload, verifyRefreshToken} from '@auth';
 import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
@@ -67,7 +67,7 @@ authRouter.post(
     '/token/refresh',
     validateRefreshTokenRequest,
     async (req: Request, res: Response, next: NextFunction) => {
-        let payload: any;
+        let payload: RefreshTokenPayload;
         try {
             payload = verifyRefreshToken(req.body.refreshToken);
         } catch (err) {
