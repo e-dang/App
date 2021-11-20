@@ -63,16 +63,9 @@ describe('user apis', () => {
                 name: newName,
             });
 
+            await user.reload();
             expect(res.statusCode).toBe(200);
-        });
-
-        test("can update the users' name", async () => {
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
-                name: newName,
-            });
-
-            const updatedUser = await User.findOne({id: user.id});
-            expect(updatedUser.name).toBe(newName);
+            expect(user.name).toBe(newName);
             expect(res.body.data.name).toBe(newName);
         });
 
@@ -81,16 +74,9 @@ describe('user apis', () => {
                 email: newEmail,
             });
 
+            await user.reload();
             expect(res.statusCode).toBe(200);
-        });
-
-        test("can update the users' email", async () => {
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
-                email: newEmail,
-            });
-
-            const updatedUser = await User.findOne({id: user.id});
-            expect(updatedUser.email).toBe(newEmail);
+            expect(user.email).toBe(newEmail);
             expect(res.body.data.email).toBe(newEmail);
         });
 
