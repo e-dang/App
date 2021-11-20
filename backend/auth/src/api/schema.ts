@@ -80,3 +80,13 @@ export const changePasswordSchema = checkSchema({
         },
     },
 });
+
+export const refreshTokenSchema = checkSchema({
+    refreshToken: {
+        in: ['body'],
+        ...notEmptyValidator,
+        isJWT: {
+            errorMessage: 'Malformed token.',
+        },
+    },
+});

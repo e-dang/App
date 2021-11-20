@@ -25,9 +25,9 @@ export class InternalError extends Error {
     }
 }
 
-export class ExpiredTokenError extends InternalError {
+export class InvalidTokenError extends InternalError {
     constructor() {
-        super(400, 'Token expired.');
+        super(400, 'Invalid token.');
     }
 }
 export class ResourceNotFound extends InternalError {
@@ -57,18 +57,6 @@ export class AlreadyExistsError extends InternalError {
 export class UserAlreadyExistsError extends AlreadyExistsError {
     constructor(email: string) {
         super(`A user with the email '${email}' already exists.`);
-    }
-}
-
-export class InvalidOldPasswordError extends InternalError {
-    constructor() {
-        super(400, 'Your old password is incorrect. Please enter it again.');
-    }
-}
-
-export class PasswordsMismatchError extends InternalError {
-    constructor() {
-        super(400, "Password confirmation doesn't match the password.");
     }
 }
 

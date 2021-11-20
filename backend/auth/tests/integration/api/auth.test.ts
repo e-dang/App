@@ -4,7 +4,7 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
-import {AuthenticationError, UserAlreadyExistsError} from '@src/errors';
+import {AuthenticationError, InvalidTokenError, UserAlreadyExistsError} from '@src/errors';
 
 describe('auth apis', () => {
     const name = 'Test User';
@@ -295,18 +295,29 @@ describe('auth apis', () => {
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
 
+        test('returns 400 status code when refresh token is not included in body', async () => {
+            const res = await supertest(app).post(url).send();
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('refreshToken');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when refresh token is malformed jwt', async () => {
+            const res = await supertest(app).post(url).send({refreshToken: 'not a jwt'});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('refreshToken');
+            expect(res.body.errors[0].msg).toEqual('Malformed token.');
+        });
+
         test('returns 400 status code when refresh token signature is invalid', async () => {
             const res = await supertest(app)
                 .post(url)
                 .send({refreshToken: refreshToken + 'invalidate'});
 
             expect(res.statusCode).toBe(400);
-        });
-
-        test('returns 400 status code when refresh token is not included in body', async () => {
-            const res = await supertest(app).post(url).send();
-
-            expect(res.statusCode).toBe(400);
+            expect(res.body).toEqual(new InvalidTokenError().json);
         });
 
         test('returns 400 status code when refresh token is expired', async () => {
@@ -315,6 +326,7 @@ describe('auth apis', () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
             expect(res.statusCode).toBe(400);
+            expect(res.body).toEqual(new InvalidTokenError().json);
         });
 
         test('returns 400 status code when refresh token does not have the same tokenVersion as the user', async () => {
@@ -323,6 +335,7 @@ describe('auth apis', () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
             expect(res.statusCode).toBe(400);
+            expect(res.body).toEqual(new InvalidTokenError().json);
         });
     });
 

@@ -4,8 +4,8 @@ import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {changePasswordSchema, signUpSchema, validate} from './schema';
-import {ExpiredTokenError, SignInError, UserAlreadyExistsError, UserNotFoundError} from '@src/errors';
+import {changePasswordSchema, refreshTokenSchema, signUpSchema, validate} from './schema';
+import {InvalidTokenError, SignInError, UserAlreadyExistsError, UserNotFoundError} from '@src/errors';
 import {verifyAuthN} from '@src/middleware';
 
 const authRouter = Router();
@@ -65,13 +65,13 @@ authRouter.post(
 
 authRouter.post(
     '/token/refresh',
-    validate([body('refreshToken').isJWT()]),
+    validate(refreshTokenSchema),
     async (req: Request, res: Response, next: NextFunction) => {
         let payload: any;
         try {
             payload = verifyRefreshToken(req.body.refreshToken);
         } catch (err) {
-            return next(new ExpiredTokenError());
+            return next(new InvalidTokenError());
         }
 
         const user = await User.findOne({id: payload.userId});
@@ -79,7 +79,7 @@ authRouter.post(
         if (!user) {
             return next(new UserNotFoundError(payload.userId));
         } else if (user.tokenVersion != payload.tokenVersion) {
-            return next(new ExpiredTokenError());
+            return next(new InvalidTokenError());
         }
 
         return res.status(200).json(createJwt(user));
