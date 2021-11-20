@@ -59,3 +59,15 @@ export class UserAlreadyExistsError extends AlreadyExistsError {
         super(`A user with the email '${email}' already exists.`);
     }
 }
+
+export class InvalidOldPasswordError extends InternalError {
+    constructor() {
+        super(400, 'Your old password is incorrect. Please enter it again.');
+    }
+}
+
+export class PasswordsMismatchError extends InternalError {
+    constructor() {
+        super(400, "Password confirmation doesn't match the password.");
+    }
+}

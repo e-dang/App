@@ -1,4 +1,4 @@
-import {createJwt, passwordIsValid, verifyRefreshToken} from '@auth';
+import {createJwt, hashPassword, passwordIsValid, verifyRefreshToken} from '@auth';
 import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
@@ -6,7 +6,14 @@ import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
 import passport from 'passport';
 import {validate} from './schema';
-import {ExpiredTokenError, SignInError, UserAlreadyExistsError, UserNotFoundError} from '@src/errors';
+import {
+    ExpiredTokenError,
+    InvalidOldPasswordError,
+    PasswordsMismatchError,
+    SignInError,
+    UserAlreadyExistsError,
+    UserNotFoundError,
+} from '@src/errors';
 
 const authRouter = Router();
 
@@ -60,7 +67,26 @@ authRouter.post('/password/reset', async (req: Request, res: Response) => {});
 
 authRouter.post('/password/reset/confirm', async (req: Request, res: Response) => {});
 
-authRouter.post('/password/change', async (req: Request, res: Response) => {});
+authRouter.post(
+    '/password/change',
+    passport.authenticate('jwt', {session: false}),
+    validate([
+        body('oldPassword').not().isEmpty(),
+        body('newPassword').isStrongPassword(),
+        body('confirmPassword').not().isEmpty(),
+    ]),
+    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        if (!passwordIsValid(req.body.oldPassword, req.user.password)) {
+            return next(new InvalidOldPasswordError());
+        } else if (req.body.newPassword !== req.body.confirmPassword) {
+            return next(new PasswordsMismatchError());
+        }
+
+        req.user.password = hashPassword(req.body.newPassword);
+        await req.user.save();
+        return res.status(200).json();
+    },
+);
 
 authRouter.post(
     '/token/refresh',
