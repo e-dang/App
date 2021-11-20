@@ -2,32 +2,27 @@ import {createJwt, hashPassword, passwordIsValid, verifyRefreshToken} from '@aut
 import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
-import {body} from 'express-validator';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {changePasswordSchema, refreshTokenSchema, signUpSchema, validate} from './schema';
+import {changePasswordSchema, refreshTokenSchema, signInSchema, signUpSchema, validate} from './schema';
 import {InvalidTokenError, SignInError, UserAlreadyExistsError, UserNotFoundError} from '@src/errors';
 import {verifyAuthN} from '@src/middleware';
 
 const authRouter = Router();
 
-authRouter.post(
-    '/signin',
-    validate([body('email').isEmail(), body('password').not().isEmpty()]),
-    async (req: Request, res: Response, next: NextFunction) => {
-        const user = await User.findOne({email: req.body.email});
-        if (!user) {
-            return next(new SignInError());
-        }
-
-        if (passwordIsValid(req.body.password, user.password)) {
-            user.lastLogin = new Date().toUTCString();
-            await user.save();
-            return res.status(200).json(createJwt(user));
-        }
-
+authRouter.post('/signin', validate(signInSchema), async (req: Request, res: Response, next: NextFunction) => {
+    const user = await User.findOne({email: req.body.email});
+    if (!user) {
         return next(new SignInError());
-    },
-);
+    }
+
+    if (passwordIsValid(req.body.password, user.password)) {
+        user.lastLogin = new Date().toUTCString();
+        await user.save();
+        return res.status(200).json(createJwt(user));
+    }
+
+    return next(new SignInError());
+});
 
 authRouter.post('/signout', verifyAuthN, async (req: AuthenticatedRequest, res: Response) => {
     req.user.tokenVersion++;

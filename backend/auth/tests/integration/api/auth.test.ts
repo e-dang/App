@@ -4,7 +4,7 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
-import {AuthenticationError, InvalidTokenError, UserAlreadyExistsError} from '@src/errors';
+import {AuthenticationError, InvalidTokenError, SignInError, UserAlreadyExistsError} from '@src/errors';
 
 describe('auth apis', () => {
     const name = 'Test User';
@@ -191,24 +191,40 @@ describe('auth apis', () => {
             const res = await supertest(app).post(url).send({password});
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
         test('returns 400 status code when password is missing', async () => {
             const res = await supertest(app).post(url).send({email});
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('password');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when email is a malformed email address', async () => {
+            const res = await supertest(app).post(url).send({email: 'malformed address', password});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
+            expect(res.body.errors[0].msg).toEqual('The provided email address is invalid.');
         });
 
         test('returns 404 status code when email and password dont match any records in the database', async () => {
-            const res = await supertest(app).post(url).send({email, password: 'wrongpassword'});
+            const res = await supertest(app)
+                .post(url)
+                .send({email, password: password + 'extrachars'});
 
             expect(res.statusCode).toBe(404);
+            expect(res.body).toEqual(new SignInError().json);
         });
 
         test('returns 404 status code when email does not exist in the database', async () => {
             const res = await supertest(app).post(url).send({email: 'dne@demo.com', password});
 
             expect(res.statusCode).toBe(404);
+            expect(res.body).toEqual(new SignInError().json);
         });
     });
 

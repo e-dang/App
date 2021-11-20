@@ -23,12 +23,30 @@ const notEmptyValidator = {
     },
 };
 
+const isEmailValidator = {
+    isEmail: {
+        errorMessage: 'The provided email address is invalid.',
+    },
+};
+
 const strongPasswordValidator = {
     isStrongPassword: {
         errorMessage:
             'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
     },
 };
+
+export const signInSchema = checkSchema({
+    email: {
+        in: ['body'],
+        ...notEmptyValidator,
+        ...isEmailValidator,
+    },
+    password: {
+        in: ['body'],
+        ...notEmptyValidator,
+    },
+});
 
 export const signUpSchema = checkSchema({
     name: {
@@ -38,9 +56,7 @@ export const signUpSchema = checkSchema({
     email: {
         in: ['body'],
         ...notEmptyValidator,
-        isEmail: {
-            errorMessage: 'The provided email address is invalid.',
-        },
+        ...isEmailValidator,
     },
     password: {
         in: ['body'],
