@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import {strategy} from '@src/passport';
+import {jwtStrategy} from '@auth';
 import {ApiGroup, apis} from '@api';
 import {config} from '@config';
 import morgan from 'morgan';
@@ -16,7 +16,7 @@ function createApiPath(api: ApiGroup) {
 
 // intialize components
 export const app = express();
-passport.use(strategy);
+passport.use(jwtStrategy);
 
 // middleware
 app.use(express.json());

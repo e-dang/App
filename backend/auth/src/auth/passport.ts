@@ -11,7 +11,7 @@ const options = {
     passReqToCallback: true,
 };
 
-export const strategy = new Strategy(
+export const jwtStrategy = new Strategy(
     options,
     async (req: Request, payload: AccessTokenPayload, done: VerifiedCallback) => {
         let user: User;
