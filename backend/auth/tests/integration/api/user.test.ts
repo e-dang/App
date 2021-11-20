@@ -106,6 +106,8 @@ describe('user apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
+            expect(res.body.errors[0].msg).toEqual('The provided email address is invalid.');
         });
 
         test('returns 400 error when name is an empty string', async () => {
@@ -114,6 +116,8 @@ describe('user apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('name');
+            expect(res.body.errors[0].msg).toEqual('This field can not be blank.');
         });
     });
 

@@ -106,3 +106,19 @@ export const refreshTokenSchema = checkSchema({
         },
     },
 });
+
+export const patchUserSchema = checkSchema({
+    email: {
+        in: ['body'],
+        optional: true,
+        ...isEmailValidator,
+    },
+    name: {
+        in: ['body'],
+        optional: true,
+        isEmpty: {
+            errorMessage: 'This field can not be blank.',
+            negated: true,
+        },
+    },
+});
