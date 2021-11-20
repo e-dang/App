@@ -75,6 +75,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('password');
             expect(res.body.errors[0].msg).toEqual(
                 'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
             );
@@ -87,6 +88,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('password');
             expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
@@ -98,6 +100,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
             expect(res.body.errors[0].msg).toEqual('The provided email address is invalid.');
         });
 
@@ -108,6 +111,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
             expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
@@ -118,6 +122,7 @@ describe('auth apis', () => {
             });
 
             expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('name');
             expect(res.body.errors[0].msg).toEqual('This field is required.');
         });
 
