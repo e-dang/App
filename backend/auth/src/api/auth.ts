@@ -3,13 +3,18 @@ import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {changePasswordSchema, refreshTokenSchema, signInSchema, signUpSchema, validate} from './schema';
 import {InvalidTokenError, SignInError, UserAlreadyExistsError, UserNotFoundError} from '@src/errors';
 import {verifyAuthN} from '@src/middleware';
+import {
+    validateChangePasswordRequest,
+    validateRefreshTokenRequest,
+    validateSignInRequest,
+    validateSignUpRequest,
+} from '@schemas';
 
 const authRouter = Router();
 
-authRouter.post('/signin', validate(signInSchema), async (req: Request, res: Response, next: NextFunction) => {
+authRouter.post('/signin', validateSignInRequest, async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findOne({email: req.body.email});
     if (!user) {
         return next(new SignInError());
@@ -30,7 +35,7 @@ authRouter.post('/signout', verifyAuthN, async (req: AuthenticatedRequest, res: 
     return res.status(200).json();
 });
 
-authRouter.post('/signup', validate(signUpSchema), async (req: Request, res: Response, next: NextFunction) => {
+authRouter.post('/signup', validateSignUpRequest, async (req: Request, res: Response, next: NextFunction) => {
     let user: User;
     try {
         user = await User.createUser(req.body.name, req.body.email, req.body.password);
@@ -50,7 +55,7 @@ authRouter.post('/password/reset/confirm', async (req: Request, res: Response) =
 authRouter.post(
     '/password/change',
     verifyAuthN,
-    validate(changePasswordSchema),
+    validateChangePasswordRequest,
     async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         req.user.password = hashPassword(req.body.newPassword);
         await req.user.save();
@@ -60,7 +65,7 @@ authRouter.post(
 
 authRouter.post(
     '/token/refresh',
-    validate(refreshTokenSchema),
+    validateRefreshTokenRequest,
     async (req: Request, res: Response, next: NextFunction) => {
         let payload: any;
         try {

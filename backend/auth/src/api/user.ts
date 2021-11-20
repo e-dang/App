@@ -1,7 +1,7 @@
 import {Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
-import {patchUserSchema, validate} from './schema';
 import {verifyAuthN} from '@src/middleware';
+import {validatePatchUserRequest} from '@schemas';
 
 const userRouter = Router();
 
@@ -13,7 +13,7 @@ userRouter.get('/', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // update auth user
-userRouter.patch('/', validate(patchUserSchema), async (req: AuthenticatedRequest, res: Response) => {
+userRouter.patch('/', validatePatchUserRequest, async (req: AuthenticatedRequest, res: Response) => {
     req.user.name = req.body.name || req.user.name;
     req.user.email = req.body.email || req.user.email;
     await req.user.save();

@@ -17,6 +17,8 @@
             "@entities/*": ["src/entities/*"],
             "@auth": ["src/auth"],
             "@auth/*": ["src/auth/*"],
+            "@schemas": ["src/schemas"],
+            "@schemas/*": ["src/schemas/*"],
             "@config": ["config"],
             "@config/*": ["config/*"],
             "@src": ["src"],
