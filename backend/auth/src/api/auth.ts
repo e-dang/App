@@ -3,7 +3,13 @@ import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {InvalidTokenError, SignInError, UserNotFoundError, UserWithEmailAlreadyExistsError} from '@errors';
+import {
+    InternalError,
+    InvalidTokenError,
+    SignInError,
+    UserNotFoundError,
+    UserWithEmailAlreadyExistsError,
+} from '@errors';
 import {verifyAuthN} from '@src/middleware';
 import {
     validateChangePasswordRequest,
@@ -43,6 +49,8 @@ authRouter.post('/signup', validateSignUpRequest, async (req: Request, res: Resp
         if (err.detail.includes('(email)=') && err.code == PG_UNIQUE_CONSTRAINT_VIOLATION) {
             return next(new UserWithEmailAlreadyExistsError(req.body.email));
         }
+
+        return next(new InternalError(err.message));
     }
 
     return res.status(201).json(createJwt(user));
