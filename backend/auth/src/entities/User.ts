@@ -1,5 +1,5 @@
 import {hashPassword} from '@auth';
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, BaseEntity} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, BaseEntity, AfterInsert} from 'typeorm';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -26,6 +26,11 @@ export class User extends BaseEntity {
 
     @Column('int', {default: 0})
     tokenVersion: number;
+
+    @AfterInsert()
+    _setLastLoginOnCreate() {
+        this.lastLogin = new Date().toUTCString();
+    }
 
     static async createUser(name: string, email: string, password: string) {
         const user = new User();
