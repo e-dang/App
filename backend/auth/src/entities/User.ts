@@ -28,9 +28,9 @@ export class User extends BaseEntity {
     tokenVersion: number;
 
     @AfterInsert()
-    async _setLastLoginOnCreate() {
+    _setLastLoginOnCreate() {
         this.lastLogin = this.dateJoined;
-        await this.save();
+        this.save();
     }
 
     static async createUser(name: string, email: string, password: string) {
