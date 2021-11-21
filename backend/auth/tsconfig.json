@@ -19,6 +19,8 @@
             "@auth/*": ["src/auth/*"],
             "@schemas": ["src/schemas"],
             "@schemas/*": ["src/schemas/*"],
+            "@errors": ["src/errors"],
+            "@errors/*": ["src/errors/*"],
             "@config": ["config"],
             "@config/*": ["config/*"],
             "@src": ["src"],

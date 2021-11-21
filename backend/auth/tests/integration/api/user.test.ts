@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import {createUser} from './utils';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
-import {AuthenticationError} from '@src/errors';
+import {AuthenticationError} from '@errors';
 
 describe('user apis', () => {
     const url = '/api/v1/user';

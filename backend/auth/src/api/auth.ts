@@ -3,7 +3,7 @@ import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
 import {PG_UNIQUE_CONSTRAINT_VIOLATION} from '@src/constants';
-import {InvalidTokenError, SignInError, UserAlreadyExistsError, UserNotFoundError} from '@src/errors';
+import {InvalidTokenError, SignInError, UserNotFoundError, UserWithEmailAlreadyExistsError} from '@errors';
 import {verifyAuthN} from '@src/middleware';
 import {
     validateChangePasswordRequest,
@@ -41,7 +41,7 @@ authRouter.post('/signup', validateSignUpRequest, async (req: Request, res: Resp
         user = await User.createUser(req.body.name, req.body.email, req.body.password);
     } catch (err) {
         if (err.detail.includes('(email)=') && err.code == PG_UNIQUE_CONSTRAINT_VIOLATION) {
-            return next(new UserAlreadyExistsError(req.body.email));
+            return next(new UserWithEmailAlreadyExistsError(req.body.email));
         }
     }
 
@@ -71,7 +71,7 @@ authRouter.post(
         try {
             payload = verifyRefreshToken(req.body.refreshToken);
         } catch (err) {
-            return next(new InvalidTokenError());
+            return next(new InvalidTokenError('body', 'refreshToken'));
         }
 
         const user = await User.findOne({id: payload.userId});
@@ -79,7 +79,7 @@ authRouter.post(
         if (!user) {
             return next(new UserNotFoundError(payload.userId));
         } else if (user.tokenVersion != payload.tokenVersion) {
-            return next(new InvalidTokenError());
+            return next(new InvalidTokenError('body', 'refreshToken'));
         }
 
         return res.status(200).json(createJwt(user));

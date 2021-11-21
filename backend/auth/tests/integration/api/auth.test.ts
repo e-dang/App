@@ -4,7 +4,7 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
-import {AuthenticationError, InvalidTokenError, SignInError, UserAlreadyExistsError} from '@src/errors';
+import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
 
 describe('auth apis', () => {
     const name = 'Test User';
@@ -132,7 +132,7 @@ describe('auth apis', () => {
 
             expect(res1.statusCode).toBe(201);
             expect(res2.statusCode).toBe(409);
-            expect(res2.body).toEqual(new UserAlreadyExistsError(email).json);
+            expect(res2.body).toEqual(new UserWithEmailAlreadyExistsError(email).json);
         });
     });
 
@@ -333,7 +333,7 @@ describe('auth apis', () => {
                 .send({refreshToken: refreshToken + 'invalidate'});
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidTokenError().json);
+            expect(res.body).toEqual(new InvalidTokenError('body', 'refreshToken').json);
         });
 
         test('returns 400 status code when refresh token is expired', async () => {
@@ -342,7 +342,7 @@ describe('auth apis', () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidTokenError().json);
+            expect(res.body).toEqual(new InvalidTokenError('body', 'refreshToken').json);
         });
 
         test('returns 400 status code when refresh token does not have the same tokenVersion as the user', async () => {
@@ -351,7 +351,7 @@ describe('auth apis', () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidTokenError().json);
+            expect(res.body).toEqual(new InvalidTokenError('body', 'refreshToken').json);
         });
     });
 
