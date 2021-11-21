@@ -21,7 +21,7 @@ export class User extends BaseEntity {
     @CreateDateColumn()
     dateJoined: string;
 
-    @Column()
+    @Column({default: true})
     isActive: boolean;
 
     @Column('int', {default: 0})
