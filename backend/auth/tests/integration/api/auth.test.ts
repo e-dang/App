@@ -4,6 +4,7 @@ import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {passwordIsValid} from '@auth';
+import moment from 'moment';
 import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
 
 describe('auth apis', () => {
@@ -29,13 +30,20 @@ describe('auth apis', () => {
             expect(res.statusCode).toBe(201);
         });
 
-        test('creates a new User in the database', async () => {
+        test('creates a new User in the database with specified email and name', async () => {
             await supertest(app).post(url).send(signUpData);
 
             const user = await User.findOne({email});
             expect(user).toBeInstanceOf(User);
             expect(user.email).toBe(email);
             expect(user.name).toBe(name);
+        });
+
+        test('creates a new User in the database with correct dateJoined and lastLogin time stamps', async () => {
+            await supertest(app).post(url).send(signUpData);
+
+            const user = await User.findOne({email});
+            expect(user.lastLogin >= user.dateJoined).toBe(true);
         });
 
         test('returns an accessToken with userId in payload', async () => {

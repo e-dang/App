@@ -27,7 +27,7 @@ authRouter.post('/signin', validateSignInRequest, async (req: Request, res: Resp
     }
 
     if (passwordIsValid(req.body.password, user.password)) {
-        user.lastLogin = new Date().toUTCString();
+        user.lastLogin = new Date();
         await user.save();
         return res.status(200).json(createJwt(user));
     }

@@ -15,11 +15,11 @@ export class User extends BaseEntity {
     @Column()
     password: string;
 
-    @Column('timestamp without time zone')
-    lastLogin: string;
+    @Column('timestamptz')
+    lastLogin: Date;
 
-    @CreateDateColumn()
-    dateJoined: string;
+    @CreateDateColumn({type: 'timestamptz'})
+    dateJoined: Date;
 
     @Column({default: true})
     isActive: boolean;
@@ -28,8 +28,9 @@ export class User extends BaseEntity {
     tokenVersion: number;
 
     @AfterInsert()
-    _setLastLoginOnCreate() {
-        this.lastLogin = new Date().toUTCString();
+    async _setLastLoginOnCreate() {
+        this.lastLogin = this.dateJoined;
+        await this.save();
     }
 
     static async createUser(name: string, email: string, password: string) {
@@ -37,7 +38,7 @@ export class User extends BaseEntity {
         user.name = name;
         user.email = email;
         user.password = hashPassword(password);
-        user.lastLogin = new Date().toUTCString();
+        user.lastLogin = new Date();
         user.isActive = true;
         return await user.save();
     }
