@@ -9,6 +9,7 @@
         "experimentalDecorators": true,
         "sourceMap": true,
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "baseUrl": ".",
         "paths": {
             "@api": ["src/api"],
