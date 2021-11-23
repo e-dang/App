@@ -1,5 +1,5 @@
 import {DomainError, DomainErrorDetails} from './base';
-import {ValidationError as ExpressValidationError, Location} from 'express-validator';
+import {Location} from 'express-validator';
 
 export class ValidationError extends DomainError {
     constructor(errors: DomainErrorDetails) {
@@ -15,7 +15,20 @@ export class InvalidTokenError extends ValidationError {
                 param,
                 msg: 'Invalid token.',
                 value: undefined,
-            } as ExpressValidationError,
+            },
+        ]);
+    }
+}
+
+export class ExpiredTokenError extends ValidationError {
+    constructor(location: Location, param: string) {
+        super([
+            {
+                location,
+                param,
+                msg: 'Expired token.',
+                value: undefined,
+            },
         ]);
     }
 }
