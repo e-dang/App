@@ -1,4 +1,12 @@
-import {createJwt, hashPassword, passwordIsValid, RefreshTokenPayload, verifyRefreshToken} from '@auth';
+import {
+    createJwt,
+    createPasswordResetToken,
+    hashPassword,
+    passwordIsValid,
+    RefreshTokenPayload,
+    verifyPasswordResetToken,
+    verifyRefreshToken,
+} from '@auth';
 import {User} from '@entities';
 import {NextFunction, Request, Response, Router} from 'express';
 import {ApiGroup, AuthenticatedRequest} from './types';
@@ -13,10 +21,13 @@ import {
 import {verifyAuthN} from '@src/middleware';
 import {
     validateChangePasswordRequest,
+    validatePasswordResetConfirmRequest,
+    validatePasswordResetRequest,
     validateRefreshTokenRequest,
     validateSignInRequest,
     validateSignUpRequest,
 } from '@schemas';
+import {sendPasswordResetEmail} from '@src/emailer';
 
 const authRouter = Router();
 
@@ -56,9 +67,43 @@ authRouter.post('/signup', validateSignUpRequest, async (req: Request, res: Resp
     return res.status(201).json(createJwt(user));
 });
 
-authRouter.post('/password/reset', async (req: Request, res: Response) => {});
+authRouter.post(
+    '/password/reset',
+    validatePasswordResetRequest,
+    async (req: Request, res: Response, next: NextFunction) => {
+        const user = await User.findOne({email: req.body.email});
+        if (!user) {
+            return res.status(200).json(); // Always return saying it worked so you dont expose User emails
+        }
 
-authRouter.post('/password/reset/confirm', async (req: Request, res: Response) => {});
+        const token = createPasswordResetToken(user);
+        await sendPasswordResetEmail(user, token);
+        return res.status(200).json();
+    },
+);
+
+authRouter.post(
+    '/password/reset/confirm',
+    validatePasswordResetConfirmRequest,
+    async (req: Request, res: Response, next: NextFunction) => {
+        const user = await User.findOne({id: req.body.userId});
+        if (!user) {
+            // send back token error since letting the sender know that a user with a certain id doesn't exist
+            // would leak user id info
+            return next(new InvalidTokenError('body', 'token'));
+        }
+
+        try {
+            verifyPasswordResetToken(user, req.body.token);
+        } catch (err) {
+            return next(err);
+        }
+
+        user.password = hashPassword(req.body.newPassword);
+        await user.save();
+        return res.status(200).json('Password successfully reset');
+    },
+);
 
 authRouter.post(
     '/password/change',

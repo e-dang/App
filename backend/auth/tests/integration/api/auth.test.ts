@@ -3,9 +3,13 @@ import supertest from 'supertest';
 import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
-import {passwordIsValid} from '@auth';
-import moment from 'moment';
+import {createPasswordResetToken, passwordIsValid} from '@auth';
 import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
+import {filterEmails} from './utils';
+import {JSDOM} from 'jsdom';
+import quotedPrintable from 'quoted-printable';
+import utf8 from 'utf8';
+import {randomUUID} from 'crypto';
 
 describe('auth apis', () => {
     const name = 'Test User';
@@ -496,6 +500,204 @@ describe('auth apis', () => {
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
+        });
+    });
+
+    describe('/password/reset', () => {
+        const url = '/api/v1/auth/password/reset';
+        let user: User;
+        const isEmailForUser = (msg) => {
+            if (msg.Content.Headers.Subject[0].includes('Password Reset Request')) {
+                // parse uuid from link sent in email
+                const dom = new JSDOM(utf8.decode(quotedPrintable.decode(msg.Content.Body)));
+                const urlSplit = dom.window.document.querySelector('a').href.split('/');
+                const uuid = urlSplit[urlSplit.length - 2];
+
+                if (uuid === user.id) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        beforeEach(async () => {
+            await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
+            user = await User.findOne({email});
+        });
+
+        test('returns 200 status code on success', async () => {
+            const res = await supertest(app).post(url).send({email});
+
+            expect(res.statusCode).toBe(200);
+        });
+
+        test('sends an email to the user with a link to reset their password that contains the user id and generated token', async () => {
+            await supertest(app).post(url).send({email});
+
+            const emails = await filterEmails(user.email, isEmailForUser);
+            expect(emails.length).toBe(1);
+        });
+
+        test('returns 200 status code when no user exists with the given email', async () => {
+            const res = await supertest(app).post(url).send({email: 'doesnotexist@demo.com'});
+
+            expect(res.statusCode).toBe(200);
+        });
+
+        test('does not send an email when no user has the provided email address', async () => {
+            await supertest(app).post(url).send({email: 'doesnotexist@demo.com'});
+
+            const emails = await filterEmails(user.email, isEmailForUser);
+            expect(emails.length).toBe(0);
+        });
+
+        test('returns 400 status code when email is invalid', async () => {
+            const res = await supertest(app).post(url).send({email: 'invalid email address'});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
+            expect(res.body.errors[0].msg).toEqual('The provided email address is invalid.');
+        });
+
+        test('returns 400 status code when email is not provided', async () => {
+            const res = await supertest(app).post(url).send({});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('email');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+    });
+
+    describe('/password/reset/confirm', () => {
+        const url = '/api/v1/auth/password/reset/confirm';
+        let user: User;
+        let token: string;
+        const newPassword = 'newTestPa$$word123';
+        const confirmPassword = newPassword;
+
+        beforeEach(async () => {
+            await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
+            user = await User.findOne({email});
+            token = createPasswordResetToken(user);
+        });
+
+        test('returns 200 status code on success', async () => {
+            const res = await supertest(app).post(url).send({userId: user.id, token, newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(200);
+        });
+
+        test("successful request updates the user's password", async () => {
+            await supertest(app).post(url).send({userId: user.id, token, newPassword, confirmPassword});
+
+            await user.reload();
+            expect(passwordIsValid(newPassword, user.password)).toBe(true);
+        });
+
+        test('returns 400 status code when userId is not provided', async () => {
+            const res = await supertest(app).post(url).send({token, newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('userId');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when userId is not a uuid', async () => {
+            const res = await supertest(app).post(url).send({userId: 'dne-id', token, newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('userId');
+            expect(res.body.errors[0].msg).toEqual('The userId must be a uuid.');
+        });
+
+        test('returns 400 status code when no user with the specified userId exists', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .send({userId: randomUUID(), token, newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('token');
+            expect(res.body.errors[0].msg).toEqual('Invalid token.');
+        });
+
+        test('returns 400 status code when token is not provided', async () => {
+            const res = await supertest(app).post(url).send({userId: user.id, newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('token');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when token is expired', async () => {
+            MockDate.set(new Date().getTime() * 1000 + 2000);
+            const res = await supertest(app).post(url).send({userId: user.id, token, newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('token');
+            expect(res.body.errors[0].msg).toEqual('Expired token.');
+        });
+
+        test('returns 400 status code when token has been changed', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .send({userId: user.id, token: token + 'randomchars', newPassword, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('token');
+            expect(res.body.errors[0].msg).toEqual('Invalid token.');
+        });
+
+        test('returns 400 status code after user has already used the token to reset their password', async () => {
+            const newPassword2 = newPassword + 'randomchars';
+            const res1 = await supertest(app).post(url).send({userId: user.id, token, newPassword, confirmPassword});
+            const res2 = await supertest(app)
+                .post(url)
+                .send({userId: user.id, token, newPassword2, confirmPassword: newPassword2});
+
+            await user.reload();
+            expect(res1.statusCode).toBe(200);
+            expect(res2.statusCode).toBe(400);
+            expect(passwordIsValid(newPassword, user.password)).toBe(true);
+            expect(passwordIsValid(newPassword2, user.password)).toBe(false);
+        });
+
+        test('returns 400 status code when newPassword is not provided', async () => {
+            const res = await supertest(app).post(url).send({userId: user.id, token, confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('newPassword');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when newPassword is not a strong password', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .send({userId: user.id, token, newPassword: 'password123', confirmPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('newPassword');
+            expect(res.body.errors[0].msg).toEqual(
+                'The password must be at least 8 characters long, with at least 1 lower case and upper case letter, 1 symbol, and 1 number.',
+            );
+        });
+
+        test('returns 400 status code when confirmPassword is not provided', async () => {
+            const res = await supertest(app).post(url).send({userId: user.id, token, newPassword});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('confirmPassword');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when confirmPassword does not match newPassword', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .send({userId: user.id, token, newPassword, confirmPassword: newPassword + 'mismatch'});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('confirmPassword');
+            expect(res.body.errors[0].msg).toEqual("Password confirmation doesn't match the password.");
         });
     });
 });
