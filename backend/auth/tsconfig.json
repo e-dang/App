@@ -28,7 +28,13 @@
             "@src/*": ["src/*"],
             "@tests": ["tests"],
             "@tests/*": ["tests/*"]
-        }
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths",
+                "useRootDirs": true
+            }
+        ]
     },
     "exclude": ["node_modules"]
 }
