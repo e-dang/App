@@ -40,11 +40,16 @@ interface Config {
     passwordResetTokenAlg: string;
     passwordResetTokenSecret: string;
     passwordResetTokenExp: number;
+    emailHost: string;
+    emailPort: number;
+    emailUser?: string;
+    emailPassword?: string;
     accessTokenPrivateKey: string;
     accessTokenPublicKey: string;
     refreshTokenPrivateKey: string;
     httpPort: number;
     apiVersion: string;
+    client: string;
 }
 
 export const config: Config = {
@@ -61,9 +66,14 @@ export const config: Config = {
     passwordResetTokenAlg: process.env.PASSWORD_RESET_TOKEN_ALG,
     passwordResetTokenSecret: process.env.PASSWORD_RESET_TOKEN_SECRET,
     passwordResetTokenExp: parseInt(process.env.PASSWORD_RESET_TOKEN_EXP),
+    emailHost: process.env.EMAIL_HOST,
+    emailPort: parseInt(process.env.EMAIL_PORT),
+    emailUser: process.env?.EMAIL_USER,
+    emailPassword: process.env?.EMAIL_PASSWORD,
     refreshTokenPrivateKey: readKey(join(__dirname, 'id_rsa_refresh'), !isDevEnv(process.env.NODE_ENV)),
     accessTokenPrivateKey: readKey(join(__dirname, 'id_rsa_access'), !isDevEnv(process.env.NODE_ENV)),
     accessTokenPublicKey: readKey(join(__dirname, 'id_rsa_access.pub')),
     httpPort: parseInt(process.env.HTTP_PORT),
     apiVersion: 'v1',
+    client: process.env.CLIENT,
 };
