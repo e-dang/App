@@ -1,6 +1,11 @@
 import {passwordIsValid} from '@auth';
 import {createValidationSchemaMiddleware} from '@src/middleware';
-import {isEmailValidator, notEmptyValidator, strongPasswordValidator} from './validators';
+import {
+    confirmPasswordMatchValidator,
+    isEmailValidator,
+    notEmptyValidator,
+    strongPasswordValidator,
+} from './validators';
 
 export const validateSignInRequest = createValidationSchemaMiddleware({
     email: {
@@ -52,14 +57,7 @@ export const validateChangePasswordRequest = createValidationSchemaMiddleware({
     confirmPassword: {
         in: ['body'],
         ...notEmptyValidator,
-        custom: {
-            options: (val: string, {req}) => {
-                if (val !== req.body.newPassword) {
-                    throw new Error("Password confirmation doesn't match the password.");
-                }
-                return true;
-            },
-        },
+        ...confirmPasswordMatchValidator,
     },
 });
 
@@ -70,5 +68,37 @@ export const validateRefreshTokenRequest = createValidationSchemaMiddleware({
         isJWT: {
             errorMessage: 'Malformed token.',
         },
+    },
+});
+
+export const validatePasswordResetRequest = createValidationSchemaMiddleware({
+    email: {
+        in: ['body'],
+        ...notEmptyValidator,
+        ...isEmailValidator,
+    },
+});
+
+export const validatePasswordResetConfirmRequest = createValidationSchemaMiddleware({
+    userId: {
+        in: ['body'],
+        ...notEmptyValidator,
+        isUUID: {
+            errorMessage: 'The userId must be a uuid.',
+        },
+    },
+    token: {
+        in: ['body'],
+        ...notEmptyValidator,
+    },
+    newPassword: {
+        in: ['body'],
+        ...notEmptyValidator,
+        ...strongPasswordValidator,
+    },
+    confirmPassword: {
+        in: ['body'],
+        ...notEmptyValidator,
+        ...confirmPasswordMatchValidator,
     },
 });

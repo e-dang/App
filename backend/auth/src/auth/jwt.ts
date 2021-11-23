@@ -6,6 +6,7 @@ import {JwtPayload} from 'jsonwebtoken';
 interface TokenPayload extends JwtPayload {
     userId: string;
 }
+
 export interface AccessTokenPayload extends TokenPayload {}
 
 export interface RefreshTokenPayload extends TokenPayload {
