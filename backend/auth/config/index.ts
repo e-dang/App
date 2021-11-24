@@ -1,31 +1,3 @@
-import dotenv from 'dotenv';
-import {readFileSync, existsSync, unlinkSync} from 'fs';
-import {join} from 'path';
-
-const parsedConfig = dotenv.config({path: __dirname + '/.env'});
-if (parsedConfig.error) {
-    throw parsedConfig.error;
-}
-
-function readKey(filepath: string, _delete: boolean = false) {
-    if (!existsSync(filepath)) {
-        throw new Error(`The file ${filepath} does not exist.`);
-    }
-
-    const key = readFileSync(filepath, 'utf-8');
-
-    // delete the key so its contents exist only in memory
-    if (_delete) {
-        unlinkSync(filepath);
-    }
-
-    return key;
-}
-
-function isDevEnv(env: string) {
-    return env === 'development' || env === 'test';
-}
-
 interface Config {
     env: string;
     dbHost: string;
@@ -70,9 +42,9 @@ export const config: Config = {
     emailPort: parseInt(process.env.EMAIL_PORT),
     emailUser: process.env?.EMAIL_USER,
     emailPassword: process.env?.EMAIL_PASSWORD,
-    refreshTokenPrivateKey: readKey(join(__dirname, 'id_rsa_refresh'), !isDevEnv(process.env.NODE_ENV)),
-    accessTokenPrivateKey: readKey(join(__dirname, 'id_rsa_access'), !isDevEnv(process.env.NODE_ENV)),
-    accessTokenPublicKey: readKey(join(__dirname, 'id_rsa_access.pub')),
+    refreshTokenPrivateKey: process.env.id_rsa_refresh_token,
+    accessTokenPrivateKey: process.env.id_rsa_access_token,
+    accessTokenPublicKey: process.env.id_rsa_access_token_pub,
     httpPort: parseInt(process.env.HTTP_PORT),
     apiVersion: 'v1',
     client: process.env.CLIENT,
