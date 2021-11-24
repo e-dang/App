@@ -27,26 +27,15 @@ spec:
       serviceAccountName: {{ include "auth.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      volumes:
-        - name: secrets
-          secret:
-            secretName: auth-secrets
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          volumeMounts:
-            - mountPath: "/var/app-secret"
-              name: secrets
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - mv /var/app-secret/* /home/auth/app/config/
+          envFrom:
+            - secretRef:
+                name: auth-secrets
           ports:
             - name: http
               containerPort: 3000
