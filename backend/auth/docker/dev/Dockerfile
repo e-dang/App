@@ -4,8 +4,10 @@ FROM node:${NODE_VERSION} as build
 
 WORKDIR /app
 
-COPY . .
+COPY package.json .
 
 RUN yarn install
+
+COPY . .
 
 CMD ["yarn", "dev"]
