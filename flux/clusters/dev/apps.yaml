@@ -12,11 +12,10 @@ spec:
   prune: true
   dependsOn:
     - name: infrastructure
-  validation: client
   decryption:
     provider: sops
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
-      name: tracker
+      name: auth
       namespace: default
