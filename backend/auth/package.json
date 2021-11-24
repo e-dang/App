@@ -12,7 +12,6 @@
         "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
     },
     "dependencies": {
-        "dotenv": "^10.0.0",
         "express": "^4.15.4",
         "express-validator": "^6.13.0",
         "handlebars": "^4.7.7",
