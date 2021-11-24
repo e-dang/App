@@ -7,7 +7,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: backend/auth/chart
+      chart: charts/auth
       version: '0.1.x'
       sourceRef:
         kind: GitRepository
