@@ -3,9 +3,9 @@
     "version": "0.0.1",
     "description": "Auth microservice",
     "scripts": {
-        "build": "docker build -t ericdang/auth-service:${ENV:=dev} -f docker/${ENV:=dev}/Dockerfile .",
+        "build": "docker build -t ericdang/auth:${ENV:=dev} -f docker/${ENV:=dev}/Dockerfile .",
         "compile": "ttsc -P tsconfig.json",
-        "start": "docker run --rm -it --name auth -p 3000:3000 ericdang/auth-service:dev",
+        "start": "docker run --rm -it --name auth -p 3000:3000 ericdang/auth:dev",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
         "prod": "node src/index.js",
         "test": "jest",
