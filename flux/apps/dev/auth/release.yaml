@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: auth
+  namespace: default
+spec:
+  values:
+    ingress:
+      annotations:
+        cert-manager.io/issuer: letsencrypt
+      hosts:
+        - host: dev.erickdang.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - dev.erickdang.com
+          secretName: letsencrypt-auth
+  postRenderers:
+    - kustomize:
+        images:
+          - name: ericdang/auth
+            newName: ericdang/auth
+            newTag: dev-17680bdb-1632089910 # {"$imagepolicy": "flux-system:auth:tag"}
