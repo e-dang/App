@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: ericdang/auth-service
+  repository: ericdang/auth
   pullPolicy: Always
 
 imagePullSecrets: []
