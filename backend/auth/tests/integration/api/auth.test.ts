@@ -46,8 +46,10 @@ describe('auth apis', () => {
         test('creates a new User in the database with correct dateJoined and lastLogin time stamps', async () => {
             await supertest(app).post(url).send(signUpData);
 
-            const user = await User.findOne({email});
-            expect(user.lastLogin >= user.dateJoined).toBe(true);
+            setTimeout(async () => {
+                const user = await User.findOne({email});
+                expect(user.lastLogin >= user.dateJoined).toBe(true);
+            }, 3000); // wait for lastLogin listener to execute
         });
 
         test('returns an accessToken with userId in payload', async () => {
