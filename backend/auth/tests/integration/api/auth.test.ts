@@ -53,7 +53,7 @@ describe('auth apis', () => {
         test('returns an accessToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.accessToken);
+            const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             const user = await User.findOne({id: payload.userId});
             expect(user.email).toBe(email);
@@ -63,7 +63,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.userId).not.toBeUndefined();
             const user = await User.findOne({id: payload.userId});
             expect(user.email).toBe(email);
@@ -73,7 +73,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             const user = await User.findOne({email});
             expect(user.tokenVersion).toBe(payload.tokenVersion);
@@ -169,7 +169,7 @@ describe('auth apis', () => {
         test('returns an accessToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.accessToken);
+            const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -177,7 +177,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -185,7 +185,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
@@ -247,8 +247,8 @@ describe('auth apis', () => {
 
         beforeEach(async () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            accessToken = res.body.accessToken;
-            refreshToken = res.body.refreshToken;
+            accessToken = res.body.data.accessToken;
+            refreshToken = res.body.data.refreshToken;
         });
 
         test('returns 200 status code on success', async () => {
@@ -290,7 +290,7 @@ describe('auth apis', () => {
         beforeEach(async () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
-            refreshToken = res.body.refreshToken;
+            refreshToken = res.body.data.refreshToken;
         });
 
         test('returns 200 status code when successful', async () => {
@@ -302,7 +302,7 @@ describe('auth apis', () => {
         test('returns an accessToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
-            const payload: any = decode(res.body.accessToken);
+            const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -310,7 +310,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -318,7 +318,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
@@ -376,7 +376,7 @@ describe('auth apis', () => {
         beforeEach(async () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
-            accessToken = res.body.accessToken;
+            accessToken = res.body.data.accessToken;
         });
 
         test('returns 200 on success', async () => {

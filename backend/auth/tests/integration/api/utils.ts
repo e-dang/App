@@ -10,8 +10,8 @@ export const createUser = async (app: Express, email: string, name: string, pass
     const user = await User.findOne({email});
     return {
         user,
-        refreshToken: res.body.refreshToken,
-        accessToken: res.body.accessToken,
+        refreshToken: res.body.data.refreshToken,
+        accessToken: res.body.data.accessToken,
     };
 };
 
