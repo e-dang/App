@@ -1,4 +1,3 @@
-
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
@@ -7,7 +6,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: auth-service
+    branch: auth-chart
   secretRef:
     name: flux-system
   url: ssh://git@github.com/e-dang/App.git
@@ -39,14 +38,14 @@ spec:
   git:
     checkout:
       ref:
-        branch: auth-service
+        branch: auth-chart
     commit:
       author:
         email: fluxcdbot@dne.com
         name: fluxcdbot
       messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
     push:
-      branch: auth-service
+      branch: auth-chart
   interval: 1m0s
   sourceRef:
     kind: GitRepository

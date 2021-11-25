@@ -1,4 +1,4 @@
-exclude: 'node_modules|migrations|.git|.tox|flux-system|ios|android|charts'
+exclude: 'node_modules|migrations|.git|.tox|flux-system|ios|android|charts|chart'
 default_stages: [commit]
 fail_fast: true
 

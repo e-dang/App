@@ -4,7 +4,7 @@
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
-        "outDir": "./build",
+        "outDir": "./dist",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": true,
@@ -28,7 +28,13 @@
             "@src/*": ["src/*"],
             "@tests": ["tests"],
             "@tests/*": ["tests/*"]
-        }
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths",
+                "useRootDirs": true
+            }
+        ]
     },
     "exclude": ["node_modules"]
 }

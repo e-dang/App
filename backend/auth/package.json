@@ -2,6 +2,28 @@
     "name": "auth",
     "version": "0.0.1",
     "description": "Auth microservice",
+    "scripts": {
+        "build": "docker build -t ericdang/auth:${ENV:=dev} -f docker/${ENV:=dev}/Dockerfile .",
+        "compile": "ttsc -P tsconfig.json",
+        "start": "docker run --rm -it --name auth -p 3000:3000 ericdang/auth:dev",
+        "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
+        "prod": "node src/index.js",
+        "test": "jest",
+        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    },
+    "dependencies": {
+        "express": "^4.15.4",
+        "express-validator": "^6.13.0",
+        "handlebars": "^4.7.7",
+        "hi-base32": "^0.5.1",
+        "morgan": "^1.10.0",
+        "nodemailer": "^6.7.1",
+        "passport": "^0.5.0",
+        "passport-jwt": "^4.0.0",
+        "pg": "^8.4.0",
+        "reflect-metadata": "^0.1.10",
+        "typeorm": "0.2.39"
+    },
     "devDependencies": {
         "@types/express": "^4.17.13",
         "@types/jest": "^27.0.2",
@@ -23,28 +45,9 @@
         "ts-jest": "^27.0.7",
         "ts-node": "3.3.0",
         "tsconfig-paths": "^3.11.0",
+        "ttypescript": "^1.5.12",
         "typeorm-transactional-tests": "^1.1.5",
-        "typescript": "^4.4.4"
-    },
-    "dependencies": {
-        "body-parser": "^1.18.1",
-        "dotenv": "^10.0.0",
-        "express": "^4.15.4",
-        "express-validator": "^6.13.0",
-        "handlebars": "^4.7.7",
-        "hi-base32": "^0.5.1",
-        "morgan": "^1.10.0",
-        "nodemailer": "^6.7.1",
-        "passport": "^0.5.0",
-        "passport-jwt": "^4.0.0",
-        "pg": "^8.4.0",
-        "reflect-metadata": "^0.1.10",
-        "typeorm": "0.2.39"
-    },
-    "scripts": {
-        "start": "tsnode src/index.ts",
-        "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
-        "test": "jest",
-        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+        "typescript": "^4.4.4",
+        "typescript-transform-paths": "^3.3.1"
     }
 }

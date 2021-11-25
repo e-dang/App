@@ -1,8 +1,8 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageRepository
 metadata:
-  name: tracker
+  name: auth
   namespace: flux-system
 spec:
-  image: ericdang/tracker
+  image: ericdang/auth
   interval: 1m0s

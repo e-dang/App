@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tracker
+  name: auth
   namespace: default
 spec:
   values:
@@ -16,10 +16,10 @@ spec:
       tls:
         - hosts:
             - dev.erickdang.com
-          secretName: letsencrypt-tracker
+          secretName: letsencrypt-auth
   postRenderers:
     - kustomize:
         images:
-          - name: ericdang/tracker
-            newName: ericdang/tracker
-            newTag: dev-17680bdb-1632089910 # {"$imagepolicy": "flux-system:tracker:tag"}
+          - name: ericdang/auth
+            newName: ericdang/auth
+            newTag: dev-17680bdb-1632089914 # {"$imagepolicy": "flux-system:auth:tag"}

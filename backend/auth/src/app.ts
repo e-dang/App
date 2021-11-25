@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import passport from 'passport';
 import {jwtStrategy} from '@auth';
 import {ApiGroup, apis} from '@api';
@@ -32,3 +32,7 @@ apis.forEach((api) => {
 
 // error handlers
 app.use(errorHandler);
+
+app.get('/health', async (req: Request, res: Response) => {
+    return res.status(200).json();
+});
