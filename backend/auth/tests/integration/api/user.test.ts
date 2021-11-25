@@ -52,6 +52,16 @@ describe('user apis', () => {
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
         });
+
+        test('returns 401 status code if access token has been tampered with', async () => {
+            const res = await supertest(app)
+                .get(url)
+                .set('Authorization', `Token ${accessToken + 'adiajwdijo'}`)
+                .send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
     });
 
     describe('PATCH /user', () => {
@@ -95,6 +105,18 @@ describe('user apis', () => {
             const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send({
                 name: newName,
             });
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 401 status code if access token has been tampered with', async () => {
+            const res = await supertest(app)
+                .patch(url)
+                .set('Authorization', `Token ${accessToken + 'adiwojaiodj'}`)
+                .send({
+                    name: newName,
+                });
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
@@ -146,6 +168,16 @@ describe('user apis', () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
             const res = await supertest(app).delete(url).set('Authorization', `Token ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 401 status code if access token has been tampered with', async () => {
+            const res = await supertest(app)
+                .delete(url)
+                .set('Authorization', `Token ${accessToken + 'awdioahjdiu29'}`)
+                .send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
