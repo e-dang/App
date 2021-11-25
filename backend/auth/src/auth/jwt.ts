@@ -1,9 +1,8 @@
-import {sign, verify} from 'jsonwebtoken';
 import {User} from '@entities';
 import {config} from '@config';
-import {JwtPayload} from 'jsonwebtoken';
+import * as jose from 'jose';
 
-interface TokenPayload extends JwtPayload {
+interface TokenPayload extends jose.JWTPayload {
     userId: string;
 }
 
@@ -13,36 +12,44 @@ export interface RefreshTokenPayload extends TokenPayload {
     tokenVersion: number;
 }
 
-export function createAccessToken(user: User) {
+export async function createAccessToken(user: User) {
     const payload: AccessTokenPayload = {
         userId: user.id,
     };
 
     return {
-        accessToken: sign(payload, config.accessTokenPrivateKey, {
-            expiresIn: config.jwtAccessTokenExp,
-            algorithm: 'RS256',
-        }),
+        accessToken: await new jose.SignJWT(payload)
+            .setProtectedHeader({alg: config.accessTokenAlg, typ: 'JWT'})
+            .setIssuedAt()
+            .setIssuer(config.jwtIssuer)
+            .setAudience(config.jwtAudience)
+            .setExpirationTime(config.jwtAccessTokenExp)
+            .sign(await config.accessTokenPrivateKey),
     };
 }
 
-export function createRefreshToken(user: User) {
+export async function createRefreshToken(user: User) {
     const payload: RefreshTokenPayload = {
         userId: user.id,
         tokenVersion: user.tokenVersion,
     };
 
     return {
-        refreshToken: sign(payload, config.refreshTokenPrivateKey, {
-            expiresIn: config.jwtRefreshTokenExp,
-        }),
+        refreshToken: await new jose.SignJWT(payload)
+            .setProtectedHeader({alg: config.refreshTokenAlg, typ: 'JWT'})
+            .setIssuedAt()
+            .setIssuer(config.jwtIssuer)
+            .setAudience(config.jwtAudience)
+            .setExpirationTime(config.jwtRefreshTokenExp)
+            .sign(config.refreshTokenPrivateKey),
     };
 }
 
-export function createJwt(user: User) {
-    return {...createAccessToken(user), ...createRefreshToken(user)};
+export async function createJwt(user: User) {
+    return {...(await createAccessToken(user)), ...(await createRefreshToken(user))};
 }
 
-export function verifyRefreshToken(token: string): RefreshTokenPayload {
-    return verify(token, config.refreshTokenPrivateKey, {ignoreExpiration: false}) as RefreshTokenPayload;
+export async function verifyRefreshToken(token: string) {
+    const decoded = await jose.jwtVerify(token, config.refreshTokenPrivateKey);
+    return decoded.payload as RefreshTokenPayload;
 }

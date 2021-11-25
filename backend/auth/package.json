@@ -5,7 +5,7 @@
     "scripts": {
         "build": "docker build -t ericdang/auth:${ENV:=dev} -f docker/${ENV:=dev}/Dockerfile .",
         "compile": "ttsc -P tsconfig.json",
-        "start": "docker run --rm -it --name auth -p 3000:3000 ericdang/auth:dev",
+        "start": "telepresence intercept auth --port 3000 --docker-run -- -v $(pwd)/backend/auth:/home/auth/app -v /home/auth/app/node_modules -it --rm ericdang/auth:dev",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
         "prod": "node src/index.js",
         "test": "jest",
@@ -16,6 +16,7 @@
         "express-validator": "^6.13.0",
         "handlebars": "^4.7.7",
         "hi-base32": "^0.5.1",
+        "jose": "^4.3.7",
         "morgan": "^1.10.0",
         "nodemailer": "^6.7.1",
         "passport": "^0.5.0",

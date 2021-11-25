@@ -252,13 +252,13 @@ describe('auth apis', () => {
         });
 
         test('returns 200 status code on success', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(200);
         });
 
         test("increments user's tokenVersion on success", async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send();
 
             const payload: any = decode(refreshToken);
             const user = await User.findOne({email});
@@ -275,7 +275,7 @@ describe('auth apis', () => {
         test('returns 401 status code when access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
@@ -380,7 +380,7 @@ describe('auth apis', () => {
         });
 
         test('returns 200 on success', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
                 confirmPassword: newPassword,
@@ -390,7 +390,7 @@ describe('auth apis', () => {
         });
 
         test("changes the user's password on success", async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
                 confirmPassword: newPassword,
@@ -402,7 +402,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when oldPassword is missing', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 newPassword,
                 confirmPassword: newPassword,
             });
@@ -413,7 +413,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when newPassword is missing', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 confirmPassword: newPassword,
             });
@@ -424,7 +424,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when confirmPassword is missing', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
             });
@@ -435,7 +435,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when new password is not a strong password', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword: 'password123',
                 confirmPassword: 'password123',
@@ -451,7 +451,7 @@ describe('auth apis', () => {
         test('returns 400 status code when newPassword and confirmPassword are mismatching', async () => {
             const res = await supertest(app)
                 .post(url)
-                .set('Authorization', `Bearer ${accessToken}`)
+                .set('Authorization', `Token ${accessToken}`)
                 .send({
                     oldPassword: password,
                     newPassword,
@@ -466,7 +466,7 @@ describe('auth apis', () => {
         test('returns 400 status code when old password doesnt match the old password in database', async () => {
             const res = await supertest(app)
                 .post(url)
-                .set('Authorization', `Bearer ${accessToken}`)
+                .set('Authorization', `Token ${accessToken}`)
                 .send({
                     oldPassword: password + 'randomchars',
                     newPassword,
@@ -492,7 +492,7 @@ describe('auth apis', () => {
         test('returns 401 status code when access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
                 confirmPassword: newPassword,

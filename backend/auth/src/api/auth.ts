@@ -40,7 +40,7 @@ authRouter.post('/signin', validateSignInRequest, async (req: Request, res: Resp
     if (passwordIsValid(req.body.password, user.password)) {
         user.lastLogin = new Date();
         await user.save();
-        return res.status(200).json(createJwt(user));
+        return res.status(200).json(await createJwt(user));
     }
 
     return next(new SignInError());
@@ -64,7 +64,7 @@ authRouter.post('/signup', validateSignUpRequest, async (req: Request, res: Resp
         return next(new InternalError(err.message));
     }
 
-    return res.status(201).json(createJwt(user));
+    return res.status(201).json(await createJwt(user));
 });
 
 authRouter.post(
@@ -122,7 +122,7 @@ authRouter.post(
     async (req: Request, res: Response, next: NextFunction) => {
         let payload: RefreshTokenPayload;
         try {
-            payload = verifyRefreshToken(req.body.refreshToken);
+            payload = await verifyRefreshToken(req.body.refreshToken);
         } catch (err) {
             return next(new InvalidTokenError('body', 'refreshToken'));
         }
@@ -135,7 +135,7 @@ authRouter.post(
             return next(new InvalidTokenError('body', 'refreshToken'));
         }
 
-        return res.status(200).json(createJwt(user));
+        return res.status(200).json(await createJwt(user));
     },
 );
 
