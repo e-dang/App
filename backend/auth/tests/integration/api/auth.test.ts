@@ -401,6 +401,18 @@ describe('auth apis', () => {
             expect(passwordsAreTheSame).toBe(true);
         });
 
+        test('changes the password even if the new password is the same as the old password', async () => {
+            const oldPassword = user.password;
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
+                oldPassword: password,
+                newPassword: password,
+                confirmPassword: password,
+            });
+
+            await user.reload();
+            expect(user.password).not.toEqual(oldPassword);
+        });
+
         test('returns 400 status code when oldPassword is missing', async () => {
             const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 newPassword,
