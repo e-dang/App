@@ -32,4 +32,4 @@ RUN yarn install --production
 COPY --from=build --chown=auth:auth /app/dist/src src
 COPY --from=build --chown=auth:auth /app/dist/config config
 
-CMD ["yarn", "prod"]
+CMD ["node", "src/index.js"]
