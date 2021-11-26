@@ -1,3 +1,23 @@
+import * as jose from 'jose';
+import fs from 'fs';
+import path from 'path';
+
+interface Secrets {
+    [x: string]: string;
+}
+
+function readSecrets() {
+    const secrets: Secrets = {};
+    fs.readdirSync(path.join(__dirname, 'secrets'), {encoding: 'utf-8'}).forEach((file) => {
+        secrets[file] = fs.readFileSync(path.join(__dirname, 'secrets', file)).toString();
+    });
+
+    return secrets;
+}
+
+const accessTokenAlg = 'EdDSA';
+const secrets = readSecrets();
+
 interface Config {
     env: string;
     dbHost: string;
@@ -16,9 +36,13 @@ interface Config {
     emailPort: number;
     emailUser?: string;
     emailPassword?: string;
-    accessTokenPrivateKey: string;
-    accessTokenPublicKey: string;
-    refreshTokenPrivateKey: string;
+    refreshTokenPrivateKey: Uint8Array;
+    accessTokenPrivateKey: Promise<jose.KeyLike>;
+    accessTokenPublicKey: Promise<jose.KeyLike>;
+    accessTokenAlg: string;
+    refreshTokenAlg: string;
+    jwtIssuer: string;
+    jwtAudience: string;
     httpPort: number;
     apiVersion: string;
     client: string;
@@ -42,9 +66,13 @@ export const config: Config = {
     emailPort: parseInt(process.env.EMAIL_PORT),
     emailUser: process.env?.EMAIL_USER,
     emailPassword: process.env?.EMAIL_PASSWORD,
-    refreshTokenPrivateKey: process.env.id_rsa_refresh_token,
-    accessTokenPrivateKey: process.env.id_rsa_access_token,
-    accessTokenPublicKey: process.env.id_rsa_access_token_pub,
+    refreshTokenPrivateKey: new TextEncoder().encode(secrets.refresh_token_secret),
+    accessTokenPrivateKey: jose.importPKCS8(secrets.access_token_private, accessTokenAlg),
+    accessTokenPublicKey: jose.importSPKI(secrets.access_token_public, accessTokenAlg),
+    accessTokenAlg: accessTokenAlg,
+    refreshTokenAlg: 'HS512',
+    jwtIssuer: 'dev.erickdang.com',
+    jwtAudience: 'dev.erickdang.com',
     httpPort: parseInt(process.env.HTTP_PORT),
     apiVersion: 'v1',
     client: process.env.CLIENT,

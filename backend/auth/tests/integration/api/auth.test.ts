@@ -46,14 +46,16 @@ describe('auth apis', () => {
         test('creates a new User in the database with correct dateJoined and lastLogin time stamps', async () => {
             await supertest(app).post(url).send(signUpData);
 
-            const user = await User.findOne({email});
-            expect(user.lastLogin >= user.dateJoined).toBe(true);
+            setTimeout(async () => {
+                const user = await User.findOne({email});
+                expect(user.lastLogin >= user.dateJoined).toBe(true);
+            }, 3000); // wait for lastLogin listener to execute
         });
 
         test('returns an accessToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.accessToken);
+            const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             const user = await User.findOne({id: payload.userId});
             expect(user.email).toBe(email);
@@ -63,7 +65,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.userId).not.toBeUndefined();
             const user = await User.findOne({id: payload.userId});
             expect(user.email).toBe(email);
@@ -73,7 +75,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             const user = await User.findOne({email});
             expect(user.tokenVersion).toBe(payload.tokenVersion);
@@ -169,7 +171,7 @@ describe('auth apis', () => {
         test('returns an accessToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.accessToken);
+            const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -177,7 +179,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -185,7 +187,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
@@ -247,18 +249,18 @@ describe('auth apis', () => {
 
         beforeEach(async () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            accessToken = res.body.accessToken;
-            refreshToken = res.body.refreshToken;
+            accessToken = res.body.data.accessToken;
+            refreshToken = res.body.data.refreshToken;
         });
 
         test('returns 200 status code on success', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(200);
         });
 
         test("increments user's tokenVersion on success", async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send();
 
             const payload: any = decode(refreshToken);
             const user = await User.findOne({email});
@@ -275,7 +277,7 @@ describe('auth apis', () => {
         test('returns 401 status code when access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
@@ -290,7 +292,7 @@ describe('auth apis', () => {
         beforeEach(async () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
-            refreshToken = res.body.refreshToken;
+            refreshToken = res.body.data.refreshToken;
         });
 
         test('returns 200 status code when successful', async () => {
@@ -302,7 +304,7 @@ describe('auth apis', () => {
         test('returns an accessToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
-            const payload: any = decode(res.body.accessToken);
+            const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -310,7 +312,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with userId in payload', async () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
@@ -318,7 +320,7 @@ describe('auth apis', () => {
         test('returns a refreshToken with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send({refreshToken});
 
-            const payload: any = decode(res.body.refreshToken);
+            const payload: any = decode(res.body.data.refreshToken);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
@@ -376,11 +378,11 @@ describe('auth apis', () => {
         beforeEach(async () => {
             const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
-            accessToken = res.body.accessToken;
+            accessToken = res.body.data.accessToken;
         });
 
         test('returns 200 on success', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
                 confirmPassword: newPassword,
@@ -390,7 +392,7 @@ describe('auth apis', () => {
         });
 
         test("changes the user's password on success", async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
                 confirmPassword: newPassword,
@@ -401,8 +403,20 @@ describe('auth apis', () => {
             expect(passwordsAreTheSame).toBe(true);
         });
 
+        test('changes the password even if the new password is the same as the old password', async () => {
+            const oldPassword = user.password;
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
+                oldPassword: password,
+                newPassword: password,
+                confirmPassword: password,
+            });
+
+            await user.reload();
+            expect(user.password).not.toEqual(oldPassword);
+        });
+
         test('returns 400 status code when oldPassword is missing', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 newPassword,
                 confirmPassword: newPassword,
             });
@@ -413,7 +427,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when newPassword is missing', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 confirmPassword: newPassword,
             });
@@ -424,7 +438,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when confirmPassword is missing', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
             });
@@ -435,7 +449,7 @@ describe('auth apis', () => {
         });
 
         test('returns 400 status code when new password is not a strong password', async () => {
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword: 'password123',
                 confirmPassword: 'password123',
@@ -451,7 +465,7 @@ describe('auth apis', () => {
         test('returns 400 status code when newPassword and confirmPassword are mismatching', async () => {
             const res = await supertest(app)
                 .post(url)
-                .set('Authorization', `Bearer ${accessToken}`)
+                .set('Authorization', `Token ${accessToken}`)
                 .send({
                     oldPassword: password,
                     newPassword,
@@ -466,7 +480,7 @@ describe('auth apis', () => {
         test('returns 400 status code when old password doesnt match the old password in database', async () => {
             const res = await supertest(app)
                 .post(url)
-                .set('Authorization', `Bearer ${accessToken}`)
+                .set('Authorization', `Token ${accessToken}`)
                 .send({
                     oldPassword: password + 'randomchars',
                     newPassword,
@@ -492,7 +506,7 @@ describe('auth apis', () => {
         test('returns 401 status code when access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).post(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({
                 oldPassword: password,
                 newPassword,
                 confirmPassword: newPassword,

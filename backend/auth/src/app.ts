@@ -1,6 +1,4 @@
 import express, {Request, Response} from 'express';
-import passport from 'passport';
-import {jwtStrategy} from '@auth';
 import {ApiGroup, apis} from '@api';
 import {config} from '@config';
 import morgan from 'morgan';
@@ -16,11 +14,9 @@ function createApiPath(api: ApiGroup) {
 
 // intialize components
 export const app = express();
-passport.use(jwtStrategy);
 
 // middleware
 app.use(express.json());
-app.use(passport.initialize());
 if (config.env !== 'test') {
     app.use(morgan('combined'));
 }

@@ -26,13 +26,13 @@ describe('user apis', () => {
 
     describe('GET /user', () => {
         test('returns 200 status code on success', async () => {
-            const res = await supertest(app).get(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(200);
         });
 
         test('returns the user whose id is contained in the access token', async () => {
-            const res = await supertest(app).get(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.body.data).toEqual(user.serialize());
         });
@@ -47,7 +47,17 @@ describe('user apis', () => {
         test('returns 401 status code if access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).get(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 401 status code if access token has been tampered with', async () => {
+            const res = await supertest(app)
+                .get(url)
+                .set('Authorization', `Token ${accessToken + 'adiajwdijo'}`)
+                .send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
@@ -59,7 +69,7 @@ describe('user apis', () => {
         const newEmail = 'newemail@demo.com';
 
         test('returns 200 status code on successful name update', async () => {
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send({
                 name: newName,
             });
 
@@ -70,7 +80,7 @@ describe('user apis', () => {
         });
 
         test('returns 200 status code on successful email update', async () => {
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send({
                 email: newEmail,
             });
 
@@ -92,7 +102,7 @@ describe('user apis', () => {
         test('returns 401 status code if access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send({
                 name: newName,
             });
 
@@ -100,8 +110,20 @@ describe('user apis', () => {
             expect(res.body).toEqual(new AuthenticationError().json);
         });
 
+        test('returns 401 status code if access token has been tampered with', async () => {
+            const res = await supertest(app)
+                .patch(url)
+                .set('Authorization', `Token ${accessToken + 'adiwojaiodj'}`)
+                .send({
+                    name: newName,
+                });
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
         test('returns 400 error when email is malformed', async () => {
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send({
                 email: 'malformed email',
             });
 
@@ -111,7 +133,7 @@ describe('user apis', () => {
         });
 
         test('returns 400 error when name is an empty string', async () => {
-            const res = await supertest(app).patch(url).set('Authorization', `Bearer ${accessToken}`).send({
+            const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send({
                 name: '',
             });
 
@@ -123,13 +145,13 @@ describe('user apis', () => {
 
     describe('DELETE /user', () => {
         test('returns 202 status code on success', async () => {
-            const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).delete(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(202);
         });
 
         test('sets isActive field on user to false on success', async () => {
-            const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).delete(url).set('Authorization', `Token ${accessToken}`).send();
 
             await user.reload();
             expect(user.isActive).toBe(false);
@@ -145,7 +167,17 @@ describe('user apis', () => {
         test('returns 401 status code if access token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).delete(url).set('Authorization', `Bearer ${accessToken}`).send();
+            const res = await supertest(app).delete(url).set('Authorization', `Token ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 401 status code if access token has been tampered with', async () => {
+            const res = await supertest(app)
+                .delete(url)
+                .set('Authorization', `Token ${accessToken + 'awdioahjdiu29'}`)
+                .send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);

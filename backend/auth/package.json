@@ -5,21 +5,21 @@
     "scripts": {
         "build": "docker build -t ericdang/auth:${ENV:=dev} -f docker/${ENV:=dev}/Dockerfile .",
         "compile": "ttsc -P tsconfig.json",
-        "start": "docker run --rm -it --name auth -p 3000:3000 ericdang/auth:dev",
+        "start": "telepresence intercept auth --port 3000 --docker-run -- -v $(pwd)/backend/auth:/home/auth/app -v /home/auth/app/node_modules -it --rm ericdang/auth:dev",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
         "prod": "node src/index.js",
         "test": "jest",
-        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+        "genkeys": "ts-node scripts/genKeys.ts"
     },
     "dependencies": {
         "express": "^4.15.4",
         "express-validator": "^6.13.0",
         "handlebars": "^4.7.7",
         "hi-base32": "^0.5.1",
+        "jose": "^4.3.7",
         "morgan": "^1.10.0",
         "nodemailer": "^6.7.1",
-        "passport": "^0.5.0",
-        "passport-jwt": "^4.0.0",
         "pg": "^8.4.0",
         "reflect-metadata": "^0.1.10",
         "typeorm": "0.2.39"
@@ -37,6 +37,7 @@
         "axios": "^0.24.0",
         "jest": "^27.3.1",
         "jsdom": "^18.1.1",
+        "jsonwebtoken": "^8.5.1",
         "mockdate": "^3.0.5",
         "moment": "^2.29.1",
         "nodemon": "^2.0.15",
