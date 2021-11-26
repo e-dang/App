@@ -11,6 +11,13 @@ import quotedPrintable from 'quoted-printable';
 import utf8 from 'utf8';
 import {randomUUID} from 'crypto';
 
+/**
+ * Auth APIs
+ *
+ * @group integration
+ * @group auth
+ */
+
 describe('auth apis', () => {
     const name = 'Test User';
     const email = 'email@demo.com';

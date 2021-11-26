@@ -9,4 +9,5 @@ module.exports = {
     setupFilesAfterEnv: ['./tests/integration/setup.ts'],
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {prefix: path.resolve(__dirname)}),
     testTimeout: 10000,
+    runner: 'groups',
 };

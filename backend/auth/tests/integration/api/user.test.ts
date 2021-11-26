@@ -6,6 +6,14 @@ import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {AuthenticationError} from '@errors';
 
+/**
+ * User APIs
+ *
+ * @group integration
+ * @group auth
+ * @group user
+ */
+
 describe('user apis', () => {
     const url = '/api/v1/user';
     const name = 'Test User';
