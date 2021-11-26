@@ -2,8 +2,8 @@ name: Auth
 
 env:
   DOCKER_BUILDKIT: 1
-  CLUSTER_NAME: tracker-dev
-  RESOURCE_GROUP: tracker-stack-dev
+  CLUSTER_NAME: dev
+  RESOURCE_GROUP: dev-stack
   DIRECTORY: backend/auth
 
 on:
