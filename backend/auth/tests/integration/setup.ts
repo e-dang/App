@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = process.env.CI ? 'ci' : 'test';
 
 import {config} from '@config';
 import {Connection, createConnection, getConnection} from 'typeorm';
