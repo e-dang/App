@@ -15,7 +15,7 @@ on:
       - .github/workflows/auth.yml
   push:
     branches:
-      - main
+      - auth-service
     paths:
       - backend/auth/**
       - .github/workflows/auth.yml
