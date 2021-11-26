@@ -2505,6 +2505,11 @@ jest-resolve@^27.3.1:
     resolve.exports "^1.1.0"
     slash "^3.0.0"
 
+jest-runner-groups@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/jest-runner-groups/-/jest-runner-groups-2.1.0.tgz#454cf7e0e442774b60b50ed20ed71f7fcb4a9218"
+  integrity sha512-iHBIJ38yEW7qkPTW3tSulq/5kjgIiVtZjuYimBT1PltBYwsb1B1gPWGFMDdEfy9O3+6cyfe5MmVgMHafi69MUw==
+
 jest-runner@^27.3.1:
   version "27.3.1"
   resolved "https://registry.yarnpkg.com/jest-runner/-/jest-runner-27.3.1.tgz#1d594dcbf3bd8600a7e839e790384559eaf96e3e"
