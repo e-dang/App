@@ -1,5 +1,13 @@
 import {hashPassword} from '@auth';
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, BaseEntity, AfterInsert} from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    BaseEntity,
+    AfterInsert,
+    getConnection,
+} from 'typeorm';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -29,7 +37,7 @@ export class User extends BaseEntity {
 
     @AfterInsert()
     async _setLastLoginOnCreate() {
-        await User.update(this, {lastLogin: this.dateJoined});
+        await getConnection().manager.update(User, this.id, {lastLogin: this.dateJoined});
     }
 
     static async createUser(name: string, email: string, password: string) {

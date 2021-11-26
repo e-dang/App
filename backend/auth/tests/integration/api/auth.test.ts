@@ -47,9 +47,11 @@ describe('auth apis', () => {
             await supertest(app).post(url).send(signUpData);
 
             const user = await User.findOne({email});
-            const secLastLogin = dateToSeconds(user.lastLogin);
-            const secDateJoined = dateToSeconds(user.dateJoined);
-            expect(secLastLogin >= secDateJoined).toBe(true);
+
+            // will cause timeout if not true
+            while (dateToSeconds(user.lastLogin) != dateToSeconds(user.dateJoined)) {
+                await user.reload();
+            }
         });
 
         test('returns an accessToken with userId in payload', async () => {
