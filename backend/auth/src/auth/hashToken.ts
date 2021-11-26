@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import {config} from '@config';
 import base32 from 'hi-base32';
 
-function dateToSeconds(date: Date) {
+export function dateToSeconds(date: Date) {
     return Math.floor(date.getTime() / 1000);
 }
 

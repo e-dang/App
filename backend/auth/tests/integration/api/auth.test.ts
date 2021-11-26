@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import {User} from '@entities';
 import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
-import {createPasswordResetToken, passwordIsValid} from '@auth';
+import {createPasswordResetToken, dateToSeconds, passwordIsValid} from '@auth';
 import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
 import {filterEmails} from './utils';
 import {JSDOM} from 'jsdom';
@@ -46,10 +46,10 @@ describe('auth apis', () => {
         test('creates a new User in the database with correct dateJoined and lastLogin time stamps', async () => {
             await supertest(app).post(url).send(signUpData);
 
-            setTimeout(async () => {
-                const user = await User.findOne({email});
-                expect(user.lastLogin >= user.dateJoined).toBe(true);
-            }, 3000); // wait for lastLogin listener to execute
+            const user = await User.findOne({email});
+            const secLastLogin = dateToSeconds(user.lastLogin);
+            const secDateJoined = dateToSeconds(user.dateJoined);
+            expect(secLastLogin >= secDateJoined).toBe(true);
         });
 
         test('returns an accessToken with userId in payload', async () => {
