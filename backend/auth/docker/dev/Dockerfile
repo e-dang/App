@@ -1,4 +1,4 @@
-ARG NODE_VERSION=17.1
+ARG NODE_VERSION=17.1-alpine
 
 FROM node:${NODE_VERSION} as build
 
