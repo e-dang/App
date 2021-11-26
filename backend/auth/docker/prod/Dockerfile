@@ -14,6 +14,8 @@ RUN yarn compile
 
 FROM node:${NODE_VERSION} as run
 
+ENV NODE_ENV=production
+
 ARG APP_HOME=/home/auth/app
 
 RUN addgroup --system --gid 150 auth \
