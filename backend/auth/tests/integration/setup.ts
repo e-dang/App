@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 import {config} from '@config';
 import {Connection, createConnection, getConnection} from 'typeorm';
 import {User} from '@entities';
