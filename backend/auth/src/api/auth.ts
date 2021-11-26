@@ -27,7 +27,7 @@ import {
     validateSignInRequest,
     validateSignUpRequest,
 } from '@schemas';
-import {sendPasswordResetEmail} from '@src/emailer';
+import {sendPasswordResetEmail} from '@emailer';
 
 const authRouter = Router();
 

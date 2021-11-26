@@ -20,6 +20,8 @@
             "@auth/*": ["src/auth/*"],
             "@schemas": ["src/schemas"],
             "@schemas/*": ["src/schemas/*"],
+            "@emailer": ["src/emailer"],
+            "@emailer/*": ["src/emailer/*"],
             "@errors": ["src/errors"],
             "@errors/*": ["src/errors/*"],
             "@config": ["config"],
