@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - ../../base/auth
   - secrets.yaml
+  - secretsv1.yaml
 patchesStrategicMerge:
   - release.yaml
