@@ -45,6 +45,7 @@ interface Config {
     jwtAudience: string;
     httpPort: number;
     apiVersion: string;
+    allowedHosts: string;
     client: string;
 }
 
@@ -75,5 +76,6 @@ export const config: Config = {
     jwtAudience: 'dev.erickdang.com',
     httpPort: parseInt(process.env.HTTP_PORT),
     apiVersion: 'v1',
+    allowedHosts: 'https://dev.erickdang.com',
     client: process.env.CLIENT,
 };

@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express';
 import {ApiGroup, apis} from '@api';
 import {config} from '@config';
 import morgan from 'morgan';
+import cors from 'cors';
 import {errorHandler} from './middleware';
 
 function createApiPath(api: ApiGroup) {
@@ -17,6 +18,7 @@ export const app = express();
 
 // middleware
 app.use(express.json());
+app.use(cors({origin: config.allowedHosts}));
 if (config.env !== 'test') {
     app.use(morgan('combined'));
 }
