@@ -9,8 +9,9 @@
         "start": "telepresence intercept auth --port 3000 --docker-run -- -v $(pwd)/backend/auth:/home/auth/app -v /home/auth/app/node_modules -it --rm ericdang/auth:dev",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
         "test": "yarn test:unit && yarn test:int",
-        "test:unit": "jest --group=unit",
-        "test:int": "jest --group=integration",
+        "test:unit": "jest --config=jest.config.unit.js --group=unit",
+        "test:int": "jest --config=jest.config.int.js --group=integration",
+        "test:unit:docker": "docker run -t ericdang/auth:dev yarn test:unit",
         "test:int:docker": "telepresence intercept auth --port 3000 --docker-run -- ericdang/auth:dev yarn test:int",
         "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
         "genkeys": "ts-node scripts/genKeys.ts"
