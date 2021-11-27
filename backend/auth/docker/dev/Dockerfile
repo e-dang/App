@@ -4,7 +4,7 @@ FROM node:${NODE_VERSION} as build
 
 ENV NODE_ENV=development
 
-WORKDIR /app
+WORKDIR /home/auth/app
 
 COPY package.json .
 
