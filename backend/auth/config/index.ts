@@ -10,12 +10,15 @@ function sourceConfigs() {
     const secrets: PartialConfigs = {};
 
     fs.readdirSync(path.join(__dirname, 'secrets'), {encoding: 'utf-8'}).forEach((file) => {
-        if (file in process.env) {
-            // use environment variable override
-            secrets[file] = process.env[file];
-        } else {
-            // read mounted configs
-            secrets[file] = fs.readFileSync(path.join(__dirname, 'secrets', file), {encoding: 'utf-8'}).toString();
+        const fileStats = fs.lstatSync(path.join(__dirname, 'secrets', file));
+        if ((fileStats.isFile() || fileStats.isSymbolicLink()) && file.substr(0, 2) !== '..') {
+            if (file in process.env) {
+                // use environment variable override
+                secrets[file] = process.env[file];
+            } else {
+                // read mounted configs
+                secrets[file] = fs.readFileSync(path.join(__dirname, 'secrets', file), {encoding: 'utf-8'}).toString();
+            }
         }
     });
 
