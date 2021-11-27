@@ -106,7 +106,7 @@ jobs:
           echo "dbName=test\ndbUser=postgres\ndbPassword=postgres" > ${DIRECTORY}/.env
 
       - name: Integration tests
-        run: cd ${DIRECTORY} && docker run --env-file=.env --network host ericdang/auth:dev yarn test:int
+        run: cd ${DIRECTORY} && yarn test:int:ci
 
   push-staging:
     needs:
