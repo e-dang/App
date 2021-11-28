@@ -101,14 +101,14 @@ jobs:
           telepresence connect
           telepresence loglevel debug
 
-      - name: output docker networks
-        run: |
-          docker network ls
-          docker container ls -a
-          echo ${NETWORK}
-          docker network inspect ${NETWORK} || true
-        env:
-          NETWORK: ${{ job.container.network }}
+      # - name: output docker networks
+      #   run: |
+      #     docker network ls
+      #     docker container ls -a
+      #     echo ${NETWORK}
+      #     docker network inspect ${NETWORK} || true
+      #   env:
+      #     NETWORK: ${{ job.container.network }}
 
       - name: Build docker image
         run: cd ${DIRECTORY} && yarn build
@@ -118,18 +118,9 @@ jobs:
           echo "dbName=tests\ndbUser=postgres\ndbPassword=postgres" > ${DIRECTORY}/.env
 
       - name: Integration tests
-        run: cd ${DIRECTORY} && yarn test:int:ci
+        run: cd ${DIRECTORY} && ls -la . && cat .env && yarn test:int:ci
         env:
           NETWORK: ${{ job.container.network }}
-
-      # - name: Output logs
-      #   if: always()
-      #   run: |
-      #     ls -la ~/.cache
-      #     ls -la ~/.cache/telepresence
-      #     ls -la ~/.cache/telepresence/logs
-      #     cat ~/.cache/telepresence/logs/connector.log
-      #     cat ~/.cache/telepresence/logs/daemon.log
 
   push-staging:
     needs:
