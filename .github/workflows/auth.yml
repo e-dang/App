@@ -73,7 +73,11 @@ jobs:
           node-version: '17.1.x'
 
       - name: Install sshfs
-        run: sudo apt-get install -y sshfs
+        run: |
+          sudo apt-get install -y sshfs
+          cat /etc/fuse.confg
+          echo user_allow_other >> /etc/fuse.conf
+          cat /etc/fuse.confg
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
