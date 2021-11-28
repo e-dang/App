@@ -20,7 +20,7 @@ beforeAll(async () => {
         logging: false,
         synchronize: true,
         entities: [User],
-        ssl: true,
+        ssl: config.env == 'ci' ? false : true,
         extra: {
             ssl: {
                 rejectUnauthorized: false,

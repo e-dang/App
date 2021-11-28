@@ -106,10 +106,7 @@ jobs:
           docker network ls
           docker container ls -a
           echo ${NETWORK}
-          docker network inspect bridge -f "{{json .Containers }}" || true
-          docker network inspect host -f "{{json .Containers }}" || true
-          docker network inspect none -f "{{json .Containers }}" || true
-          docker network inspect ${NETWORK} -f "{{json .Containers }}" || true
+          docker network inspect ${NETWORK} || true
         env:
           NETWORK: ${{ job.container.network }}
 
