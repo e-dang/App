@@ -97,6 +97,7 @@ jobs:
         run: |
           az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
           telepresence connect
+          telepresence loglevel debug
 
       - name: Build docker image
         run: cd ${DIRECTORY} && yarn build
