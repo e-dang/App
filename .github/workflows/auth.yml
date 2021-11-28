@@ -75,7 +75,6 @@ jobs:
       - name: Install sshfs
         run: |
           sudo apt-get install -y sshfs
-          cat /etc/fuse.confg
           echo user_allow_other >> /etc/fuse.conf
           cat /etc/fuse.confg
 
