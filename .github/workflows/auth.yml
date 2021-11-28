@@ -101,14 +101,20 @@ jobs:
           telepresence connect
           telepresence loglevel debug
 
-      - name: Build docker image
-        run: cd ${DIRECTORY} && yarn build
-
       - name: output docker networks
         run: |
           docker network ls
           docker container ls -a
-          docker inspect tracker-dev.postgres.database.azure.com -f "{{json .NetworkSettings.Networks }}" || true
+          echo ${NETWORK}
+          docker network inspect bridge -f "{{json .Containers }}" || true
+          docker network inspect host -f "{{json .Containers }}" || true
+          docker network inspect none -f "{{json .Containers }}" || true
+          docker network inspect ${NETWORK} -f "{{json .Containers }}" || true
+        env:
+          NETWORK: ${{ job.container.network }}
+
+      - name: Build docker image
+        run: cd ${DIRECTORY} && yarn build
 
       - name: Create env file
         run: |
@@ -116,6 +122,8 @@ jobs:
 
       - name: Integration tests
         run: cd ${DIRECTORY} && yarn test:int:ci
+        env:
+          NETWORK: ${{ job.container.network }}
 
       # - name: Output logs
       #   if: always()

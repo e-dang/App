@@ -13,7 +13,7 @@
         "test:int": "jest --config=jest.config.int.js --group=integration",
         "test:unit:docker": "docker run -t ericdang/auth:dev yarn test:unit",
         "test:int:docker": "telepresence intercept auth --port 3000 --docker-run -- -t ericdang/auth:dev yarn test:int",
-        "test:int:ci": "telepresence intercept auth --port 3000 --docker-run --docker-mount=/secrets -- --env CI --env-file .env --network bridge ericdang/auth:dev yarn test:int:ci:run",
+        "test:int:ci": "telepresence intercept auth --port 3000 --docker-run --docker-mount=/secrets -- --env CI --env-file .env --network ${NETWORK} ericdang/auth:dev yarn test:int:ci:run",
         "test:int:ci:run": "cp -r /secrets/home/auth/app/config/secrets /home/auth/app/config && yarn test:int",
         "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
         "genkeys": "ts-node scripts/genKeys.ts"
