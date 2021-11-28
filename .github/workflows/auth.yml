@@ -74,9 +74,9 @@ jobs:
 
       - name: Install sshfs
         run: |
-          sudo apt-get install -y sshfs
-          sudo echo user_allow_other >> /etc/fuse.conf
-          sudo cat /etc/fuse.confg
+          sudo apt-get install -y sshfs fuse
+
+        # sudo echo user_allow_other >> /etc/fuse.conf
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
