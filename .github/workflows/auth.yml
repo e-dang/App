@@ -73,7 +73,7 @@ jobs:
           node-version: '17.1.x'
 
       - name: Install sshfs
-        run: sudo apt install -y sshfs
+        run: sudo apt-get install -y sshfs
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
