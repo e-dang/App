@@ -19,7 +19,7 @@ export const app = express();
 // middleware
 app.use(express.json());
 app.use(cors({origin: config.allowedHosts}));
-if (config.env !== 'test') {
+if (config.env !== 'test' && config.env !== 'ci') {
     app.use(morgan('combined'));
 }
 
