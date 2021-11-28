@@ -105,7 +105,10 @@ jobs:
         run: cd ${DIRECTORY} && yarn build
 
       - name: output docker networks
-        run: docker network ls
+        run: |
+          docker network ls
+          docker container ls -a
+          docker inspect tracker-dev.postgres.database.azure.com -f "{{json .NetworkSettings.Networks }}" || true
 
       - name: Create env file
         run: |
@@ -114,14 +117,14 @@ jobs:
       - name: Integration tests
         run: cd ${DIRECTORY} && yarn test:int:ci
 
-      - name: Output logs
-        if: always()
-        run: |
-          ls -la ~/.cache
-          ls -la ~/.cache/telepresence
-          ls -la ~/.cache/telepresence/logs
-          cat ~/.cache/telepresence/logs/connector.log
-          cat ~/.cache/telepresence/logs/daemon.log
+      # - name: Output logs
+      #   if: always()
+      #   run: |
+      #     ls -la ~/.cache
+      #     ls -la ~/.cache/telepresence
+      #     ls -la ~/.cache/telepresence/logs
+      #     cat ~/.cache/telepresence/logs/connector.log
+      #     cat ~/.cache/telepresence/logs/daemon.log
 
   push-staging:
     needs:
