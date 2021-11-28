@@ -8,6 +8,6 @@ module.exports = {
     testEnvironment: 'node',
     setupFilesAfterEnv: ['./tests/integration/setup.ts'],
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {prefix: path.resolve(__dirname)}),
-    testTimeout: 10000,
+    testTimeout: process.env.CI ? 30000 : 10000,
     runner: 'groups',
 };
