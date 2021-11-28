@@ -115,7 +115,9 @@ jobs:
 
       - name: Create env file
         run: |
-          echo "dbName=tests\ndbUser=postgres\ndbPassword=postgres" > ${DIRECTORY}/.env
+          echo "dbName=tests" >> ${DIRECTORY}/.env
+          echo "dbUser=postgres" >> ${DIRECTORY}/.env
+          echo "dbPassword=postgres" >> ${DIRECTORY}/.env
 
       - name: Integration tests
         run: cd ${DIRECTORY} && ls -la . && cat .env && yarn test:int:ci
