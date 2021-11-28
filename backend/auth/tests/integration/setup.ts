@@ -21,11 +21,11 @@ beforeAll(async () => {
         synchronize: true,
         entities: [User],
         ssl: config.env == 'ci' ? false : true,
-        extra: {
-            ssl: {
-                rejectUnauthorized: false,
-            },
-        },
+        // extra: {
+        //     ssl: {
+        //         rejectUnauthorized: false,
+        //     },
+        // },
     });
 });
 
