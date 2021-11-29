@@ -99,6 +99,7 @@ jobs:
         run: |
           az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
           telepresence connect
+          curl mailhog.default:8025 || true
 
       - name: Build docker image
         run: cd ${DIRECTORY} && yarn build
@@ -113,6 +114,12 @@ jobs:
         run: cd ${DIRECTORY} && yarn test:int:ci
         env:
           NETWORK: ${{ job.container.network }}
+
+      - name: Output logs
+        if: always()
+        run: |
+          cat ~/.cache/telepresence/logs/connector.log
+          cat ~/.cache/telepresence/logs/daemon.log
 
   push-staging:
     needs:
