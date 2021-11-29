@@ -108,7 +108,6 @@ jobs:
           echo "dbName=tests" >> ${DIRECTORY}/.env
           echo "dbUser=postgres" >> ${DIRECTORY}/.env
           echo "dbPassword=postgres" >> ${DIRECTORY}/.env
-          curl mailhog.default:8025 || true
 
       - name: Integration tests
         run: cd ${DIRECTORY} && yarn test:int:ci

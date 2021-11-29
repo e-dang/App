@@ -4,7 +4,8 @@ import {Express} from 'express';
 import axios from 'axios';
 import {config} from '@config';
 
-const MAILHOG_URL = `http://${config.emailHost}:8025`;
+const MAILHOG_URL = `${config.emailHost}:8025`;
+// const MAILHOG_URL = `http://${config.emailHost}:8025`;
 
 export const createUser = async (app: Express, email: string, name: string, password: string) => {
     const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
