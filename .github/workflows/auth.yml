@@ -74,7 +74,7 @@ jobs:
 
       - name: Install sshfs
         run: |
-          sudo apt-get install -y sshfs fuse
+          sudo apt-get install -y sshfs fuse iproute2
           echo user_allow_other | sudo tee -a /etc/fuse.conf
 
       - name: Set up Docker Buildx
