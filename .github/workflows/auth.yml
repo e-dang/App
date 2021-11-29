@@ -99,7 +99,6 @@ jobs:
         run: |
           az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
           telepresence connect
-          telepresence loglevel debug
 
       - name: Build docker image
         run: cd ${DIRECTORY} && yarn build
@@ -111,7 +110,7 @@ jobs:
           echo "dbPassword=postgres" >> ${DIRECTORY}/.env
 
       - name: Integration tests
-        run: cd ${DIRECTORY} && ls -la . && cat .env && yarn test:int:ci
+        run: cd ${DIRECTORY} && yarn test:int:ci
         env:
           NETWORK: ${{ job.container.network }}
 
