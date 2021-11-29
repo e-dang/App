@@ -99,7 +99,6 @@ jobs:
         run: |
           az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
           telepresence connect
-          curl mailhog.default:8025 || true
 
       - name: Build docker image
         run: cd ${DIRECTORY} && yarn build
@@ -109,6 +108,7 @@ jobs:
           echo "dbName=tests" >> ${DIRECTORY}/.env
           echo "dbUser=postgres" >> ${DIRECTORY}/.env
           echo "dbPassword=postgres" >> ${DIRECTORY}/.env
+          curl kubernetes.default:443 || true
 
       - name: Integration tests
         run: cd ${DIRECTORY} && yarn test:int:ci
