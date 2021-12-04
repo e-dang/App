@@ -135,6 +135,4 @@ jobs:
           TAG: ${{ steps.tag.outputs.TAG }}
 
       - name: Push staging docker image
-        run: |
-          docker tag ericdang/auth:prod ericdang/auth:${{ steps.tag.outputs.TAG }}
-          docker push ericdang/auth:${{ steps.tag.outputs.TAG }}
+        run: docker push ericdang/auth:${{ steps.tag.outputs.TAG }}
