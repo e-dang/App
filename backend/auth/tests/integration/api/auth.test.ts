@@ -5,11 +5,19 @@ import {decode} from 'jsonwebtoken';
 import MockDate from 'mockdate';
 import {createPasswordResetToken, dateToSeconds, passwordIsValid} from '@auth';
 import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
-import {filterEmails} from './utils';
-import {JSDOM} from 'jsdom';
-import quotedPrintable from 'quoted-printable';
-import utf8 from 'utf8';
+import nodemailer from 'nodemailer';
 import {randomUUID} from 'crypto';
+import {mocked} from 'ts-jest/utils';
+
+jest.mock('nodemailer', () => {
+    return {
+        createTransport: jest.fn().mockReturnValue({
+            sendMail: jest.fn(),
+        }),
+    };
+});
+
+const mockedNodeMailer = mocked(nodemailer, true);
 
 /**
  * Auth APIs
@@ -529,22 +537,10 @@ describe('auth apis', () => {
     describe('/password/reset', () => {
         const url = '/api/v1/auth/password/reset';
         let user: User;
-        const isEmailForUser = (msg) => {
-            if (msg.Content.Headers.Subject[0].includes('Password Reset Request')) {
-                // parse uuid from link sent in email
-                const dom = new JSDOM(utf8.decode(quotedPrintable.decode(msg.Content.Body)));
-                const urlSplit = dom.window.document.querySelector('a').href.split('/');
-                const uuid = urlSplit[urlSplit.length - 2];
-
-                if (uuid === user.id) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
+        const mockSendMail = mockedNodeMailer.createTransport().sendMail as jest.Mock;
 
         beforeEach(async () => {
+            mockSendMail.mockClear();
             await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
             user = await User.findOne({email});
         });
@@ -558,8 +554,9 @@ describe('auth apis', () => {
         test('sends an email to the user with a link to reset their password that contains the user id and generated token', async () => {
             await supertest(app).post(url).send({email});
 
-            const emails = await filterEmails(user.email, isEmailForUser);
-            expect(emails.length).toBe(1);
+            const message = mockSendMail.mock.calls[0][0];
+            expect(message.to).toEqual(email);
+            expect(message.html).toContain(user.id);
         });
 
         test('returns 200 status code when no user exists with the given email', async () => {
@@ -571,8 +568,7 @@ describe('auth apis', () => {
         test('does not send an email when no user has the provided email address', async () => {
             await supertest(app).post(url).send({email: 'doesnotexist@demo.com'});
 
-            const emails = await filterEmails(user.email, isEmailForUser);
-            expect(emails.length).toBe(0);
+            expect(mockSendMail.mock.calls.length).toBe(0);
         });
 
         test('returns 400 status code when email is invalid', async () => {
