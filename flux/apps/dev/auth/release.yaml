@@ -22,4 +22,4 @@ spec:
         images:
           - name: ericdang/auth
             newName: ericdang/auth
-            newTag: dev-17680bdb-1632089917 # {"$imagepolicy": "flux-system:auth:tag"}
+            newTag: dev-9677e1e1-1638661731 # {"$imagepolicy": "flux-system:auth:tag"}
