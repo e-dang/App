@@ -134,5 +134,11 @@ jobs:
         env:
           TAG: ${{ steps.tag.outputs.TAG }}
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Push staging docker image
         run: docker push ericdang/auth:${{ steps.tag.outputs.TAG }}
