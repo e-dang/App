@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
@@ -29,7 +29,7 @@ RUN chown -R auth:auth ${APP_HOME}
 
 COPY --chown=auth:auth package.json .
 
-RUN yarn install --production
+RUN yarn install --production --frozen-lockfile
 
 COPY --from=build --chown=auth:auth /app/dist/src src
 COPY --from=build --chown=auth:auth /app/dist/config config
