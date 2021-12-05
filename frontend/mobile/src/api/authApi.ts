@@ -40,11 +40,10 @@ export const authApi = baseApi.injectEndpoints({
                 body: credentials,
             }),
         }),
-        signOut: builder.mutation<void, SignOutRequest>({
-            query: (refreshToken) => ({
+        signOut: builder.mutation<void, null>({
+            query: () => ({
                 url: 'auth/signout/',
                 method: 'POST',
-                body: refreshToken,
             }),
         }),
         forgotPassword: builder.mutation<void, ForgotPasswordRequest>({
