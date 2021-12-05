@@ -101,7 +101,7 @@ if (env == 'dev') {
         vmSize: 'Standard_A2_v2',
         vnetSubnetID: config.subnetId,
         enableAutoScaling: true,
-        count: 1,
+        count: 2,
         minCount: 1,
         maxCount: 3,
         scaleSetEvictionPolicy: 'Delete',

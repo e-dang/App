@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "lib": ["es5", "es6"],
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "./dist",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@api": ["src/api"],
+            "@api/*": ["src/api/*"],
+            "@entities": ["src/entities"],
+            "@entities/*": ["src/entities/*"],
+            "@auth": ["src/auth"],
+            "@auth/*": ["src/auth/*"],
+            "@schemas": ["src/schemas"],
+            "@schemas/*": ["src/schemas/*"],
+            "@emailer": ["src/emailer"],
+            "@emailer/*": ["src/emailer/*"],
+            "@errors": ["src/errors"],
+            "@errors/*": ["src/errors/*"],
+            "@config": ["config"],
+            "@config/*": ["config/*"],
+            "@src": ["src"],
+            "@src/*": ["src/*"],
+            "@tests": ["__tests__"],
+            "@tests/*": ["__tests__/*"]
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths",
+                "useRootDirs": true
+            }
+        ]
+    },
+    "exclude": ["node_modules"]
+}

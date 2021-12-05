@@ -15,7 +15,7 @@ on:
       - .github/workflows/auth.yml
   push:
     branches:
-      - auth-service
+      - main
     paths:
       - backend/auth/**
       - .github/workflows/auth.yml
@@ -57,7 +57,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test
+          POSTGRES_DB: tests
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
@@ -67,10 +67,10 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
 
-      - name: Setup yarn
-        uses: actions/setup-node@v2
-        with:
-          node-version: '17.1.x'
+      - name: Install sshfs
+        run: |
+          sudo apt-get install -y sshfs fuse iproute2
+          echo user_allow_other | sudo tee -a /etc/fuse.conf
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -100,10 +100,14 @@ jobs:
 
       - name: Create env file
         run: |
-          echo "dbName=test\ndbUser=postgres\ndbPassword=postgres" > .env
+          echo "dbName=tests" >> ${DIRECTORY}/.env
+          echo "dbUser=postgres" >> ${DIRECTORY}/.env
+          echo "dbPassword=postgres" >> ${DIRECTORY}/.env
 
       - name: Integration tests
         run: cd ${DIRECTORY} && yarn test:int:ci
+        env:
+          NETWORK: ${{ job.container.network }}
 
   push-staging:
     needs:
@@ -123,14 +127,18 @@ jobs:
         run: |
           sha=${GITHUB_SHA::8}
           ts=$(date +%s)
-          echo "::set-output name=TAG::staging-${sha}-${ts}"
+          echo "::set-output name=TAG::dev-${sha}-${ts}"
 
       - name: Build docker image
         run: cd ${DIRECTORY} && yarn build:ci
         env:
           TAG: ${{ steps.tag.outputs.TAG }}
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Push staging docker image
-        run: |
-          docker tag ericdang/auth:prod ericdang/auth:${{ steps.tag.outputs.TAG }}
-          docker push ericdang/auth:${{ steps.tag.outputs.TAG }}
+        run: docker push ericdang/auth:${{ steps.tag.outputs.TAG }}

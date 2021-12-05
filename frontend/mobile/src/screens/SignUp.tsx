@@ -26,7 +26,7 @@ export function SignUp() {
     }, [data, dispatch]);
 
     const handleSignUp = () => {
-        signUp({name, email, password1: password, password2: password});
+        signUp({name, email, password});
     };
 
     const handleBack = () => {

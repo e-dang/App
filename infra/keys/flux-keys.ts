@@ -29,8 +29,8 @@ const fluxVault = new keyvault.Vault('flux-vault', {
     },
 });
 
-const fluxTrackerSops = new keyvault.Key('flux-tracker-sops', {
-    keyName: 'tracker-sops',
+const fluxAuthSops = new keyvault.Key('flux-auth-sops', {
+    keyName: 'auth-sops',
     resourceGroupName: config.resourceGroupName,
     vaultName: fluxVault.name,
     properties: {
@@ -92,7 +92,7 @@ const devAccess = new authorization.RoleAssignment('dev-access', {
 });
 
 export const fluxVaultId = fluxVault.id;
-export const trackerSopsUri = fluxTrackerSops.keyUriWithVersion;
+export const authSopsUri = fluxAuthSops.keyUriWithVersion;
 export const externalDnsSopsUri = fluxExternalDnsSops.keyUriWithVersion;
 export const akvFluxServicePrincipleId = akvApplication.applicationId;
 export const akvFluxServicePrincipleSecret = akvServicePrincipalPassword.value;

@@ -1,16 +1,8 @@
 import fetchMock, {enableFetchMocks} from 'jest-fetch-mock';
 enableFetchMocks();
-import {
-    authApi,
-    AuthenticationResponse,
-    ForgotPasswordRequest,
-    SignInRequest,
-    SignOutRequest,
-    SignUpRequest,
-} from '@api';
+import {authApi, AuthenticationResponse, ForgotPasswordRequest, SignInRequest, SignUpRequest} from '@api';
 import {authReducer} from '@store/authSlice';
 import {expectCorrectRequest, setupApiStore} from '@tests/utils';
-import {User} from '@src/types';
 
 describe('auth endpoints', () => {
     let storeRef: ReturnType<typeof setupApiStore>;
@@ -21,14 +13,10 @@ describe('auth endpoints', () => {
         storeRef = setupApiStore(authApi, {auth: authReducer});
         fetchMock.resetMocks();
         response = {
-            access_token: 'test-access-token',
-            refresh_token: 'test-refresh-token',
-            user: {
-                url: 'test-url',
-                uuid: 'test-id',
-                name: 'test-name',
-                email: 'test-email',
-            } as User,
+            data: {
+                accessToken: 'test-access-token',
+                refreshToken: 'test-refresh-token',
+            },
         };
         mockError = new Error('Internal Server Error');
     });
@@ -40,8 +28,7 @@ describe('auth endpoints', () => {
             request = {
                 name: 'test name',
                 email: 'test@demo.com',
-                password1: 'testpassword123',
-                password2: 'testpassword123',
+                password: 'testpassword123',
             };
         });
 
@@ -50,7 +37,7 @@ describe('auth endpoints', () => {
 
             await storeRef.store.dispatch<any>(authApi.endpoints.signUp.initiate(request));
 
-            expectCorrectRequest('POST', 'registration/');
+            expectCorrectRequest('POST', 'auth/signup/');
         });
 
         test('successful response', async () => {
@@ -88,7 +75,7 @@ describe('auth endpoints', () => {
 
             await storeRef.store.dispatch<any>(authApi.endpoints.signIn.initiate(request));
 
-            expectCorrectRequest('POST', 'login/');
+            expectCorrectRequest('POST', 'auth/signin/');
         });
 
         test('successful response', async () => {
@@ -112,24 +99,16 @@ describe('auth endpoints', () => {
     });
 
     describe('signOut', () => {
-        let request: SignOutRequest;
-
-        beforeEach(() => {
-            request = {
-                refresh: 'test-refresh-token',
-            };
-        });
-
         test('request is correct', async () => {
             fetchMock.mockResponse(JSON.stringify({}));
 
-            await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate(request));
+            await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate());
 
-            expectCorrectRequest('POST', 'logout/');
+            expectCorrectRequest('POST', 'auth/signout/');
         });
 
         test('successful response', async () => {
-            const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate(request));
+            const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate());
 
             expect(data).toBeUndefined();
         });
@@ -139,7 +118,7 @@ describe('auth endpoints', () => {
 
             const {
                 error: {status, error},
-            } = await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate(request));
+            } = await storeRef.store.dispatch<any>(authApi.endpoints.signOut.initiate());
 
             expect(status).toEqual('FETCH_ERROR');
             expect(error).toContain(mockError.message);
@@ -160,7 +139,7 @@ describe('auth endpoints', () => {
 
             await storeRef.store.dispatch<any>(authApi.endpoints.forgotPassword.initiate(request));
 
-            expectCorrectRequest('POST', 'password/reset/');
+            expectCorrectRequest('POST', 'auth/password/reset/');
         });
 
         test('successful response', async () => {

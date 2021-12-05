@@ -37,6 +37,42 @@ const trackerDbSubnet = new azure.network.Subnet('tracker-db-subnet', {
     ],
 });
 
+const vpnGatewaySubnet = new azure.network.Subnet('GatewaySubnet', {
+    name: 'vpn-gateway-subnet',
+    virtualNetworkName: vnet.name,
+    resourceGroupName: resourceGroup.name,
+    addressPrefix: config.require('vpnGatewaySubnetPrefix'),
+});
+
+const publicIp = new azure.network.PublicIPAddress('vpn-gateway-public-ip', {
+    resourceGroupName: resourceGroup.name,
+});
+
+const vpnGateway = new azure.network.VirtualNetworkGateway('vpn-gateway', {
+    resourceGroupName: resourceGroup.name,
+    gatewayType: 'Vpn',
+    vpnType: 'RouteBased',
+    sku: {
+        name: 'VpnGw1',
+        tier: 'VpnGw1',
+    },
+    virtualNetworkGatewayName: 'vpnGateway',
+    ipConfigurations: [
+        {
+            name: 'vpngwipconfig',
+            privateIPAllocationMethod: 'Dynamic',
+            publicIPAddress: {
+                id: publicIp.id,
+            },
+            subnet: {
+                id: vpnGatewaySubnet.id,
+            },
+        },
+    ],
+    enableBgp: false,
+    activeActive: false,
+});
+
 const privateDns = new azure.network.PrivateZone('private-dns', {
     location: 'Global',
     privateZoneName: `${env}.postgres.database.azure.com`,
