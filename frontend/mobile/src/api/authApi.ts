@@ -31,28 +31,28 @@ export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         signIn: builder.mutation<AuthenticationResponse, SignInRequest>({
             query: (credentials) => ({
-                url: 'login/',
+                url: 'auth/signin/',
                 method: 'POST',
                 body: credentials,
             }),
         }),
         signUp: builder.mutation<AuthenticationResponse, SignUpRequest>({
             query: (credentials) => ({
-                url: 'registration/',
+                url: 'auth/signup/',
                 method: 'POST',
                 body: credentials,
             }),
         }),
         signOut: builder.mutation<void, SignOutRequest>({
             query: (refreshToken) => ({
-                url: 'logout/',
+                url: 'auth/signout/',
                 method: 'POST',
                 body: refreshToken,
             }),
         }),
         forgotPassword: builder.mutation<void, ForgotPasswordRequest>({
             query: (email) => ({
-                url: 'password/reset/',
+                url: 'auth/password/reset/',
                 method: 'POST',
                 body: email,
             }),
