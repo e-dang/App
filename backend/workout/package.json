@@ -19,6 +19,7 @@
         "cors": "^2.8.5",
         "express": "^4.15.4",
         "express-validator": "^6.13.0",
+        "jose": "^4.3.7",
         "morgan": "^1.10.0",
         "pg": "^8.4.0",
         "reflect-metadata": "^0.1.10",
