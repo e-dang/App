@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import {User, Workout} from '@entities';
 import MockDate from 'mockdate';
 import {decode} from 'jsonwebtoken';
-import {AuthenticationError} from '@errors';
+import {AuthenticationError, WorkoutNotFoundError} from '@errors';
 import {createToken} from './utils';
 
 describe('workout apis', () => {
@@ -76,13 +76,14 @@ describe('workout apis', () => {
         });
 
         test('returns 404 status code if no workout with that id exists', async () => {
+            const wrongUuid = randomUUID();
             const res = await supertest(app)
-                .get(`${url}/${randomUUID()}`)
+                .get(`${url}/${wrongUuid}`)
                 .set('Authorization', `Token ${accessToken}`)
                 .send();
 
             expect(res.statusCode).toBe(404);
-            expect(res.body).toEqual(new WorkoutNotFoundError().json);
+            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, wrongUuid).json);
         });
 
         test('returns 404 status code if the workout has been deleted', async () => {
@@ -91,7 +92,7 @@ describe('workout apis', () => {
             const res = await supertest(app).get(detailUrl).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(404);
-            expect(res.body).toEqual(new WorkoutNotFoundError().json);
+            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, workout.id).json);
         });
 
         test('returns 401 status code if token is expired', async () => {
@@ -181,7 +182,7 @@ describe('workout apis', () => {
                 .send({name: newName});
 
             expect(res.statusCode).toBe(404);
-            expect(res.body).toEqual(new WorkoutNotFoundError().json);
+            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, workout.id).json);
         });
 
         test('returns 401 status code if token is expired', async () => {
@@ -229,7 +230,7 @@ describe('workout apis', () => {
                 .send();
 
             expect(res.statusCode).toBe(404);
-            expect(res.body).toEqual(new WorkoutNotFoundError().json);
+            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, workout.id).json);
         });
 
         test('returns 401 status code if token is expired', async () => {
