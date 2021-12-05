@@ -27,6 +27,13 @@ const trackerDb = new azure.postgresql.FlexibleServerDatabase('tracker-database'
     charset: 'utf8',
 });
 
+const workoutsDb = new azure.postgresql.FlexibleServerDatabase('workouts-database', {
+    name: 'workouts',
+    serverId: trackerServer.id,
+    collation: 'en_US.utf8',
+    charset: 'utf8',
+});
+
 // const trackerServer = new azure.dbforpostgresql.v20210601.Server('tracker-server', {
 //     resourceGroupName: config.resourceGroupName,
 //     serverName: `tracker-${env}`,
