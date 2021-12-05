@@ -1,6 +1,12 @@
 import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {User} from './User';
 
+interface WorkoutDetail {
+    id: string;
+    owner: string;
+    name: string;
+}
+
 @Entity('workouts')
 export class Workout extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
@@ -14,4 +20,12 @@ export class Workout extends BaseEntity {
 
     @Column({default: false})
     isDeleted: boolean;
+
+    serialize(): WorkoutDetail {
+        return {
+            id: this.id,
+            owner: this.owner.id,
+            name: this.name,
+        };
+    }
 }
