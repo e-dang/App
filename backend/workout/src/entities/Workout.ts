@@ -11,4 +11,7 @@ export class Workout extends BaseEntity {
 
     @Column('varchar', {length: 255})
     name: string;
+
+    @Column({default: false})
+    isDeleted: boolean;
 }
