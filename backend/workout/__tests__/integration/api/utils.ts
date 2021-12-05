@@ -8,5 +8,5 @@ export async function createToken(userId: string) {
         .setIssuer('dev.erickdang.com')
         .setAudience('dev.erickdang.com')
         .setExpirationTime('5m')
-        .sign(await config.accessTokenPrivateKey);
+        .sign(await config.accessTokenPublicKey);
 }

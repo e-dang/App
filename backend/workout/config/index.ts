@@ -48,7 +48,7 @@ interface Config {
     apiVersion: string;
     allowedHosts: string;
     httpPort: number;
-    accessTokenPrivateKey: Promise<jose.KeyLike>;
+    accessTokenPublicKey: Promise<jose.KeyLike>;
 }
 
 export const config: Config = {
@@ -61,5 +61,5 @@ export const config: Config = {
     httpPort: getConfigValue('httpPort', Number),
     apiVersion: 'v1',
     allowedHosts: 'https://dev.erickdang.com',
-    accessTokenPrivateKey: jose.importPKCS8(getConfigValue('accessTokenPrivate', String), accessTokenAlg),
+    accessTokenPublicKey: jose.importPKCS8(getConfigValue('accessTokenPublic', String), accessTokenAlg),
 };
