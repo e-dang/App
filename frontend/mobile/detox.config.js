@@ -5,7 +5,7 @@ module.exports = {
     apps: {
         ios: {
             type: 'ios.app',
-            build: 'yarn ios',
+            build: 'yarn ios-e2e',
             binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/mobile.app',
         },
         android: {
@@ -17,9 +17,9 @@ module.exports = {
         simulator: {
             type: 'ios.simulator',
             device: {
-                id: '06405B2F-B746-4787-A6D8-2E70AE5E76BD',
+                id: 'C01FB298-7F87-4A4D-B220-F56E3BD439D1',
                 type: 'iPhone 12',
-                name: 'iPhone 12-Detox',
+                name: 'iPhone 12 Detox',
             },
         },
         emulator: {
