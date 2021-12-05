@@ -1,30 +1,42 @@
+import jose from 'jose';
 import fs from 'fs';
 import path from 'path';
 
-export interface PartialConfigs {
-    [x: string]: string;
+type CastableType = string | number | boolean;
+
+interface SimpleConstructor<T extends CastableType> {
+    (value: any): T;
 }
 
-function sourceConfigs() {
-    const secrets: PartialConfigs = {};
+function getConfigValue<T extends CastableType>(name: string, type: SimpleConstructor<T>, _default: T = undefined): T {
+    // return value if found in env vars
+    if (name in process.env) {
+        return castTo(process.env[name], type);
+    }
 
-    fs.readdirSync(path.join(__dirname, 'secrets'), {encoding: 'utf-8'}).forEach((file) => {
-        const fileStats = fs.lstatSync(path.join(__dirname, 'secrets', file));
-        if ((fileStats.isFile() || fileStats.isSymbolicLink()) && file.substr(0, 2) !== '..') {
-            if (file in process.env) {
-                // use environment variable override
-                secrets[file] = process.env[file];
-            } else {
-                // read mounted configs
-                secrets[file] = fs.readFileSync(path.join(__dirname, 'secrets', file), {encoding: 'utf-8'}).toString();
-            }
-        }
-    });
+    // otherwise look for files containing value
+    const secretsDir = path.join(__dirname, 'secrets');
+    if (fs.readdirSync(secretsDir, {encoding: 'utf-8'}).includes(name)) {
+        return castTo(fs.readFileSync(path.join(secretsDir, name), {encoding: 'utf-8'}).toString(), type);
+    }
 
-    return secrets;
+    // fall back to default
+    if (_default !== undefined) {
+        return _default;
+    }
+
+    throw new Error(`Please specify a value for the configuration '${name}'.`);
 }
 
-const sourcedConfigs = sourceConfigs();
+function castTo<T extends CastableType>(value: string, type: SimpleConstructor<T>): T {
+    if (type.prototype === Boolean.prototype) {
+        return type(JSON.parse(value));
+    }
+
+    return type(value);
+}
+
+const accessTokenAlg = 'EdDSA';
 
 interface Config {
     env: string;
@@ -36,16 +48,18 @@ interface Config {
     apiVersion: string;
     allowedHosts: string;
     httpPort: number;
+    accessTokenPrivateKey: Promise<jose.KeyLike>;
 }
 
 export const config: Config = {
     env: process.env.NODE_ENV,
-    dbHost: sourcedConfigs.dbHost,
-    dbPort: parseInt(sourcedConfigs.dbPort),
-    dbUser: sourcedConfigs.dbUser,
-    dbPassword: sourcedConfigs.dbPassword,
-    dbName: sourcedConfigs.dbName,
-    httpPort: parseInt(sourcedConfigs.httpPort),
+    dbHost: getConfigValue('dbHost', String),
+    dbPort: getConfigValue('dbPort', Number),
+    dbUser: getConfigValue('dbUser', String),
+    dbPassword: getConfigValue('dbPassword', String),
+    dbName: getConfigValue('dbName', String),
+    httpPort: getConfigValue('httpPort', Number),
     apiVersion: 'v1',
     allowedHosts: 'https://dev.erickdang.com',
+    accessTokenPrivateKey: jose.importPKCS8(getConfigValue('accessTokenPrivate', String), accessTokenAlg),
 };
