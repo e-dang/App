@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {config} from '@config';
 import {createConnection} from 'typeorm';
-import {User} from '@entities';
+import {User, Workout} from '@entities';
 import {app} from '@src/app';
 
 createConnection({
@@ -13,7 +13,7 @@ createConnection({
     database: config.dbName,
     synchronize: true,
     logging: false,
-    entities: [User],
+    entities: [User, Workout],
     ssl: true,
     extra: {
         ssl: {
