@@ -8,11 +8,10 @@ function generateEmail() {
 }
 
 async function createUser(name, email, password) {
-    return await axios.post('https://dev.erickdang.com/api/v1/registration/', {
+    return await axios.post('https://dev.erickdang.com/api/v1/auth/signup', {
         name,
         email,
-        password1: password,
-        password2: password,
+        password,
     });
 }
 
@@ -40,7 +39,7 @@ describe('Auth flow', () => {
         await device.reloadReactNative();
         name = 'Test User';
         email = generateEmail();
-        password = 'mytestpassword123';
+        password = 'Mytestpassword123!';
     });
 
     afterEach(async () => {
