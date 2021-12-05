@@ -1,5 +1,5 @@
 import {config} from '@config';
-import jose from 'jose';
+import * as jose from 'jose';
 
 export async function createToken(userId: string) {
     return new jose.SignJWT({userId})
