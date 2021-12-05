@@ -1,11 +1,10 @@
 import {baseApi} from './baseApi';
-import {Email, Name, Password, Token, User} from '@src/types';
+import {AuthToken, Email, Name, Password, Token} from '@src/types';
 
 export interface SignUpRequest {
     name: Name;
     email: Email;
-    password1: Password;
-    password2: Password;
+    password: Password;
 }
 
 export interface SignInRequest {
@@ -22,9 +21,7 @@ export interface ForgotPasswordRequest {
 }
 
 export interface AuthenticationResponse {
-    access_token: Token;
-    refresh_token: Token;
-    user: User;
+    data: AuthToken;
 }
 
 export const authApi = baseApi.injectEndpoints({
