@@ -29,8 +29,8 @@
             "@config/*": ["config/*"],
             "@src": ["src"],
             "@src/*": ["src/*"],
-            "@tests": ["tests"],
-            "@tests/*": ["tests/*"]
+            "@tests": ["__tests__"],
+            "@tests/*": ["__tests__/*"]
         },
         "plugins": [
             {
