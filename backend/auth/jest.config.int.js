@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    setupFilesAfterEnv: ['./tests/integration/setup.ts'],
+    setupFilesAfterEnv: ['./__tests__/integration/setup.ts'],
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {prefix: path.resolve(__dirname)}),
     testTimeout: process.env.CI ? 30000 : 10000,
     runner: 'groups',
