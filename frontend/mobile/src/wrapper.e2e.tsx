@@ -13,7 +13,7 @@ export function App() {
 
     const handleSignOut = async () => {
         if (authToken) {
-            await callSignOut({refresh: authToken.refreshToken});
+            await callSignOut();
             dispatch(signOut());
         }
     };
