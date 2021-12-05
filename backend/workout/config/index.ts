@@ -61,5 +61,5 @@ export const config: Config = {
     httpPort: getConfigValue('httpPort', Number),
     apiVersion: 'v1',
     allowedHosts: 'https://dev.erickdang.com',
-    accessTokenPublicKey: jose.importPKCS8(getConfigValue('accessTokenPublic', String), accessTokenAlg),
+    accessTokenPublicKey: jose.importSPKI(getConfigValue('accessTokenPublic', String), accessTokenAlg),
 };
