@@ -29,3 +29,5 @@ export const validatePatchWorkoutRequest = createValidationSchemaMiddleware({
         },
     },
 });
+
+export const validateDeleteWorkoutRequest = validateWorkoutDetailRequest;

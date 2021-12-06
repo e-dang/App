@@ -1,6 +1,6 @@
 import {ApiGroup, AuthenticatedRequest} from '@api';
 import {WorkoutNotFoundError} from '@errors';
-import {validatePatchWorkoutRequest, validateWorkoutDetailRequest} from '@schemas';
+import {validateDeleteWorkoutRequest, validatePatchWorkoutRequest, validateWorkoutDetailRequest} from '@schemas';
 import {verifyAuthN} from '@src/middleware';
 import {Response, NextFunction, Router} from 'express';
 
@@ -48,7 +48,22 @@ workoutRouter.patch(
     },
 );
 
-workoutRouter.delete('/:workoutId', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
+workoutRouter.delete(
+    '/:workoutId',
+    validateDeleteWorkoutRequest,
+    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        const workout = await req.user.getWorkout(req.params.workoutId);
+
+        if (!workout) {
+            return next(new WorkoutNotFoundError(req.user.id, req.params.workoutId));
+        }
+
+        workout.isDeleted = true;
+        await workout.save();
+
+        return res.status(202).json();
+    },
+);
 
 export const workoutApis: ApiGroup = {
     pathPrefix: 'workout',
