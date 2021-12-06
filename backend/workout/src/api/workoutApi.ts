@@ -1,4 +1,6 @@
 import {ApiGroup, AuthenticatedRequest} from '@api';
+import {WorkoutNotFoundError} from '@errors';
+import {validateWorkoutDetailRequest} from '@schemas';
 import {verifyAuthN} from '@src/middleware';
 import {Response, NextFunction, Router} from 'express';
 
@@ -10,7 +12,19 @@ workoutRouter.get('/', async (req: AuthenticatedRequest, res: Response, next: Ne
     return res.status(200).json({data: await req.user.getSerializedWorkouts()});
 });
 
-workoutRouter.get('/:workoutId', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
+workoutRouter.get(
+    '/:workoutId',
+    validateWorkoutDetailRequest,
+    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        const workout = await req.user.getWorkout(req.params.workoutId);
+
+        if (!workout || workout.isDeleted) {
+            return next(new WorkoutNotFoundError(req.user.id, req.params.workoutId));
+        }
+
+        return res.status(200).json({data: workout.serialize()});
+    },
+);
 
 workoutRouter.post('/', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
 
