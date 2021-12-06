@@ -26,7 +26,10 @@ workoutRouter.get(
     },
 );
 
-workoutRouter.post('/', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
+workoutRouter.post('/', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const workout = await req.user.addWorkout(req.body);
+    return res.status(201).json({data: workout.serialize()});
+});
 
 workoutRouter.patch('/:workoutId', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
 
