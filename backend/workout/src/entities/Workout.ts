@@ -12,6 +12,9 @@ export class Workout extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({nullable: true})
+    ownerId: string;
+
     @ManyToOne(() => User, (user) => user.workouts)
     owner: User;
 
@@ -24,7 +27,7 @@ export class Workout extends BaseEntity {
     serialize(): WorkoutDetail {
         return {
             id: this.id,
-            owner: this.owner.id,
+            owner: this.ownerId,
             name: this.name,
         };
     }

@@ -7,10 +7,7 @@ const workoutRouter = Router();
 workoutRouter.use(verifyAuthN);
 
 workoutRouter.get('/', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const serializedWorkouts = req.user.workouts?.map((workout) => {
-        workout.serialize();
-    });
-    return res.status(200).json({data: serializedWorkouts || []});
+    return res.status(200).json({data: await req.user.getSerializedWorkouts()});
 });
 
 workoutRouter.get('/:workoutId', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
