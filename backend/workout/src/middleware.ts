@@ -53,9 +53,7 @@ export const verifyAuthN = async (req: Request, res: Response, next: NextFunctio
     if (!user) {
         // If user not found, but we have verified that the JWT is valid, then create new user.
         // This might only be temprorary until event architecture is in place
-        user = new User();
-        user.id = payload.userId;
-        await user.save();
+        user = await User.create({id: payload.userId}).save();
     }
 
     req.user = user;
