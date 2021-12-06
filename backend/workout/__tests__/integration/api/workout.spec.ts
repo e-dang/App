@@ -7,16 +7,23 @@ import {decode} from 'jsonwebtoken';
 import {AuthenticationError, WorkoutNotFoundError} from '@errors';
 import {createToken} from './utils';
 
+/**
+ * Workout APIs
+ *
+ * @group integration
+ * @group workout
+ */
+
 describe('workout apis', () => {
-    const url = 'api/v1/workout';
-    let uuid: string;
+    const url = '/api/v1/workout';
+    let userId: string;
     let accessToken: string;
     let user: User;
 
     beforeEach(async () => {
-        uuid = randomUUID();
-        accessToken = await createToken(uuid);
-        user = await User.findOne(uuid);
+        userId = randomUUID();
+        accessToken = await createToken(userId);
+        user = await User.create({id: userId}).save();
     });
 
     afterEach(() => {
@@ -24,19 +31,21 @@ describe('workout apis', () => {
     });
 
     describe('GET /workout', () => {
-        test('returns the workouts owned by the requesting user and 200 status code', async () => {
+        test('returns only the workouts owned by the requesting user and 200 status code', async () => {
+            await user.addWorkouts([{name: 'test1'}, {name: 'test2'}]);
+            await user.reload();
             const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(200);
-            expect(res.body).toEqual(user.workouts);
+            expect(res.body.data).toEqual(await user.getSerializedWorkouts());
         });
 
-        test('does not return deleted workouts for requesting user', async () => {
-            const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
+        // test('does not return deleted workouts for requesting user', async () => {
+        //     const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
 
-            expect(res.statusCode).toBe(200);
-            // expect(res.body.data)
-        });
+        //     expect(res.statusCode).toBe(200);
+        // expect(res.body.data)
+        // });
 
         test('returns 401 status code if token is expired', async () => {
             const payload: any = decode(accessToken);
@@ -60,11 +69,7 @@ describe('workout apis', () => {
         let workout: Workout;
 
         beforeEach(async () => {
-            workout = new Workout();
-            workout.owner = user;
-            await workout.save();
-            user.workouts = [workout];
-            await user.save();
+            workout = await user.addWorkout({name: 'test workout'});
             detailUrl = `${url}/${workout.id}`;
         });
 
@@ -84,6 +89,14 @@ describe('workout apis', () => {
 
             expect(res.statusCode).toBe(404);
             expect(res.body).toEqual(new WorkoutNotFoundError(user.id, wrongUuid).json);
+        });
+
+        test('returns 400 status code when workoutId is not a valid uuid', async () => {
+            const res = await supertest(app).get(`${url}/1`).set('Authorization', `Token ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('workoutId');
+            expect(res.body.errors[0].msg).toEqual('Invalid id.');
         });
 
         test('returns 404 status code if the workout has been deleted', async () => {
@@ -127,10 +140,12 @@ describe('workout apis', () => {
             const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send(workoutData);
 
             expect(res.statusCode).toBe(201);
-            await user.reload();
-            const newWorkout = user.workouts.find((workout) => workout.id === res.body.data.id);
-            expect(newWorkout).not.toBeUndefined();
+            expect(user.getWorkout(res.body.data.id)).not.toBeUndefined();
         });
+
+        // test('automatically assigns a generic name to workout if name is not provided', async () => {
+
+        // })
 
         test('returns 401 status code if token is expired', async () => {
             const payload: any = decode(accessToken);
@@ -155,12 +170,7 @@ describe('workout apis', () => {
         const newName = 'test workout2';
 
         beforeEach(async () => {
-            workout = new Workout();
-            workout.name = 'test workout1';
-            workout.owner = user;
-            await workout.save();
-            user.workouts = [workout];
-            await user.save();
+            workout = await user.addWorkout({name: 'oldname'});
             detailUrl = `${url}/${workout.id}`;
         });
 
@@ -175,14 +185,37 @@ describe('workout apis', () => {
             expect(workout.name).toEqual(newName);
         });
 
-        test('returns 404 status code if a workout with the specified id does not exist for that user ', async () => {
+        test('returns 400 status code when name is an empty string', async () => {
             const res = await supertest(app)
-                .patch(`${url}/${randomUUID()}`)
+                .patch(detailUrl)
+                .set('Authorization', `Token ${accessToken}`)
+                .send({name: ''});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('name');
+            expect(res.body.errors[0].msg).toEqual('The name cannot be blank.');
+        });
+
+        test('returns 400 status code when workoutId is not a uuid', async () => {
+            const res = await supertest(app)
+                .patch(`${url}/1`)
+                .set('Authorization', `Token ${accessToken}`)
+                .send({name: newName});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('workoutId');
+            expect(res.body.errors[0].msg).toEqual('Invalid id.');
+        });
+
+        test('returns 404 status code if a workout with the specified id does not exist for that user ', async () => {
+            const wrongId = randomUUID();
+            const res = await supertest(app)
+                .patch(`${url}/${wrongId}`)
                 .set('Authorization', `Token ${accessToken}`)
                 .send({name: newName});
 
             expect(res.statusCode).toBe(404);
-            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, workout.id).json);
+            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, wrongId).json);
         });
 
         test('returns 401 status code if token is expired', async () => {
@@ -207,11 +240,7 @@ describe('workout apis', () => {
         let workout: Workout;
 
         beforeEach(async () => {
-            workout = new Workout();
-            workout.owner = user;
-            await workout.save();
-            user.workouts = [workout];
-            await user.save();
+            workout = await user.addWorkout({name: 'workout1'});
             detailUrl = `${url}/${workout.id}`;
         });
 
@@ -223,14 +252,23 @@ describe('workout apis', () => {
             expect(workout.isDeleted).toBe(true);
         });
 
+        test('returns 400 status code when workoutId is not a uuid', async () => {
+            const res = await supertest(app).delete(`${url}/1`).set('Authorization', `Token ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('workoutId');
+            expect(res.body.errors[0].msg).toEqual('Invalid id.');
+        });
+
         test('returns 404 status code if no workout with that id exists', async () => {
+            const wrongId = randomUUID();
             const res = await supertest(app)
-                .delete(`${url}/${randomUUID()}`)
+                .delete(`${url}/${wrongId}`)
                 .set('Authorization', `Token ${accessToken}`)
                 .send();
 
             expect(res.statusCode).toBe(404);
-            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, workout.id).json);
+            expect(res.body).toEqual(new WorkoutNotFoundError(user.id, wrongId).json);
         });
 
         test('returns 401 status code if token is expired', async () => {
