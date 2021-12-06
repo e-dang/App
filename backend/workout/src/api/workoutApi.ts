@@ -1,6 +1,6 @@
 import {ApiGroup, AuthenticatedRequest} from '@api';
 import {WorkoutNotFoundError} from '@errors';
-import {validateWorkoutDetailRequest} from '@schemas';
+import {validatePatchWorkoutRequest, validateWorkoutDetailRequest} from '@schemas';
 import {verifyAuthN} from '@src/middleware';
 import {Response, NextFunction, Router} from 'express';
 
@@ -31,7 +31,22 @@ workoutRouter.post('/', async (req: AuthenticatedRequest, res: Response, next: N
     return res.status(201).json({data: workout.serialize()});
 });
 
-workoutRouter.patch('/:workoutId', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
+workoutRouter.patch(
+    '/:workoutId',
+    validatePatchWorkoutRequest,
+    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        const workout = await req.user.getWorkout(req.params.workoutId);
+
+        if (!workout) {
+            return next(new WorkoutNotFoundError(req.user.id, req.params.workoutId));
+        }
+
+        workout.name = req.body?.name || workout.name;
+        await workout.save();
+
+        return res.status(200).json({data: workout.serialize()});
+    },
+);
 
 workoutRouter.delete('/:workoutId', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {});
 

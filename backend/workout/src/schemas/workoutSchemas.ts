@@ -10,3 +10,22 @@ export const validateWorkoutDetailRequest = createValidationSchemaMiddleware({
         },
     },
 });
+
+export const validatePatchWorkoutRequest = createValidationSchemaMiddleware({
+    workoutId: {
+        in: ['params'],
+        ...notEmptyValidator,
+        isUUID: {
+            errorMessage: 'Invalid id.',
+        },
+    },
+    name: {
+        in: ['body'],
+        isLength: {
+            errorMessage: 'The name cannot be blank.',
+            options: {
+                min: 1,
+            },
+        },
+    },
+});
