@@ -15,7 +15,7 @@ beforeAll(async () => {
         port: config.dbPort,
         username: config.dbUser,
         password: config.dbPassword,
-        database: 'tests',
+        database: config.dbName,
         logging: false,
         synchronize: true,
         entities: [User, Workout],
