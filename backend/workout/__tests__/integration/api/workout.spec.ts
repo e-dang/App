@@ -16,12 +16,73 @@ import {createToken} from './utils';
 
 async function createUserAndToken(): Promise<[User, string]> {
     const userId = randomUUID();
-    const accessToken = await createToken(userId);
+    const accessToken = await createToken({userId, roles: ['user']});
     const user = await User.create({id: userId}).save();
     return [user, accessToken];
 }
 
-describe('workout apis', () => {
+async function createAdminUserAndToken(): Promise<[User, string]> {
+    const userId = randomUUID();
+    const accessToken = await createToken({userId, roles: ['admin']});
+    const user = await User.create({id: userId}).save();
+    return [user, accessToken];
+}
+
+describe('admin workout apis', () => {
+    const url = '/api/v1/workout/';
+    let user: User;
+    let accessToken: string;
+    let adminUser: User;
+    let adminAccessToken: string;
+
+    beforeEach(async () => {
+        [user, accessToken] = await createUserAndToken();
+        [adminUser, adminAccessToken] = await createAdminUserAndToken();
+    });
+
+    afterEach(() => {
+        MockDate.reset();
+    });
+
+    describe('GET /workouts', () => {
+        test('returns all workouts in the database and 200 status code', async () => {
+            const workouts1 = await user.addWorkouts([{name: 'test1'}, {name: 'test2'}]);
+            const workouts2 = await adminUser.addWorkouts([{name: 'test2'}, {name: 'test3'}]);
+            const workoutIds = [...workouts1, ...workouts2].map((workout) => workout.id);
+
+            const res = await supertest(app).get(url).set('Authorization', `Token ${adminAccessToken}`).send();
+
+            expect(res.statusCode).toBe(200);
+            const retWorkoutIds = res.body.data.map((workout) => workout.id);
+            expect(new Set(retWorkoutIds)).toEqual(new Set(workoutIds));
+        });
+
+        test('returns 401 status code if token is expired', async () => {
+            const payload: any = decode(adminAccessToken);
+            MockDate.set(payload.exp * 1000 + 2000);
+            const res = await supertest(app).get(url).set('Authorization', `Token ${adminAccessToken}`).send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 401 status code if no access token is provided', async () => {
+            const res = await supertest(app).get(url).send();
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 403 status code if requester is not an admin user', async () => {
+            const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
+        });
+    });
+});
+
+describe('user workout apis', () => {
     let url: string;
     let accessToken: string;
     let user: User;
