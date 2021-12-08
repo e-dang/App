@@ -29,7 +29,7 @@ async function createAdminUserAndToken(): Promise<[User, string]> {
 }
 
 describe('admin workout apis', () => {
-    const url = '/api/v1/workout/';
+    const url = '/api/v1/workouts/';
     let user: User;
     let accessToken: string;
     let adminUser: User;
@@ -89,14 +89,14 @@ describe('user workout apis', () => {
 
     beforeEach(async () => {
         [user, accessToken] = await createUserAndToken();
-        url = `/api/v1/workout/${user.id}`;
+        url = `/api/v1/workouts/${user.id}`;
     });
 
     afterEach(() => {
         MockDate.reset();
     });
 
-    describe('GET /workout/:userId', () => {
+    describe('GET /workouts/:userId', () => {
         test('returns only the workouts owned by the requesting user and 200 status code', async () => {
             await user.addWorkouts([{name: 'test1'}, {name: 'test2'}]);
             await user.reload();
@@ -138,7 +138,7 @@ describe('user workout apis', () => {
         });
     });
 
-    describe('GET /workout/:userId/:workoutId', () => {
+    describe('GET /workouts/:userId/:workoutId', () => {
         let detailUrl: string;
         let workout: Workout;
 
@@ -207,7 +207,7 @@ describe('user workout apis', () => {
         });
     });
 
-    describe('POST /workout/:userId', () => {
+    describe('POST /workouts/:userId', () => {
         let workoutData: {
             name: string;
         };
@@ -254,7 +254,7 @@ describe('user workout apis', () => {
         });
     });
 
-    describe('PATCH /workout/:userId/:workoutId', () => {
+    describe('PATCH /workouts/:userId/:workoutId', () => {
         let detailUrl: string;
         let workout: Workout;
         const newName = 'test workout2';
@@ -333,7 +333,7 @@ describe('user workout apis', () => {
         });
     });
 
-    describe('DELETE /workout/:userId/:workoutId', () => {
+    describe('DELETE /workouts/:userId/:workoutId', () => {
         let detailUrl: string;
         let workout: Workout;
 

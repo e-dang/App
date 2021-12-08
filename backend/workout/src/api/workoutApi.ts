@@ -79,6 +79,6 @@ workoutRouter.delete(
 );
 
 export const workoutApis: ApiGroup = {
-    pathPrefix: 'workout',
+    pathPrefix: 'workouts',
     router: workoutRouter,
 };
