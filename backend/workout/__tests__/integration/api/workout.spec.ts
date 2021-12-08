@@ -14,16 +14,20 @@ import {createToken} from './utils';
  * @group workout
  */
 
+async function createUserAndToken(): Promise<[User, string]> {
+    const userId = randomUUID();
+    const accessToken = await createToken(userId);
+    const user = await User.create({id: userId}).save();
+    return [user, accessToken];
+}
+
 describe('workout apis', () => {
     let url: string;
-    let userId: string;
     let accessToken: string;
     let user: User;
 
     beforeEach(async () => {
-        userId = randomUUID();
-        accessToken = await createToken(userId);
-        user = await User.create({id: userId}).save();
+        [user, accessToken] = await createUserAndToken();
         url = `/api/v1/workout/${user.id}`;
     });
 
@@ -58,10 +62,7 @@ describe('workout apis', () => {
         });
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
-            const otherUserId = randomUUID();
-            const otherAccessToken = await createToken(otherUserId);
-            await User.create({id: otherUserId}).save();
-
+            const [_, otherAccessToken] = await createUserAndToken();
             const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
@@ -130,10 +131,7 @@ describe('workout apis', () => {
         });
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
-            const otherUserId = randomUUID();
-            const otherAccessToken = await createToken(otherUserId);
-            await User.create({id: otherUserId}).save();
-
+            const [_, otherAccessToken] = await createUserAndToken();
             const res = await supertest(app).get(detailUrl).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
@@ -180,10 +178,7 @@ describe('workout apis', () => {
         });
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
-            const otherUserId = randomUUID();
-            const otherAccessToken = await createToken(otherUserId);
-            await User.create({id: otherUserId}).save();
-
+            const [_, otherAccessToken] = await createUserAndToken();
             const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
@@ -269,10 +264,7 @@ describe('workout apis', () => {
         });
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
-            const otherUserId = randomUUID();
-            const otherAccessToken = await createToken(otherUserId);
-            await User.create({id: otherUserId}).save();
-
+            const [_, otherAccessToken] = await createUserAndToken();
             const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
@@ -333,10 +325,7 @@ describe('workout apis', () => {
         });
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
-            const otherUserId = randomUUID();
-            const otherAccessToken = await createToken(otherUserId);
-            await User.create({id: otherUserId}).save();
-
+            const [_, otherAccessToken] = await createUserAndToken();
             const res = await supertest(app).get(detailUrl).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
