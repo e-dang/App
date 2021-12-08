@@ -15,7 +15,7 @@ import {createToken} from './utils';
  */
 
 describe('workout apis', () => {
-    const url = '/api/v1/workout';
+    let url: string;
     let userId: string;
     let accessToken: string;
     let user: User;
@@ -24,13 +24,14 @@ describe('workout apis', () => {
         userId = randomUUID();
         accessToken = await createToken(userId);
         user = await User.create({id: userId}).save();
+        url = `/api/v1/workout/${user.id}`;
     });
 
     afterEach(() => {
         MockDate.reset();
     });
 
-    describe('GET /workout', () => {
+    describe('GET /workout/:userId', () => {
         test('returns only the workouts owned by the requesting user and 200 status code', async () => {
             await user.addWorkouts([{name: 'test1'}, {name: 'test2'}]);
             await user.reload();
@@ -64,7 +65,7 @@ describe('workout apis', () => {
         });
     });
 
-    describe('GET /workout/<id>', () => {
+    describe('GET /workout/:userId/:workoutId', () => {
         let detailUrl: string;
         let workout: Workout;
 
@@ -125,7 +126,7 @@ describe('workout apis', () => {
         });
     });
 
-    describe('POST /workout', () => {
+    describe('POST /workout/:userId', () => {
         let workoutData: {
             name: string;
         };
@@ -164,7 +165,7 @@ describe('workout apis', () => {
         });
     });
 
-    describe('PATCH /workout/<id>', () => {
+    describe('PATCH /workout/:userId/:workoutId', () => {
         let detailUrl: string;
         let workout: Workout;
         const newName = 'test workout2';
@@ -235,7 +236,7 @@ describe('workout apis', () => {
         });
     });
 
-    describe('DELETE /workout/<id>', () => {
+    describe('DELETE /workout/:userId/:workoutId', () => {
         let detailUrl: string;
         let workout: Workout;
 
