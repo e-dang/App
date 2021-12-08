@@ -1,9 +1,10 @@
 import {Request, Response, NextFunction} from 'express';
 import {config} from '@config';
 import {User} from '@entities';
-import {AuthenticationError, ErrorInterface, ValidationError} from '@errors';
+import {AuthenticationError, AuthorizationError, ErrorInterface, ValidationError} from '@errors';
 import {checkSchema, Schema, ValidationChain, validationResult} from 'express-validator';
 import * as jose from 'jose';
+import {AuthenticatedRequest} from '@api';
 
 export function errorHandler(err: ErrorInterface, req: Request, res: Response, next: NextFunction) {
     res.status(err.statusCode).json(err.json);
@@ -57,6 +58,14 @@ export const verifyAuthN = async (req: Request, res: Response, next: NextFunctio
     }
 
     req.user = user;
+    return next();
+};
+
+export const validateIsOwner = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (req.params.userId !== req.user.id) {
+        return next(new AuthorizationError());
+    }
+
     return next();
 };
 
