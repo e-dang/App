@@ -57,6 +57,17 @@ describe('workout apis', () => {
             expect(res.body).toEqual(new AuthenticationError().json);
         });
 
+        test('returns 403 status code if requester is not the owner of the workout', async () => {
+            const otherUserId = randomUUID();
+            const otherAccessToken = await createToken(otherUserId);
+            await User.create({id: otherUserId}).save();
+
+            const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
+        });
+
         test('returns 401 status code if no access token is provided', async () => {
             const res = await supertest(app).get(url).send();
 
@@ -118,6 +129,17 @@ describe('workout apis', () => {
             expect(res.body).toEqual(new AuthenticationError().json);
         });
 
+        test('returns 403 status code if requester is not the owner of the workout', async () => {
+            const otherUserId = randomUUID();
+            const otherAccessToken = await createToken(otherUserId);
+            await User.create({id: otherUserId}).save();
+
+            const res = await supertest(app).get(detailUrl).set('Authorization', `Token ${otherAccessToken}`).send();
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
+        });
+
         test('returns 401 status code if no access token is provided', async () => {
             const res = await supertest(app).get(detailUrl).send();
 
@@ -155,6 +177,17 @@ describe('workout apis', () => {
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 403 status code if requester is not the owner of the workout', async () => {
+            const otherUserId = randomUUID();
+            const otherAccessToken = await createToken(otherUserId);
+            await User.create({id: otherUserId}).save();
+
+            const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
         });
 
         test('returns 401 status code if no access token is provided', async () => {
@@ -222,17 +255,28 @@ describe('workout apis', () => {
         test('returns 401 status code if token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).patch(url).set('Authorization', `Token ${accessToken}`).send();
+            const res = await supertest(app).patch(detailUrl).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 401 status code if no access token is provided', async () => {
-            const res = await supertest(app).patch(url).send();
+            const res = await supertest(app).patch(detailUrl).send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 403 status code if requester is not the owner of the workout', async () => {
+            const otherUserId = randomUUID();
+            const otherAccessToken = await createToken(otherUserId);
+            await User.create({id: otherUserId}).save();
+
+            const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
         });
     });
 
@@ -275,17 +319,28 @@ describe('workout apis', () => {
         test('returns 401 status code if token is expired', async () => {
             const payload: any = decode(accessToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).delete(url).set('Authorization', `Token ${accessToken}`).send();
+            const res = await supertest(app).delete(detailUrl).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
         });
 
         test('returns 401 status code if no access token is provided', async () => {
-            const res = await supertest(app).delete(url).send();
+            const res = await supertest(app).delete(detailUrl).send();
 
             expect(res.statusCode).toBe(401);
             expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 403 status code if requester is not the owner of the workout', async () => {
+            const otherUserId = randomUUID();
+            const otherAccessToken = await createToken(otherUserId);
+            await User.create({id: otherUserId}).save();
+
+            const res = await supertest(app).get(detailUrl).set('Authorization', `Token ${otherAccessToken}`).send();
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
         });
     });
 });
