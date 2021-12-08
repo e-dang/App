@@ -10,8 +10,10 @@ export function errorHandler(err: ErrorInterface, req: Request, res: Response, n
     res.status(err.statusCode).json(err.json);
 }
 
-interface AccessTokenPayload extends jose.JWTPayload {
+type Role = 'user' | 'admin';
+export interface AccessTokenPayload extends jose.JWTPayload {
     userId: string;
+    roles: Role[];
 }
 
 function parseAccessToken(req: Request) {
@@ -58,11 +60,20 @@ export const verifyAuthN = async (req: Request, res: Response, next: NextFunctio
     }
 
     req.user = user;
+    req.tokenPayload = payload;
     return next();
 };
 
 export const validateIsOwner = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (req.params.userId !== req.user.id) {
+        return next(new AuthorizationError());
+    }
+
+    return next();
+};
+
+export const validateIsAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (req.tokenPayload === undefined || !req.tokenPayload.roles.includes('admin')) {
         return next(new AuthorizationError());
     }
 
