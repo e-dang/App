@@ -89,7 +89,7 @@ describe('user workout apis', () => {
 
     beforeEach(async () => {
         [user, accessToken] = await createUserAndToken();
-        url = `/api/v1/workouts/${user.id}`;
+        url = `/api/v1/${user.id}/workouts`;
     });
 
     afterEach(() => {

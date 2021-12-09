@@ -9,17 +9,25 @@ const workoutRouter = Router();
 
 workoutRouter.use(verifyAuthN);
 
-workoutRouter.get('/', validateIsAdmin, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const workouts = (await Workout.find()).map((workout) => workout.serialize());
-    return res.status(200).json({data: workouts});
-});
-
-workoutRouter.get('/:userId', validateIsOwner, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    return res.status(200).json({data: await req.user.getSerializedWorkouts()});
-});
+workoutRouter.get(
+    '/workouts',
+    validateIsAdmin,
+    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        const workouts = (await Workout.find()).map((workout) => workout.serialize());
+        return res.status(200).json({data: workouts});
+    },
+);
 
 workoutRouter.get(
-    '/:userId/:workoutId',
+    '/:userId/workouts',
+    validateIsOwner,
+    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        return res.status(200).json({data: await req.user.getSerializedWorkouts()});
+    },
+);
+
+workoutRouter.get(
+    '/:userId/workouts/:workoutId',
     validateIsOwner,
     validateWorkoutDetailRequest,
     async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -34,7 +42,7 @@ workoutRouter.get(
 );
 
 workoutRouter.post(
-    '/:userId',
+    '/:userId/workouts',
     validateIsOwner,
     async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         const workout = await req.user.addWorkout(req.body);
@@ -43,7 +51,7 @@ workoutRouter.post(
 );
 
 workoutRouter.patch(
-    '/:userId/:workoutId',
+    '/:userId/workouts/:workoutId',
     validateIsOwner,
     validatePatchWorkoutRequest,
     async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -61,7 +69,7 @@ workoutRouter.patch(
 );
 
 workoutRouter.delete(
-    '/:userId/:workoutId',
+    '/:userId/workouts/:workoutId',
     validateIsOwner,
     validateDeleteWorkoutRequest,
     async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -79,6 +87,5 @@ workoutRouter.delete(
 );
 
 export const workoutApis: ApiGroup = {
-    pathPrefix: 'workouts',
     router: workoutRouter,
 };
