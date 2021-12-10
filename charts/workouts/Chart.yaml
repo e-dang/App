@@ -1,0 +1,6 @@
+apiVersion: v2
+name: workouts
+description: Workouts microservice Helm Chart
+type: application
+version: 0.1.8
+appVersion: '0.0.1'
