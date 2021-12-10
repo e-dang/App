@@ -1,0 +1,144 @@
+name: Workouts
+
+env:
+  DOCKER_BUILDKIT: 1
+  CLUSTER_NAME: dev
+  RESOURCE_GROUP: dev-stack
+  DIRECTORY: backend/workouts
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - backend/workouts/**
+      - .github/workflows/workouts.yml
+  push:
+    branches:
+      - main
+    paths:
+      - backend/workouts/**
+      - .github/workflows/workouts.yml
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Install and Run Pre-commit
+        uses: pre-commit/action@v2.0.3
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Setup yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: '17.1.x'
+
+      - name: Install dependencies
+        run: cd ${DIRECTORY} && yarn install
+
+      - name: Unit test
+        run: cd ${DIRECTORY} && yarn test:unit
+
+  integration-test:
+    runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      tracker-dev.postgres.database.azure.com:
+        image: postgres:13.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tests
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Install sshfs
+        run: |
+          sudo apt-get install -y sshfs fuse iproute2
+          echo user_allow_other | sudo tee -a /etc/fuse.conf
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Install telepresence
+        run: |
+          sudo curl -fL https://app.getambassador.io/download/tel2/linux/amd64/latest/telepresence -o /usr/local/bin/telepresence && \
+          sudo chmod +x /usr/local/bin/telepresence
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+
+      - name: Login to azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Connect to cluster context
+        run: |
+          az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
+          telepresence connect
+
+      - name: Build docker image
+        run: cd ${DIRECTORY} && yarn build
+
+      - name: Create env file
+        run: |
+          echo "dbName=tests" >> ${DIRECTORY}/.env
+          echo "dbUser=postgres" >> ${DIRECTORY}/.env
+          echo "dbPassword=postgres" >> ${DIRECTORY}/.env
+
+      - name: Integration tests
+        run: cd ${DIRECTORY} && yarn test:int:ci
+        env:
+          NETWORK: ${{ job.container.network }}
+
+  push-staging:
+    needs:
+      - lint
+      - unit-test
+      - integration-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Generate tag
+        id: tag
+        run: |
+          sha=${GITHUB_SHA::8}
+          ts=$(date +%s)
+          echo "::set-output name=TAG::dev-${sha}-${ts}"
+
+      - name: Build docker image
+        run: cd ${DIRECTORY} && yarn build:ci
+        env:
+          TAG: ${{ steps.tag.outputs.TAG }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push staging docker image
+        run: docker push ericdang/workouts:${{ steps.tag.outputs.TAG }}
