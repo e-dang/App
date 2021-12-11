@@ -30,7 +30,7 @@ spec:
       volumes:
         - name: secrets
           secret:
-            secretName: workouts-secrets-v1
+            secretName: workouts-secrets
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
