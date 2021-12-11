@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: workouts
+  namespace: default
+spec:
+  values:
+    ingress:
+      annotations:
+        cert-manager.io/issuer: letsencrypt
+      hosts:
+        - host: dev.erickdang.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - dev.erickdang.com
+          secretName: letsencrypt-workouts
+  postRenderers:
+    - kustomize:
+        images:
+          - name: ericdang/workouts
+            newName: ericdang/workouts
+            newTag: dev-e4133f8d-1638671014 # {"$imagepolicy": "flux-system:workouts:tag"}
