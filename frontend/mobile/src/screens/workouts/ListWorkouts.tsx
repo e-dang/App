@@ -4,11 +4,19 @@ import {Header, Screen} from '@components';
 import {useSelector} from '@hooks';
 import {selectAuthUserId} from '@selectors';
 import {Box, Button, Center, FlatList, Heading, Spinner, Text} from 'native-base';
-// import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {WorkoutStackParamList} from './WorkoutStack';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-// export type WorkoutNavProps = StackNagivationProp<>
+export type ListWorkoutNavProps = StackNavigationProp<WorkoutStackParamList, 'listWorkouts'>;
+
 export const WorkoutScreen: FC = ({children}) => {
-    // const navigation = useNavigation();
+    const navigation = useNavigation<ListWorkoutNavProps>();
+
+    const handleCreateWorkout = () => {
+        navigation.navigate('createWorkout');
+    };
+
     return (
         <>
             <Header />
@@ -22,7 +30,7 @@ export const WorkoutScreen: FC = ({children}) => {
                     variant="solid"
                     colorScheme="primary"
                     borderRadius={100}
-                    onPress={() => null}>
+                    onPress={handleCreateWorkout}>
                     Create Workout
                 </Button>
             </Screen>

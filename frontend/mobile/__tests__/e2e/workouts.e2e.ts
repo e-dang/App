@@ -24,7 +24,7 @@ describe('create workout flow', () => {
 
         // the user taps the add workout button and is taken to the create workout flow screen
         await createWorkoutBtn.tap();
-        const createWorkoutFlowScreen = element(by.id('createWorkoutFlowScreen'));
+        const createWorkoutFlowScreen = element(by.id('createWorkoutScreen'));
         await expect(createWorkoutFlowScreen).toBeVisible();
     });
 });

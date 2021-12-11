@@ -6,7 +6,7 @@ export function CreateWorkoutScreen() {
     return (
         <>
             <Header />
-            <Screen testID="createWorkoutRootScreen">
+            <Screen testID="createWorkoutScreen">
                 <Center>
                     <Text>Some text</Text>
                 </Center>
