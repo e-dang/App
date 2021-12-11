@@ -16,6 +16,11 @@ creation_rules:
     azure_keyvault: https://flux-dev-b4bcd66564.vault.azure.net/keys/auth-sops/46ec3243cd614213a26b5535f093b746
     pgp: A9D0E9EDCEA9201EA6214063FE9E4A501304255A
 
+  - path_regex: ./flux/apps/dev/workouts/.*.yaml
+    encrypted_regex: ^(data|stringData)$
+    azure_keyvault: https://flux-dev-b4bcd66564.vault.azure.net/keys/workouts-sops/918470840b3d41fab3ccd866891cf973
+    pgp: A9D0E9EDCEA9201EA6214063FE9E4A501304255A
+
   - path_regex: ./flux/infrastructure/dev/external-dns/secret.yaml
     encrypted_regex: ^(data|stringData)$
     azure_keyvault: https://flux-dev-b4bcd66564.vault.azure.net/keys/external-dns-sops/4b084cc5367a42f88367fd1b1a5cc995
