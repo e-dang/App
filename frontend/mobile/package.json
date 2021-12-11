@@ -5,12 +5,11 @@
     "scripts": {
         "android": "react-native run-android",
         "ios": "react-native run-ios",
-        "ios-e2e": "RN_SRC_EXT=e2e.tsx react-native run-ios",
-        "start": "react-native start",
-        "test": "jest --config=jest.config.unit.js",
+        "ios:e2e": "RN_SRC_EXT=e2e.tsx react-native run-ios",
+        "test:unit": "jest --config=jest.config.unit.js",
+        "test:e2e:ios": "detox test -c ios --cleanup",
+        "test:e2e:android": "detox test -c android --cleanup",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "e2e:ios": "detox test -c ios --cleanup",
-        "e2e:android": "detox test -c android",
         "clean-cache": "rm -rf $TMPDIR/metro-cache"
     },
     "dependencies": {
