@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
-import {Home, Settings, SignUp, Welcome, SignIn, ForgotPassword, Workouts} from '@screens';
+import {Home, Settings, SignUp, Welcome, SignIn, ForgotPassword, WorkoutStackScreen} from '@screens';
 import {useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -59,7 +59,7 @@ export const App = () => {
         <Tab.Navigator initialRouteName="home" screenOptions={{headerShown: false}}>
             <Tab.Screen
                 name="workouts"
-                component={Workouts}
+                component={WorkoutStackScreen}
                 options={{
                     tabBarTestID: 'navWorkouts',
                     tabBarLabel: t('workouts'),
