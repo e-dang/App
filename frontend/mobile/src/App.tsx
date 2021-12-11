@@ -39,7 +39,7 @@ export const App = () => {
     }, []);
 
     return token !== null ? (
-        <Tab.Navigator screenOptions={{headerShown: false}}>
+        <Tab.Navigator initialRouteName="home" screenOptions={{headerShown: false}}>
             <Tab.Screen
                 name="workouts"
                 component={Workouts}
