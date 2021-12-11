@@ -12,10 +12,6 @@ export interface SignInRequest {
     password: string;
 }
 
-export interface SignOutRequest {
-    refresh: string;
-}
-
 export interface ForgotPasswordRequest {
     email: string;
 }
