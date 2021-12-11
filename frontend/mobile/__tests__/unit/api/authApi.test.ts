@@ -2,7 +2,7 @@ import fetchMock, {enableFetchMocks} from 'jest-fetch-mock';
 enableFetchMocks();
 import {authApi, AuthenticationResponse, ForgotPasswordRequest, SignInRequest, SignUpRequest} from '@api';
 import {authReducer} from '@store/authSlice';
-import {expectCorrectRequest, setupApiStore} from '@tests/utils';
+import {expectCorrectRequest, setupApiStore} from '@tests/unit/utils';
 
 describe('auth endpoints', () => {
     let storeRef: ReturnType<typeof setupApiStore>;
