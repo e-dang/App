@@ -1,35 +1,5 @@
 import {by, element, expect, device} from 'detox';
-import {v4 as uuidv4} from 'uuid';
-import axios from 'axios';
-
-const MAILHOG_URL = 'https://mail.dev.erickdang.com/api/v2/search';
-
-function generateEmail() {
-    return `${uuidv4()}@demo.com`;
-}
-
-async function createUser(name: string, email: string, password: string) {
-    return await axios.post('https://dev.erickdang.com/api/v1/auth/signup', {
-        name,
-        email,
-        password,
-    });
-}
-
-async function signOut() {
-    await element(by.id('masterSignOut')).tap();
-}
-
-async function checkForEmail(to: string, predicate: (msg: any) => boolean) {
-    const messages = await axios.get(MAILHOG_URL, {
-        params: {
-            kind: 'to',
-            query: to,
-        },
-    });
-
-    messages.data.items.some(predicate);
-}
+import {checkForEmail, createUser, generateEmail, signOut} from './utils';
 
 describe('Auth flow', () => {
     let name: string;
@@ -81,7 +51,7 @@ describe('Auth flow', () => {
 
     test('sign in and sign out flow', async () => {
         // an existing user opens the app but is not logged in
-        await createUser(name, email, password);
+        await createUser({name, email, password});
         const welcomeScreen = element(by.id('welcomeScreen'));
         await expect(welcomeScreen).toBeVisible();
 
@@ -118,7 +88,7 @@ describe('Auth flow', () => {
 
     test('forgot password flow', async () => {
         // an existing user is on the welcome screen and navigates to the sign in screen
-        await createUser(name, email, password);
+        await createUser({name, email, password});
         await expect(element(by.id('welcomeScreen'))).toBeVisible();
         await element(by.id('signInBtn')).tap();
 
