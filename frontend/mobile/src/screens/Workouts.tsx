@@ -1,8 +1,11 @@
+import React, {FC} from 'react';
+import {useListWorkoutsQuery} from '@api/workoutApi';
 import {Header, Screen} from '@components';
-import {Center, Heading, Text} from 'native-base';
-import React from 'react';
+import {useSelector} from '@hooks';
+import {selectAuthUserId} from '@selectors';
+import {Box, Button, Center, FlatList, Heading, Spinner, Text} from 'native-base';
 
-export function Workouts() {
+export const WorkoutScreen: FC = ({children}) => {
     return (
         <>
             <Header />
@@ -10,10 +13,44 @@ export function Workouts() {
                 <Center flex={4} justifyContent="flex-start">
                     <Heading>Workouts</Heading>
                 </Center>
-                <Center flex={3}>
-                    <Text>These are your workouts</Text>
-                </Center>
+                <Center flex={3}>{children}</Center>
+                <Button
+                    testID="createWorkoutBtn"
+                    variant="solid"
+                    colorScheme="primary"
+                    borderRadius={100}
+                    onPress={() => null}>
+                    Create Workout
+                </Button>
             </Screen>
         </>
+    );
+};
+
+export function Workouts() {
+    const authUserId = useSelector(selectAuthUserId) as string;
+    const {data = {data: []}, isLoading} = useListWorkoutsQuery(authUserId);
+
+    if (isLoading) {
+        return (
+            <WorkoutScreen>
+                <Spinner animating={isLoading} accessibilityLabel="Loading indicator" />
+            </WorkoutScreen>
+        );
+    }
+
+    return (
+        <WorkoutScreen>
+            <FlatList
+                testID="workoutList"
+                data={data.data}
+                ListEmptyComponent={<Text>You Don't Have Any Workouts...</Text>}
+                renderItem={({item}) => (
+                    <Box>
+                        <Text>{item.name}</Text>
+                    </Box>
+                )}
+            />
+        </WorkoutScreen>
     );
 }
