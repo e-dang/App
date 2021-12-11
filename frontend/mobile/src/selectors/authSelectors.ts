@@ -1,6 +1,5 @@
 import {createSelector} from 'reselect';
-import {RootState} from '@src/store';
-import {AuthState} from '@reducers';
+import {RootState, AuthState} from '@store';
 import {AuthToken} from '@src/types';
 import {Buffer} from 'buffer';
 
