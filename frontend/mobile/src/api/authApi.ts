@@ -1,23 +1,23 @@
 import {baseApi} from './baseApi';
-import {AuthToken, Email, Name, Password, Token} from '@src/types';
+import {AuthToken} from '@src/types';
 
 export interface SignUpRequest {
-    name: Name;
-    email: Email;
-    password: Password;
+    name: string;
+    email: string;
+    password: string;
 }
 
 export interface SignInRequest {
-    email: Email;
-    password: Password;
+    email: string;
+    password: string;
 }
 
 export interface SignOutRequest {
-    refresh: Token;
+    refresh: string;
 }
 
 export interface ForgotPasswordRequest {
-    email: Email;
+    email: string;
 }
 
 export interface AuthenticationResponse {

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {LoadingModal, Screen, BackButton, Header, EmailInput, PasswordInput} from '@components';
-import {Email, Password} from '@src/types';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from '@hooks';
@@ -12,8 +11,8 @@ import {AuthStackParamList} from '@src/App';
 export type SignInNavProps = StackNavigationProp<AuthStackParamList, 'signIn'>;
 
 export function SignIn() {
-    const [email, setEmail] = useState<Email>('');
-    const [password, setPassword] = useState<Password>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
     const navigation = useNavigation<SignInNavProps>();
     const dispatch = useDispatch();
     const [signIn, {data, error, isLoading}] = useSignInMutation();

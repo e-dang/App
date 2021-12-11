@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {BackButton, EmailInput, Header, Screen} from '@components';
-import {Email} from '@src/types';
 import {Button, Center, Heading, Modal, Stack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {useForgotPasswordMutation} from '@api';
@@ -10,7 +9,7 @@ import {AuthStackParamList} from '@src/App';
 export type ForgotPasswordNavProps = StackNavigationProp<AuthStackParamList, 'forgotPassword'>;
 
 export function ForgotPassword() {
-    const [email, setEmail] = useState<Email>('');
+    const [email, setEmail] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigation = useNavigation<ForgotPasswordNavProps>();
     const [forgotPassword] = useForgotPasswordMutation();
