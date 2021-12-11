@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {CreateWorkoutScreen} from './CreateWorkoutRoot';
+import {CreateWorkoutScreen} from './CreateWorkout';
 import {ListWorkoutsScreen} from './ListWorkouts';
 
 export type WorkoutStackParamList = {
