@@ -7,7 +7,7 @@
         "ios": "react-native run-ios",
         "ios-e2e": "RN_SRC_EXT=e2e.tsx react-native run-ios",
         "start": "react-native start",
-        "test": "jest",
+        "test": "jest --config=jest.config.unit.js",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "e2e:ios": "detox test -c ios --cleanup",
         "e2e:android": "detox test -c android",
@@ -65,8 +65,5 @@
     },
     "resolutions": {
         "@types/react": "^17"
-    },
-    "jest": {
-        "testRegex": "(/__tests__/.*(test|spec))\\.(ts|tsx|js)$"
     }
 }
