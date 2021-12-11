@@ -8,10 +8,11 @@ spec:
     ingress:
       annotations:
         cert-manager.io/issuer: letsencrypt
+        nginx.ingress.kubernetes.io/use-regex: 'true'
       hosts:
         - host: dev.erickdang.com
           paths:
-            - path: /
+            - path: /api/v1/[0-9a-f-]{36}/workouts
               pathType: Prefix
       tls:
         - hosts:
