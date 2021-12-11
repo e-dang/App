@@ -19,23 +19,23 @@ export interface ForgotPasswordRequest {
     email: string;
 }
 
-export type AuthenticationResponse = ApiResponse<AuthToken>;
-
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        signIn: builder.mutation<AuthenticationResponse, SignInRequest>({
+        signIn: builder.mutation<AuthToken, SignInRequest>({
             query: (credentials) => ({
                 url: 'auth/signin/',
                 method: 'POST',
                 body: credentials,
             }),
+            transformResponse: (response: ApiResponse<AuthToken>) => response.data,
         }),
-        signUp: builder.mutation<AuthenticationResponse, SignUpRequest>({
+        signUp: builder.mutation<AuthToken, SignUpRequest>({
             query: (credentials) => ({
                 url: 'auth/signup/',
                 method: 'POST',
                 body: credentials,
             }),
+            transformResponse: (response: ApiResponse<AuthToken>) => response.data,
         }),
         signOut: builder.mutation<void, void>({
             query: () => ({
@@ -50,11 +50,12 @@ export const authApi = baseApi.injectEndpoints({
                 body: email,
             }),
         }),
-        getAuthUser: builder.query<ApiResponse<User>, void>({
+        getAuthUser: builder.query<User, void>({
             query: () => ({
                 url: 'user/',
                 method: 'GET',
             }),
+            transformResponse: (response: ApiResponse<User>) => response.data,
         }),
     }),
 });

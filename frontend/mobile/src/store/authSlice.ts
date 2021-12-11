@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ApiResponse, AuthenticationResponse} from '@api';
 import {AuthToken, User} from '@src/types';
 
 export interface AuthState {
@@ -16,11 +15,11 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setCredentials: (state, action: PayloadAction<AuthenticationResponse>) => {
-            state.token = action.payload.data;
+        setCredentials: (state, action: PayloadAction<AuthToken>) => {
+            state.token = action.payload;
         },
-        setAuthUser: (state, action: PayloadAction<ApiResponse<User>>) => {
-            state.user = action.payload.data;
+        setAuthUser: (state, action: PayloadAction<User>) => {
+            state.user = action.payload;
         },
         refreshToken: (state, action: PayloadAction<string>) => {
             if (state.token !== null) {
