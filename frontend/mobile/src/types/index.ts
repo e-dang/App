@@ -10,3 +10,10 @@ export interface User {
     name: string;
     email: string;
 }
+
+export interface Workout {
+    id: string;
+    name: string;
+    createdAt: string;
+    lastUpdatedAt: string;
+}
