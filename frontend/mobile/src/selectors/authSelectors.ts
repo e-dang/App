@@ -7,6 +7,10 @@ export const selectAuthState = (state: RootState) => state.auth;
 
 export const selectAuthToken = createSelector(selectAuthState, (authState: AuthState) => authState.token);
 
+export const selectAuthUser = createSelector(selectAuthState, (authState: AuthState) => authState.user);
+
+export const selectAuthUserId = createSelector(selectAuthUser, (user: AuthState['user']) => user?.id);
+
 export const isAuthTokenValid = createSelector(selectAuthToken, (token: AuthToken | null) => {
     if (token === null) {
         return false;
