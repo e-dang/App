@@ -50,7 +50,7 @@ export const authApi = baseApi.injectEndpoints({
                 body: email,
             }),
         }),
-        getAuthUser: builder.mutation<ApiResponse<User>, void>({
+        getAuthUser: builder.query<ApiResponse<User>, void>({
             query: () => ({
                 url: 'user/',
                 method: 'GET',
@@ -64,5 +64,5 @@ export const {
     useSignUpMutation,
     useSignOutMutation,
     useForgotPasswordMutation,
-    useGetAuthUserMutation,
+    useLazyGetAuthUserQuery,
 } = authApi;
