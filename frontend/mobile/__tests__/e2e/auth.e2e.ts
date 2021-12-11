@@ -1,3 +1,4 @@
+import {by, element, expect, device} from 'detox';
 import {v4 as uuidv4} from 'uuid';
 import axios from 'axios';
 
@@ -7,7 +8,7 @@ function generateEmail() {
     return `${uuidv4()}@demo.com`;
 }
 
-async function createUser(name, email, password) {
+async function createUser(name: string, email: string, password: string) {
     return await axios.post('https://dev.erickdang.com/api/v1/auth/signup', {
         name,
         email,
@@ -19,7 +20,7 @@ async function signOut() {
     await element(by.id('masterSignOut')).tap();
 }
 
-async function checkForEmail(to, predicate) {
+async function checkForEmail(to: string, predicate: (msg: any) => boolean) {
     const messages = await axios.get(MAILHOG_URL, {
         params: {
             kind: 'to',
@@ -31,9 +32,9 @@ async function checkForEmail(to, predicate) {
 }
 
 describe('Auth flow', () => {
-    let name;
-    let email;
-    let password;
+    let name: string;
+    let email: string;
+    let password: string;
 
     beforeEach(async () => {
         await device.reloadReactNative();
