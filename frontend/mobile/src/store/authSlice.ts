@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AuthenticationResponse} from '@api';
+import {ApiResponse, AuthenticationResponse} from '@api';
 import {AuthToken, User} from '@src/types';
 
 export interface AuthState {
@@ -19,6 +19,9 @@ const authSlice = createSlice({
         setCredentials: (state, action: PayloadAction<AuthenticationResponse>) => {
             state.token = action.payload.data;
         },
+        setAuthUser: (state, action: PayloadAction<ApiResponse<User>>) => {
+            state.user = action.payload.data;
+        },
         refreshToken: (state, action: PayloadAction<string>) => {
             if (state.token !== null) {
                 state.token.accessToken = action.payload;
@@ -30,5 +33,5 @@ const authSlice = createSlice({
     },
 });
 
-export const {setCredentials, refreshToken, signOut} = authSlice.actions;
+export const {setCredentials, setAuthUser, refreshToken, signOut} = authSlice.actions;
 export const authReducer = authSlice.reducer;

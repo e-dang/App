@@ -7,6 +7,9 @@ import {Home, Settings, SignUp, Welcome, SignIn, ForgotPassword, Workouts} from 
 import {useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useGetAuthUserMutation} from '@api';
+import {useDispatch} from '@hooks';
+import {setAuthUser} from '@store';
 
 export type AppTabParamList = {
     workouts: undefined;
@@ -29,6 +32,8 @@ const Stack = createStackNavigator<AuthStackParamList>();
 export const App = () => {
     const token = useSelector(selectAuthToken);
     const {t} = useTranslation();
+    const dispatch = useDispatch();
+    const [getAuthUser, {data}] = useGetAuthUserMutation();
 
     const init = async () => {};
 
@@ -37,6 +42,18 @@ export const App = () => {
             RNBootSplash.hide({fade: true}); // fade animation
         });
     }, []);
+
+    React.useEffect(() => {
+        if (token !== null) {
+            getAuthUser();
+        }
+    }, [token, getAuthUser]);
+
+    React.useEffect(() => {
+        if (data !== undefined) {
+            dispatch(setAuthUser(data));
+        }
+    }, [dispatch, data]);
 
     return token !== null ? (
         <Tab.Navigator initialRouteName="home" screenOptions={{headerShown: false}}>

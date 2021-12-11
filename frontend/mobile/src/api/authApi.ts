@@ -1,6 +1,9 @@
 import {baseApi} from './baseApi';
-import {AuthToken} from '@src/types';
+import {AuthToken, User} from '@src/types';
 
+export interface ApiResponse<T> {
+    data: T;
+}
 export interface SignUpRequest {
     name: string;
     email: string;
@@ -16,9 +19,7 @@ export interface ForgotPasswordRequest {
     email: string;
 }
 
-export interface AuthenticationResponse {
-    data: AuthToken;
-}
+export type AuthenticationResponse = ApiResponse<AuthToken>;
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -49,7 +50,19 @@ export const authApi = baseApi.injectEndpoints({
                 body: email,
             }),
         }),
+        getAuthUser: builder.mutation<ApiResponse<User>, void>({
+            query: () => ({
+                url: 'user/',
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
-export const {useSignInMutation, useSignUpMutation, useSignOutMutation, useForgotPasswordMutation} = authApi;
+export const {
+    useSignInMutation,
+    useSignUpMutation,
+    useSignOutMutation,
+    useForgotPasswordMutation,
+    useGetAuthUserMutation,
+} = authApi;
