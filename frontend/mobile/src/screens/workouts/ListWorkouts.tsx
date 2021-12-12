@@ -20,7 +20,7 @@ export const WorkoutScreen: FC = ({children}) => {
     return (
         <>
             <Header />
-            <Screen testID="workoutScreen">
+            <Screen testID="listWorkoutsScreen">
                 <Center flex={4} justifyContent="flex-start">
                     <Heading>Workouts</Heading>
                 </Center>
