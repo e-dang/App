@@ -16,6 +16,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Install and Run Pre-commit
+        uses: pre-commit/action@v2.0.3
+
   unit-test:
     runs-on: ubuntu-latest
     steps:
