@@ -1,12 +1,13 @@
 import fetchMock, {enableFetchMocks} from 'jest-fetch-mock';
 enableFetchMocks();
-import {authApi, AuthenticationResponse, ForgotPasswordRequest, SignInRequest, SignUpRequest} from '@api';
+import {ApiResponse, authApi, ForgotPasswordRequest, SignInRequest, SignUpRequest} from '@api';
 import {authReducer} from '@store/authSlice';
-import {expectCorrectRequest, setupApiStore} from '@tests/utils';
+import {expectCorrectRequest, setupApiStore} from '@tests/unit/utils';
+import {AuthToken} from '@src/types';
 
 describe('auth endpoints', () => {
     let storeRef: ReturnType<typeof setupApiStore>;
-    let response: AuthenticationResponse;
+    let response: ApiResponse<AuthToken>;
     let mockError: Error;
 
     beforeEach(() => {
@@ -45,7 +46,7 @@ describe('auth endpoints', () => {
 
             const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signUp.initiate(request));
 
-            expect(data).toStrictEqual(response);
+            expect(data).toStrictEqual(response.data);
         });
 
         test('unsuccessful response', async () => {
@@ -83,7 +84,7 @@ describe('auth endpoints', () => {
 
             const {data} = await storeRef.store.dispatch<any>(authApi.endpoints.signIn.initiate(request));
 
-            expect(data).toStrictEqual(response);
+            expect(data).toStrictEqual(response.data);
         });
 
         test('unsuccessful response', async () => {

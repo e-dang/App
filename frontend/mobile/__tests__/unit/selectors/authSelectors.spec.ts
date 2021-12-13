@@ -1,4 +1,4 @@
-import {isAuthTokenValid, selectAuthState, selectAuthToken} from '@selectors';
+import {isAuthTokenValid, selectAuthState, selectAuthToken, selectAuthUser} from '@selectors';
 import {RootState} from '@src/store';
 import {mock, MockProxy} from 'jest-mock-extended';
 import MockDate from 'mockdate';
@@ -21,6 +21,18 @@ describe('auth selector tests', () => {
         const retVal = selectAuthToken(rootState);
 
         expect(retVal).toBe(rootState.auth.token);
+    });
+
+    test('selectAuthUser returns the user stored in the auth slice of the root state', async () => {
+        const retVal = selectAuthUser(rootState);
+
+        expect(retVal).toBe(rootState.auth.user);
+    });
+
+    test('selectAuthUserId returns the user id stored in the auth slice of the root state', async () => {
+        const retVal = selectAuthUser(rootState);
+
+        expect(retVal).toBe(rootState.auth.user?.id);
     });
 
     test('isAuthTokenValid returns true if authToken is not expired', async () => {

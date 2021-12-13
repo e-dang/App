@@ -1,44 +1,41 @@
 import {baseApi} from './baseApi';
-import {AuthToken, Email, Name, Password, Token} from '@src/types';
+import {AuthToken, User} from '@src/types';
 
+export interface ApiResponse<T> {
+    data: T;
+}
 export interface SignUpRequest {
-    name: Name;
-    email: Email;
-    password: Password;
+    name: string;
+    email: string;
+    password: string;
 }
 
 export interface SignInRequest {
-    email: Email;
-    password: Password;
-}
-
-export interface SignOutRequest {
-    refresh: Token;
+    email: string;
+    password: string;
 }
 
 export interface ForgotPasswordRequest {
-    email: Email;
-}
-
-export interface AuthenticationResponse {
-    data: AuthToken;
+    email: string;
 }
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        signIn: builder.mutation<AuthenticationResponse, SignInRequest>({
+        signIn: builder.mutation<AuthToken, SignInRequest>({
             query: (credentials) => ({
                 url: 'auth/signin/',
                 method: 'POST',
                 body: credentials,
             }),
+            transformResponse: (response: ApiResponse<AuthToken>) => response.data,
         }),
-        signUp: builder.mutation<AuthenticationResponse, SignUpRequest>({
+        signUp: builder.mutation<AuthToken, SignUpRequest>({
             query: (credentials) => ({
                 url: 'auth/signup/',
                 method: 'POST',
                 body: credentials,
             }),
+            transformResponse: (response: ApiResponse<AuthToken>) => response.data,
         }),
         signOut: builder.mutation<void, void>({
             query: () => ({
@@ -53,7 +50,20 @@ export const authApi = baseApi.injectEndpoints({
                 body: email,
             }),
         }),
+        getAuthUser: builder.query<User, void>({
+            query: () => ({
+                url: 'user/',
+                method: 'GET',
+            }),
+            transformResponse: (response: ApiResponse<User>) => response.data,
+        }),
     }),
 });
 
-export const {useSignInMutation, useSignUpMutation, useSignOutMutation, useForgotPasswordMutation} = authApi;
+export const {
+    useSignInMutation,
+    useSignUpMutation,
+    useSignOutMutation,
+    useForgotPasswordMutation,
+    useLazyGetAuthUserQuery,
+} = authApi;

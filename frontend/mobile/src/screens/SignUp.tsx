@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, NameInput} from '@components';
-import {Email, Name, Password} from '@src/types';
 import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from '@hooks';
@@ -15,9 +14,9 @@ export function SignUp() {
     const [signUp, {data, error, isLoading}] = useSignUpMutation();
     const dispatch = useDispatch();
     const navigation = useNavigation<SignUpNavProps>();
-    const [name, setName] = useState<Name>('');
-    const [email, setEmail] = useState<Email>('');
-    const [password, setPassword] = useState<Password>('');
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
     React.useEffect(() => {
         if (data !== undefined) {

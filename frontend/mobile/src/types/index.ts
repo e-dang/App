@@ -1,20 +1,19 @@
 export * from './utils';
 
-export type Email = string;
-export type Name = string;
-export type Password = string;
-export type Token = string;
-export type URL = string;
-export type UUID = string;
-
 export interface AuthToken {
-    accessToken: Token;
-    refreshToken: Token;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export interface User {
-    url: URL;
-    uuid: UUID;
-    name: Name;
-    email: Email;
+    id: string;
+    name: string;
+    email: string;
+}
+
+export interface Workout {
+    id: string;
+    name: string;
+    createdAt: string;
+    lastUpdatedAt: string;
 }

@@ -3,18 +3,9 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "android": "cd frontend/mobile && yarn android",
-        "ios": "cd frontend/mobile && yarn ios",
-        "start": "cd frontend/mobile && yarn start",
-        "test-mobile": "cd frontend/mobile && yarn test",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "checks": "pre-commit run --all-files",
-        "build-dev": "cd backend/tracker && docker build -f docker/Dockerfile -t ericdang/tracker:dev --build-arg BUILD_ENVIRONMENT=dev .",
-        "build-prod": "cd backend/tracker && docker build -f docker/Dockerfile -t ericdang/tracker:prod --build-arg BUILD_ENVIRONMENT=production .",
-        "dev": "telepresence intercept tracker --port 5000 --docker-run -- -v $(pwd)/backend/tracker:/home/django/app -it --rm ericdang/tracker:dev",
-        "test": "docker run $(scripts/env.sh) -e DJANGO_SETTINGS_MODULE=config.settings.test -v $(pwd)/backend/tracker:/home/django/app -t --rm ${NETWORK} ericdang/tracker:dev pytest",
         "kube-config": "./scripts/kube-config.sh",
-        "backup-certs": "kubectl get --all-namespaces -oyaml issuer,clusterissuer,cert > cert-backup.yaml && kubectl get -oyaml secret letsencrypt > cert-secret-backup.yaml",
+        "backup-certs": "kubectl get --all-namespaces -oyaml issuer,clusterissuer,cert > cert-backup.yaml && kubectl get -oyaml secret letsencrypt-private-key > cert-secret-backup.yaml",
         "restore-certs": "kubectl apply -f <(awk '!/^ *(resourceVersion|uid): [^ ]+$/' cert-secret-backup.yaml) && kubectl apply -f <(awk '!/^ *(resourceVersion|uid): [^ ]+$/' cert-backup.yaml)"
     }
 }

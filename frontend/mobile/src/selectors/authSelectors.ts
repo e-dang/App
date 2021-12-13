@@ -1,12 +1,15 @@
 import {createSelector} from 'reselect';
-import {RootState} from '@src/store';
-import {AuthState} from '@reducers';
+import {RootState, AuthState} from '@store';
 import {AuthToken} from '@src/types';
 import {Buffer} from 'buffer';
 
 export const selectAuthState = (state: RootState) => state.auth;
 
 export const selectAuthToken = createSelector(selectAuthState, (authState: AuthState) => authState.token);
+
+export const selectAuthUser = createSelector(selectAuthState, (authState: AuthState) => authState.user);
+
+export const selectAuthUserId = createSelector(selectAuthUser, (user: AuthState['user']) => user?.id);
 
 export const isAuthTokenValid = createSelector(selectAuthToken, (token: AuthToken | null) => {
     if (token === null) {

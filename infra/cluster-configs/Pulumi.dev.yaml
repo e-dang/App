@@ -1,5 +1,5 @@
 config:
   azure-native:location: WestUS
-  cluster-configs:branch: main
+  cluster-configs:branch: workout-service
   cluster-configs:fluxVersion: 0.18.3
   cluster-configs:githubOwner: e-dang
