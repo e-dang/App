@@ -10,13 +10,11 @@ export class User extends BaseEntity {
     workouts: Workout[];
 
     async addWorkout(entityLike: Omit<DeepPartial<Workout>, 'owner'>) {
-        return (await this.addWorkouts([entityLike]))[0];
+        return await Workout.create({owner: this, ...entityLike}).save();
     }
 
     async addWorkouts(entityLike: Omit<DeepPartial<Workout>, 'owner'>[]) {
-        this.workouts = entityLike.map((data) => Workout.create({owner: this, ...data}));
-        await this.save();
-        return this.workouts;
+        return await Promise.all(entityLike.map((data) => Workout.create({owner: this, ...data}).save()));
     }
 
     async getSerializedWorkouts() {

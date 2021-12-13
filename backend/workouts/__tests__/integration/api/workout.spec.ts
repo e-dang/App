@@ -99,11 +99,14 @@ describe('user workout apis', () => {
     describe('GET /workouts/:userId', () => {
         test('returns only the workouts owned by the requesting user and 200 status code', async () => {
             await user.addWorkouts([{name: 'test1'}, {name: 'test2'}]);
+            await user.addWorkout({name: 'test3'});
             await user.reload();
             const res = await supertest(app).get(url).set('Authorization', `Token ${accessToken}`).send();
 
             expect(res.statusCode).toBe(200);
             expect(res.body.data).toEqual(await user.getSerializedWorkouts());
+            const names = res.body.data.map((workout) => workout.name).sort();
+            expect(names).toEqual(['test1', 'test2', 'test3']);
         });
 
         // test('does not return deleted workouts for requesting user', async () => {
