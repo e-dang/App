@@ -5,9 +5,10 @@ import {
     fetchBaseQuery,
     FetchBaseQueryError,
 } from '@reduxjs/toolkit/dist/query/react';
-import {selectAuthToken} from '@selectors';
+import {selectAuthToken, selectAuthUserId} from '@selectors';
 import {refreshToken, signOut} from '@store/authSlice'; // avoid circular import
 import {RootState} from '@store';
+import {BaseQueryApi} from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 
 export const BASE_URL = 'https://dev.erickdang.com/api/v1/';
 
@@ -23,11 +24,28 @@ const baseQuery = fetchBaseQuery({
     },
 });
 
+const modifyUrlWithUserId = (args: string | FetchArgs, api: BaseQueryApi) => {
+    if (typeof args === 'string') {
+        return args;
+    }
+
+    if (args.url.includes(':userId')) {
+        const userId = selectAuthUserId(api.getState() as RootState);
+        if (userId !== undefined) {
+            args.url = args.url.replace(':userId', userId);
+            return args;
+        }
+    }
+
+    return args;
+};
+
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
     args,
     api,
     extraOptions,
 ) => {
+    args = modifyUrlWithUserId(args, api);
     let result = await baseQuery(args, api, extraOptions);
 
     if (result.error && result.error.status === 401) {
