@@ -1,8 +1,6 @@
 import React, {FC} from 'react';
 import {useListWorkoutsQuery} from '@api/workoutApi';
 import {Header, Screen} from '@components';
-import {useSelector} from '@hooks';
-import {selectAuthUserId} from '@selectors';
 import {Box, Button, Center, FlatList, Heading, Spinner, Text} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {WorkoutStackParamList} from './WorkoutStack';
@@ -39,8 +37,7 @@ export const WorkoutScreen: FC = ({children}) => {
 };
 
 export function ListWorkoutsScreen() {
-    const authUserId = useSelector(selectAuthUserId) as string;
-    const {data = {data: []}, isLoading} = useListWorkoutsQuery(authUserId);
+    const {data = {data: []}, isLoading} = useListWorkoutsQuery();
 
     if (isLoading) {
         return (
