@@ -23,4 +23,4 @@ spec:
         images:
           - name: ericdang/workouts
             newName: ericdang/workouts
-            newTag: dev-e4133f8d-1638671017 # {"$imagepolicy": "flux-system:workouts:tag"}
+            newTag: dev-e4133f8d-1638671018 # {"$imagepolicy": "flux-system:workouts:tag"}
