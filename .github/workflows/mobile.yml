@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-whitebox:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
