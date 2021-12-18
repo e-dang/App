@@ -6,9 +6,10 @@ import {
     FetchBaseQueryError,
 } from '@reduxjs/toolkit/dist/query/react';
 import {selectAuthToken, selectAuthUserId} from '@selectors';
-import {refreshToken, signOut} from '@store/authSlice'; // avoid circular import
+import {setCredentials, signOut} from '@store/authSlice'; // avoid circular import
 import {RootState} from '@store';
 import {BaseQueryApi} from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import {AuthToken} from '@src/types';
 
 export const BASE_URL = 'https://dev.erickdang.com/api/v1/';
 
@@ -49,10 +50,18 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     let result = await baseQuery(args, api, extraOptions);
 
     if (result.error && result.error.status === 401) {
-        const refreshResult = await baseQuery('token/refresh/', api, extraOptions);
+        const refreshResult = await baseQuery(
+            {
+                url: 'auth/token/refresh/',
+                method: 'POST',
+                responseHandler: async (response: Response) => (await response.json()).data,
+            },
+            api,
+            extraOptions,
+        );
 
         if (refreshResult.data) {
-            api.dispatch(refreshToken(refreshResult.data as string));
+            api.dispatch(setCredentials(refreshResult.data as AuthToken));
             result = await baseQuery(args, api, extraOptions);
         } else {
             api.dispatch(signOut());
