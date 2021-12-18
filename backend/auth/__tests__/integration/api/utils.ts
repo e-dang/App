@@ -36,7 +36,7 @@ const shapeFlags = (flags: any) =>
 export const extractCookies = (headers: any): Cookies => {
     const cookies = headers['set-cookie']; // Cookie[]
 
-    return cookies.reduce((shapedCookies: any, cookieString: any) => {
+    return cookies.reduce((shapedCookies: Cookies, cookieString: string) => {
         const [rawCookie, ...flags] = cookieString.split('; ');
         const [cookieName, value] = rawCookie.split('=');
         return {...shapedCookies, [cookieName]: {value, flags: shapeFlags(flags)}};
