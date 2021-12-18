@@ -41,13 +41,13 @@ export class User extends BaseEntity {
     }
 
     static async createUser(name: string, email: string, password: string) {
-        const user = new User();
-        user.name = name;
-        user.email = email;
-        user.password = hashPassword(password);
-        user.lastLogin = new Date();
-        user.isActive = true;
-        return await user.save();
+        return await User.create({
+            name,
+            email,
+            password: hashPassword(password),
+            lastLogin: new Date(),
+            isActive: true,
+        }).save();
     }
 
     serialize() {

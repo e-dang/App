@@ -23,7 +23,6 @@ import {
     validateChangePasswordRequest,
     validatePasswordResetConfirmRequest,
     validatePasswordResetRequest,
-    validateRefreshTokenRequest,
     validateSignInRequest,
     validateSignUpRequest,
 } from '@schemas';
@@ -40,7 +39,8 @@ authRouter.post('/signin', validateSignInRequest, async (req: Request, res: Resp
     if (passwordIsValid(req.body.password, user.password)) {
         user.lastLogin = new Date();
         await user.save();
-        return res.status(200).json(await createJwt(user));
+        const {refreshToken, accessToken} = await createJwt(user);
+        return res.status(200).cookie('rt', refreshToken, {httpOnly: true}).json({data: {accessToken}});
     }
 
     return next(new SignInError());
@@ -64,7 +64,8 @@ authRouter.post('/signup', validateSignUpRequest, async (req: Request, res: Resp
         return next(new InternalError(err.message));
     }
 
-    return res.status(201).json(await createJwt(user));
+    const {refreshToken, accessToken} = await createJwt(user);
+    return res.status(201).cookie('rt', refreshToken, {httpOnly: true}).json({data: {accessToken}});
 });
 
 authRouter.post(
@@ -116,28 +117,25 @@ authRouter.post(
     },
 );
 
-authRouter.post(
-    '/token/refresh',
-    validateRefreshTokenRequest,
-    async (req: Request, res: Response, next: NextFunction) => {
-        let payload: RefreshTokenPayload;
-        try {
-            payload = await verifyRefreshToken(req.body.refreshToken);
-        } catch (err) {
-            return next(new InvalidTokenError('body', 'refreshToken'));
-        }
+authRouter.post('/token/refresh', async (req: Request, res: Response, next: NextFunction) => {
+    let payload: RefreshTokenPayload;
+    try {
+        payload = await verifyRefreshToken(req.cookies.rt);
+    } catch (err) {
+        return next(new InvalidTokenError('headers', 'refreshToken'));
+    }
 
-        const user = await User.findOne({id: payload.userId});
+    const user = await User.findOne({id: payload.userId});
 
-        if (!user) {
-            return next(new UserNotFoundError(payload.userId));
-        } else if (user.tokenVersion != payload.tokenVersion) {
-            return next(new InvalidTokenError('body', 'refreshToken'));
-        }
+    if (!user) {
+        return next(new UserNotFoundError(payload.userId));
+    } else if (user.tokenVersion != payload.tokenVersion) {
+        return next(new InvalidTokenError('headers', 'refreshToken'));
+    }
 
-        return res.status(200).json(await createJwt(user));
-    },
-);
+    const {refreshToken, accessToken} = await createJwt(user);
+    return res.status(200).cookie('rt', refreshToken, {httpOnly: true}).json({data: {accessToken}});
+});
 
 export const authApis: ApiGroup = {
     pathPrefix: 'auth',

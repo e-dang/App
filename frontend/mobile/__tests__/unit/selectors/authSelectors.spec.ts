@@ -41,8 +41,6 @@ describe('auth selector tests', () => {
         rootState.auth.token = {
             accessToken:
                 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI5NTc3MzM4LCJqdGkiOiIzMmZmZjliODFlZTA0YjY4ODk0MmIwZjQ2NjY5ZjBmMCIsInVzZXJfaWQiOjd9.-gGrjt78TsZW4aT0-_YCOYxkDTvykeuA4o1OIyfgnz8',
-            refreshToken:
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyOTY2MzQzOCwianRpIjoiNzZiOGNkZjNjNzM4NGJlOGFmY2QzM2M3MmMwOWYzM2QiLCJ1c2VyX2lkIjo3fQ.9QZ9-B3QzqAtfttbgWVrtP9rxxvhhl-bpHoi6ITDF-w',
         };
 
         const retVal = isAuthTokenValid(rootState);
@@ -50,8 +48,8 @@ describe('auth selector tests', () => {
         expect(retVal).toBe(true);
     });
 
-    test('isAuthTokenValid returns false if authToken is null', async () => {
-        rootState.auth.token = null;
+    test('isAuthTokenValid returns false if authToken is undefined', async () => {
+        rootState.auth.token = undefined;
 
         const retVal = isAuthTokenValid(rootState);
 
@@ -62,8 +60,6 @@ describe('auth selector tests', () => {
         rootState.auth.token = {
             accessToken:
                 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI5NTc3MzM4LCJqdGkiOiIzMmZmZjliODFlZTA0YjY4ODk0MmIwZjQ2NjY5ZjBmMCIsInVzZXJfaWQiOjd9.-gGrjt78TsZW4aT0-_YCOYxkDTvykeuA4o1OIyfgnz8',
-            refreshToken:
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyOTY2MzQzOCwianRpIjoiNzZiOGNkZjNjNzM4NGJlOGFmY2QzM2M3MmMwOWYzM2QiLCJ1c2VyX2lkIjo3fQ.9QZ9-B3QzqAtfttbgWVrtP9rxxvhhl-bpHoi6ITDF-w',
         };
 
         const retVal = isAuthTokenValid(rootState);

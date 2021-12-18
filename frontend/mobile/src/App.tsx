@@ -44,7 +44,7 @@ export const App = () => {
     }, []);
 
     React.useEffect(() => {
-        if (token !== null) {
+        if (token !== undefined) {
             getAuthUser();
         }
     }, [token, getAuthUser]);
@@ -55,7 +55,7 @@ export const App = () => {
         }
     }, [dispatch, data]);
 
-    return token !== null ? (
+    return token !== undefined ? (
         <Tab.Navigator initialRouteName="home" screenOptions={{headerShown: false}}>
             <Tab.Screen
                 name="workouts"

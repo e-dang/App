@@ -3,12 +3,10 @@ import {AuthToken, User} from '@src/types';
 
 export interface AuthState {
     user?: User;
-    token: AuthToken | null;
+    token?: AuthToken;
 }
 
-const initialState: AuthState = {
-    token: null,
-};
+const initialState: AuthState = {};
 
 const authSlice = createSlice({
     name: 'auth',
@@ -20,16 +18,11 @@ const authSlice = createSlice({
         setAuthUser: (state, action: PayloadAction<User>) => {
             state.user = action.payload;
         },
-        refreshToken: (state, action: PayloadAction<string>) => {
-            if (state.token !== null) {
-                state.token.accessToken = action.payload;
-            }
-        },
         signOut: (_) => {
             return initialState;
         },
     },
 });
 
-export const {setCredentials, setAuthUser, refreshToken, signOut} = authSlice.actions;
+export const {setCredentials, setAuthUser, signOut} = authSlice.actions;
 export const authReducer = authSlice.reducer;

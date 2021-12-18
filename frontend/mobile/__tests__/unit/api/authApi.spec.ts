@@ -16,7 +16,6 @@ describe('auth endpoints', () => {
         response = {
             data: {
                 accessToken: 'test-access-token',
-                refreshToken: 'test-refresh-token',
             },
         };
         mockError = new Error('Internal Server Error');

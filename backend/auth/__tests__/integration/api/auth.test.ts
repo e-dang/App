@@ -7,7 +7,8 @@ import {createPasswordResetToken, dateToSeconds, passwordIsValid} from '@auth';
 import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
 import nodemailer from 'nodemailer';
 import {randomUUID} from 'crypto';
-import {mocked} from 'ts-jest/utils';
+import {mocked} from 'jest-mock';
+import {createUser, extractCookies} from './utils';
 
 jest.mock('nodemailer', () => {
     return {
@@ -20,7 +21,7 @@ jest.mock('nodemailer', () => {
 const mockedNodeMailer = mocked(nodemailer, true);
 
 /**
- * Auth APIs
+ * Test Groups
  *
  * @group integration
  * @group auth
@@ -79,20 +80,27 @@ describe('auth apis', () => {
             expect(user.name).toBe(name);
         });
 
-        test('returns a refreshToken with userId in payload', async () => {
+        test('returns a refreshToken in httpOnly header', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.data.refreshToken);
+            const cookies = extractCookies(res.headers);
+            expect(cookies.rt.flags.HttpOnly).toBe(true);
+        });
+
+        test('returns a refreshToken in header with userId in payload', async () => {
+            const res = await supertest(app).post(url).send(signUpData);
+
+            const payload: any = decode(extractCookies(res.headers).rt.value);
             expect(payload.userId).not.toBeUndefined();
             const user = await User.findOne({id: payload.userId});
             expect(user.email).toBe(email);
             expect(user.name).toBe(name);
         });
 
-        test('returns a refreshToken with tokenVersion in payload', async () => {
+        test('returns a refreshToken in header with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send(signUpData);
 
-            const payload: any = decode(res.body.data.refreshToken);
+            const payload: any = decode(extractCookies(res.headers).rt.value);
             expect(payload.tokenVersion).not.toBeUndefined();
             const user = await User.findOne({email});
             expect(user.tokenVersion).toBe(payload.tokenVersion);
@@ -193,18 +201,25 @@ describe('auth apis', () => {
             expect(user.id).toBe(payload.userId);
         });
 
-        test('returns a refreshToken with userId in payload', async () => {
+        test('returns a refreshToken in httpOnly header', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.data.refreshToken);
+            const cookies = extractCookies(res.headers);
+            expect(cookies.rt.flags.HttpOnly).toBe(true);
+        });
+
+        test('returns a refreshToken in header with userId in payload', async () => {
+            const res = await supertest(app).post(url).send(signInData);
+
+            const payload: any = decode(extractCookies(res.headers).rt.value);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
 
-        test('returns a refreshToken with tokenVersion in payload', async () => {
+        test('returns a refreshToken in header with tokenVersion in payload', async () => {
             const res = await supertest(app).post(url).send(signInData);
 
-            const payload: any = decode(res.body.data.refreshToken);
+            const payload: any = decode(extractCookies(res.headers).rt.value);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
@@ -265,9 +280,7 @@ describe('auth apis', () => {
         let refreshToken: string;
 
         beforeEach(async () => {
-            const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            accessToken = res.body.data.accessToken;
-            refreshToken = res.body.data.refreshToken;
+            ({accessToken, refreshToken} = await createUser(app, {email, name, password}));
         });
 
         test('returns 200 status code on success', async () => {
@@ -307,82 +320,107 @@ describe('auth apis', () => {
         let user: User;
 
         beforeEach(async () => {
-            const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            user = await User.findOne({email});
-            refreshToken = res.body.data.refreshToken;
+            ({user, refreshToken} = await createUser(app, {email, name, password}));
         });
 
         test('returns 200 status code when successful', async () => {
-            const res = await supertest(app).post(url).send({refreshToken});
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
 
             expect(res.statusCode).toBe(200);
         });
 
         test('returns an accessToken with userId in payload', async () => {
-            const res = await supertest(app).post(url).send({refreshToken});
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
 
             const payload: any = decode(res.body.data.accessToken);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
 
-        test('returns a refreshToken with userId in payload', async () => {
-            const res = await supertest(app).post(url).send({refreshToken});
+        test('returns a refreshToken in httpOnly header', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
 
-            const payload: any = decode(res.body.data.refreshToken);
+            const cookies = extractCookies(res.headers);
+            expect(cookies.rt.flags.HttpOnly).toBe(true);
+        });
+
+        test('returns a refreshToken in header with userId in payload', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
+
+            const payload: any = decode(extractCookies(res.headers).rt.value);
             expect(payload.userId).not.toBeUndefined();
             expect(user.id).toBe(payload.userId);
         });
 
-        test('returns a refreshToken with tokenVersion in payload', async () => {
-            const res = await supertest(app).post(url).send({refreshToken});
+        test('returns a refreshToken in header with tokenVersion in payload', async () => {
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
 
-            const payload: any = decode(res.body.data.refreshToken);
+            const payload: any = decode(extractCookies(res.headers).rt.value);
             expect(payload.tokenVersion).not.toBeUndefined();
             expect(user.tokenVersion).toBe(payload.tokenVersion);
         });
 
-        test('returns 400 status code when refresh token is not included in body', async () => {
+        test('returns 400 status code when refresh token is not included in cookies', async () => {
             const res = await supertest(app).post(url).send();
 
             expect(res.statusCode).toBe(400);
-            expect(res.body.errors[0].param).toEqual('refreshToken');
-            expect(res.body.errors[0].msg).toEqual('This field is required.');
+            expect(res.body).toEqual(new InvalidTokenError('headers', 'refreshToken').json);
         });
 
         test('returns 400 status code when refresh token is malformed jwt', async () => {
-            const res = await supertest(app).post(url).send({refreshToken: 'not a jwt'});
+            const res = await supertest(app).post(url).set('Cookie', ['rt=not a jwt']).send();
 
             expect(res.statusCode).toBe(400);
-            expect(res.body.errors[0].param).toEqual('refreshToken');
-            expect(res.body.errors[0].msg).toEqual('Malformed token.');
+            expect(res.body).toEqual(new InvalidTokenError('headers', 'refreshToken').json);
         });
 
         test('returns 400 status code when refresh token signature is invalid', async () => {
             const res = await supertest(app)
                 .post(url)
-                .send({refreshToken: refreshToken + 'invalidate'});
+                .set('Cookie', [`rt=${refreshToken} + invalidate`])
+                .send();
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidTokenError('body', 'refreshToken').json);
+            expect(res.body).toEqual(new InvalidTokenError('headers', 'refreshToken').json);
         });
 
         test('returns 400 status code when refresh token is expired', async () => {
             const payload: any = decode(refreshToken);
             MockDate.set(payload.exp * 1000 + 2000);
-            const res = await supertest(app).post(url).send({refreshToken});
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidTokenError('body', 'refreshToken').json);
+            expect(res.body).toEqual(new InvalidTokenError('headers', 'refreshToken').json);
         });
 
         test('returns 400 status code when refresh token does not have the same tokenVersion as the user', async () => {
             user.tokenVersion++;
             await user.save();
-            const res = await supertest(app).post(url).send({refreshToken});
+            const res = await supertest(app)
+                .post(url)
+                .set('Cookie', [`rt=${refreshToken}`])
+                .send();
 
             expect(res.statusCode).toBe(400);
-            expect(res.body).toEqual(new InvalidTokenError('body', 'refreshToken').json);
+            expect(res.body).toEqual(new InvalidTokenError('headers', 'refreshToken').json);
         });
     });
 
@@ -393,9 +431,7 @@ describe('auth apis', () => {
         let accessToken: string;
 
         beforeEach(async () => {
-            const res = await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            user = await User.findOne({email});
-            accessToken = res.body.data.accessToken;
+            ({user, accessToken} = await createUser(app, {email, name, password}));
         });
 
         test('returns 200 on success', async () => {
@@ -541,8 +577,7 @@ describe('auth apis', () => {
 
         beforeEach(async () => {
             mockSendMail.mockClear();
-            await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            user = await User.findOne({email});
+            ({user} = await createUser(app, {email, name, password}));
         });
 
         test('returns 200 status code on success', async () => {
@@ -596,8 +631,7 @@ describe('auth apis', () => {
         const confirmPassword = newPassword;
 
         beforeEach(async () => {
-            await supertest(app).post('/api/v1/auth/signup').send({email, name, password});
-            user = await User.findOne({email});
+            ({user} = await createUser(app, {name, email, password}));
             token = createPasswordResetToken(user);
         });
 

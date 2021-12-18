@@ -5,7 +5,6 @@ import supertest from 'supertest';
  * Private auth APIs
  *
  * @group integration
- * @group auth
  * @group private
  */
 

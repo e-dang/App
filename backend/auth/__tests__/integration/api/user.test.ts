@@ -7,10 +7,9 @@ import MockDate from 'mockdate';
 import {AuthenticationError} from '@errors';
 
 /**
- * User APIs
+ * Test Groups
  *
  * @group integration
- * @group auth
  * @group user
  */
 
@@ -23,9 +22,7 @@ describe('user apis', () => {
     let accessToken: string;
 
     beforeEach(async () => {
-        const retVal = await createUser(app, email, name, password);
-        user = retVal.user;
-        accessToken = retVal.accessToken;
+        ({user, accessToken} = await createUser(app, {email, name, password}));
     });
 
     afterEach(() => {

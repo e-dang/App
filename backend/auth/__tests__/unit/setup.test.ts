@@ -1,8 +1,8 @@
 /**
- * Auth APIs
+ * Test Groups
  *
  * @group unit
- * @group auth
+ * @group setup
  */
 
 describe('setup', () => {

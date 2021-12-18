@@ -61,16 +61,6 @@ export const validateChangePasswordRequest = createValidationSchemaMiddleware({
     },
 });
 
-export const validateRefreshTokenRequest = createValidationSchemaMiddleware({
-    refreshToken: {
-        in: ['body'],
-        ...notEmptyValidator,
-        isJWT: {
-            errorMessage: 'Malformed token.',
-        },
-    },
-});
-
 export const validatePasswordResetRequest = createValidationSchemaMiddleware({
     email: {
         in: ['body'],

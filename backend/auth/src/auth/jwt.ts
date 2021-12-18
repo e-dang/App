@@ -46,7 +46,7 @@ export async function createRefreshToken(user: User) {
 }
 
 export async function createJwt(user: User) {
-    return {data: {...(await createAccessToken(user)), ...(await createRefreshToken(user))}};
+    return {...(await createAccessToken(user)), ...(await createRefreshToken(user))};
 }
 
 export async function verifyRefreshToken(token: string) {
