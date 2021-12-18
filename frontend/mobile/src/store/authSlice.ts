@@ -3,12 +3,10 @@ import {AuthToken, User} from '@src/types';
 
 export interface AuthState {
     user?: User;
-    token: AuthToken | null;
+    token?: AuthToken;
 }
 
-const initialState: AuthState = {
-    token: null,
-};
+const initialState: AuthState = {};
 
 const authSlice = createSlice({
     name: 'auth',
