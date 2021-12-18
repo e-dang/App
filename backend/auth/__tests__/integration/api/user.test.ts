@@ -7,10 +7,9 @@ import MockDate from 'mockdate';
 import {AuthenticationError} from '@errors';
 
 /**
- * User APIs
+ * Test Groups
  *
  * @group integration
- * @group auth
  * @group user
  */
 
