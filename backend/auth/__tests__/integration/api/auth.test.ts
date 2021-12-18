@@ -7,7 +7,7 @@ import {createPasswordResetToken, dateToSeconds, passwordIsValid} from '@auth';
 import {AuthenticationError, InvalidTokenError, SignInError, UserWithEmailAlreadyExistsError} from '@errors';
 import nodemailer from 'nodemailer';
 import {randomUUID} from 'crypto';
-import {mocked} from 'ts-jest/utils';
+import {mocked} from 'jest-mock';
 import {createUser, extractCookies} from './utils';
 
 jest.mock('nodemailer', () => {
