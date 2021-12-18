@@ -5,3 +5,4 @@ export * from './Settings';
 export * from './SignIn';
 export * from './ForgotPassword';
 export * from './workouts';
+export * from './exercises';

@@ -3,7 +3,16 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
 import RNBootSplash from 'react-native-bootsplash';
-import {Home, Settings, SignUp, Welcome, SignIn, ForgotPassword, WorkoutStackScreen} from '@screens';
+import {
+    Home,
+    Settings,
+    SignUp,
+    Welcome,
+    SignIn,
+    ForgotPassword,
+    WorkoutStackScreen,
+    ExerciseStackScreen,
+} from '@screens';
 import {useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +22,7 @@ import {setAuthUser} from '@store';
 
 export type AppTabParamList = {
     workouts: undefined;
+    exercises: undefined;
     home: undefined;
     settings: undefined;
 };
@@ -64,6 +74,15 @@ export const App = () => {
                     tabBarTestID: 'navWorkouts',
                     tabBarLabel: t('workouts'),
                     tabBarIcon: ({color, size}) => <Icon name={'weight-lifter'} size={size} color={color} />,
+                }}
+            />
+            <Tab.Screen
+                name="exercises"
+                component={ExerciseStackScreen}
+                options={{
+                    tabBarTestID: 'navExercises',
+                    tabBarLabel: t('exercises'),
+                    tabBarIcon: ({color, size}) => <Icon name={'weight'} size={size} color={color} />,
                 }}
             />
             <Tab.Screen
