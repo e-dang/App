@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: workout-service
+    branch: main
   secretRef:
     name: flux-system
   url: ssh://git@github.com/e-dang/App.git
@@ -39,14 +39,14 @@ spec:
   git:
     checkout:
       ref:
-        branch: workout-service
+        branch: main
     commit:
       author:
         email: fluxcdbot@dne.com
         name: fluxcdbot
       messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
     push:
-      branch: workout-service
+      branch: main
   interval: 1m0s
   sourceRef:
     kind: GitRepository
