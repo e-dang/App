@@ -4,6 +4,7 @@ import {config} from '@config';
 import morgan from 'morgan';
 import cors from 'cors';
 import {errorHandler} from './middleware';
+import cookieParser from 'cookie-parser';
 
 function createApiPath(api: ApiGroup) {
     const path = `/api/${config.apiVersion}`;
@@ -19,6 +20,7 @@ export const app = express();
 // middleware
 app.use(express.json());
 app.use(cors({origin: config.allowedHosts}));
+app.use(cookieParser());
 if (config.env !== 'test' && config.env !== 'ci') {
     app.use(morgan('combined'));
 }
