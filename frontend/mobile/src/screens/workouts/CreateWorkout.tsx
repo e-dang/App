@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {BackButton, Header, HeaderButton, NameInput, Screen} from '@components';
-import {Box, Center, Heading, VStack} from 'native-base';
+import {BackButton, BasicButton, Header, HeaderButton, NameInput, Screen} from '@components';
+import {Box, Center, Heading, VStack, Icon as NBIcon, TextArea} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WorkoutStackParamList} from '.';
 import {useCreateWorkoutMutation} from '@api';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export type CreateWorkoutNavProps = StackNavigationProp<WorkoutStackParamList, 'createWorkout'>;
 
@@ -38,6 +39,14 @@ export function CreateWorkoutScreen() {
                 </Box>
                 <Center>
                     <NameInput onChangeText={(value) => setName(value)} value={name} />
+                </Center>
+                <Box>
+                    <TextArea testID="noteInput" onChangeText={() => null} placeholder={'Notes...'} />
+                </Box>
+                <Center>
+                    <BasicButton startIcon={<NBIcon as={Icon} name="plus" size={5} />} onPress={() => null}>
+                        Add Exercise
+                    </BasicButton>
                 </Center>
             </VStack>
         </Screen>
