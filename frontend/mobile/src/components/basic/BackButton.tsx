@@ -1,15 +1,17 @@
 import React, {FC} from 'react';
-import {Button, Icon as NBIcon, IButtonProps} from 'native-base';
+import {Icon as NBIcon, IButtonProps} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {HeaderButton} from '@components';
 
 export const BackButton: FC<IButtonProps> = ({children, ...props}) => {
     return (
-        <Button
+        <HeaderButton
             {...props}
-            startIcon={<NBIcon as={Icon} name="chevron-left" size={5} color="black" />}
+            startIcon={<NBIcon as={Icon} name="chevron-left" size={5} color="black" mr={-2} />}
             _text={{color: 'black'}}
-            variant="unstyled">
+            variant="unstyled"
+            px={0}>
             {children}
-        </Button>
+        </HeaderButton>
     );
 };
