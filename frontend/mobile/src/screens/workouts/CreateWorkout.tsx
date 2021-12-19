@@ -6,8 +6,9 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {WorkoutStackParamList} from '.';
 import {useCreateWorkoutMutation} from '@api';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {AppStackParamList} from '@screens/AppStack';
 
-export type CreateWorkoutNavProps = StackNavigationProp<WorkoutStackParamList, 'createWorkout'>;
+export type CreateWorkoutNavProps = StackNavigationProp<WorkoutStackParamList & AppStackParamList, 'createWorkout'>;
 
 export function CreateWorkoutScreen() {
     const navigation = useNavigation<CreateWorkoutNavProps>();
@@ -23,12 +24,16 @@ export function CreateWorkoutScreen() {
         navigation.navigate('listWorkouts');
     };
 
+    const handleAddExercises = () => {
+        navigation.push('workoutAddExercises');
+    };
+
     return (
         <Screen testID="createWorkoutScreen">
             <Header
                 leftContent={<BackButton onPress={handleBack}>Back</BackButton>}
                 rightContent={
-                    <HeaderButton testID="doneBtn" colorScheme="primary" variant="ghost" onPress={handleDone}>
+                    <HeaderButton testID="doneBtn" onPress={handleDone}>
                         Done
                     </HeaderButton>
                 }
@@ -44,7 +49,7 @@ export function CreateWorkoutScreen() {
                     <TextArea testID="noteInput" onChangeText={() => null} placeholder={'Notes...'} />
                 </Box>
                 <Center>
-                    <BasicButton startIcon={<NBIcon as={Icon} name="plus" size={5} />} onPress={() => null}>
+                    <BasicButton startIcon={<NBIcon as={Icon} name="plus" size={5} />} onPress={handleAddExercises}>
                         Add Exercise
                     </BasicButton>
                 </Center>
