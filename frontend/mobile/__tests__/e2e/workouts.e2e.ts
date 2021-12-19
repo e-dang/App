@@ -28,15 +28,22 @@ describe('create workout flow', () => {
         const createWorkoutScreen = element(by.id('createWorkoutScreen'));
         await expect(createWorkoutScreen).toBeVisible();
 
-        // the user then enters the name of the workout into the name input
+        // the user then enters the name and description of the workout
         const workoutName = 'My Test Workout';
         const workoutNameInput = element(by.id('nameInput'));
         await expect(workoutNameInput).toBeVisible();
         workoutNameInput.typeText(workoutName);
         await expect(workoutNameInput).toHaveText(workoutName);
 
+        const workoutNotes =
+            'This is a test note of a workout that is being used in a test. This note is supposed to be long in order to test that the input can handle a long text input.';
+        const workoutNotesInput = element(by.id('noteInput'));
+        await expect(workoutNotesInput).toBeVisible();
+        workoutNotesInput.typeText(workoutNotes);
+        await expect(workoutNotesInput).toHaveText(workoutNotes);
+
         // then the user clicks the add exercise button
-        const addExerciseBtn = element(by.id('addExerciseBtn'));
+        const addExerciseBtn = element(by.text('Add Exercise'));
         await expect(addExerciseBtn).toBeVisible();
         await addExerciseBtn.tap();
 
@@ -64,7 +71,7 @@ describe('create workout flow', () => {
         }
 
         // they save the workout and is taken back to the workout list screen where they see their new workout
-        const doneBtn = element(by.id('doneBtn'));
+        const doneBtn = element(by.text('Save'));
         await expect(doneBtn).toBeVisible();
         await doneBtn.tap();
 
