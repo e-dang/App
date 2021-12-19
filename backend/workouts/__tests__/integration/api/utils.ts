@@ -1,4 +1,6 @@
+import {User} from '@entities';
 import {AccessTokenPayload} from '@src/middleware';
+import {randomUUID} from 'crypto';
 import * as jose from 'jose';
 
 export async function createToken(payload: AccessTokenPayload) {
@@ -9,4 +11,18 @@ export async function createToken(payload: AccessTokenPayload) {
         .setAudience('dev.erickdang.com')
         .setExpirationTime('5m')
         .sign(await jose.importPKCS8(process.env.accessTokenPrivateKey, 'EdDSA'));
+}
+
+export async function createUserAndToken(): Promise<[User, string]> {
+    const userId = randomUUID();
+    const accessToken = await createToken({userId, roles: ['user']});
+    const user = await User.create({id: userId}).save();
+    return [user, accessToken];
+}
+
+export async function createAdminUserAndToken(): Promise<[User, string]> {
+    const userId = randomUUID();
+    const accessToken = await createToken({userId, roles: ['admin']});
+    const user = await User.create({id: userId}).save();
+    return [user, accessToken];
 }
