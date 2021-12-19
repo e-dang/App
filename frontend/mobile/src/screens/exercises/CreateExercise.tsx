@@ -32,7 +32,7 @@ export function CreateExerciseScreen() {
                     </Button>
                 }
             />
-            <Screen>
+            <Screen testID="createExerciseScreen">
                 <Center>
                     <NameInput
                         onChangeText={(value) => setExerciseForm({...exerciseForm, name: value})}
