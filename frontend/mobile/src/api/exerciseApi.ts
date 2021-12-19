@@ -12,7 +12,7 @@ export const exerciseApi = taggedBaseApi.injectEndpoints({
     endpoints: (builder) => ({
         listExercises: builder.query<ApiResponse<Exercise[]>, void>({
             query: () => ({
-                url: ':userId/workouts/',
+                url: ':userId/exercises/',
                 method: 'GET',
             }),
             providesTags: (result) =>
@@ -21,10 +21,10 @@ export const exerciseApi = taggedBaseApi.injectEndpoints({
                     : [{type: 'Exercise', id: 'LIST'}],
         }),
         createExercise: builder.mutation<Exercise, CreateExerciseRequest>({
-            query: (workout) => ({
-                url: ':userId/workouts/',
+            query: (exercise) => ({
+                url: ':userId/exercises/',
                 method: 'POST',
-                body: workout,
+                body: exercise,
             }),
             transformResponse: (response: ApiResponse<Exercise>) => response.data,
             invalidatesTags: [{type: 'Exercise', id: 'LIST'}],
