@@ -1,7 +1,7 @@
 process.env.NODE_ENV = process.env.CI ? 'ci' : 'test';
 
 import {config} from '@config';
-import {User, Workout} from '@entities';
+import {entities} from '@entities';
 import {Connection, createConnection, getConnection} from 'typeorm';
 import {TransactionalTestContext} from 'typeorm-transactional-tests';
 
@@ -18,7 +18,7 @@ beforeAll(async () => {
         database: config.dbName,
         logging: false,
         synchronize: true,
-        entities: [User, Workout],
+        entities,
         ssl: config.env == 'ci' ? false : true,
         extra:
             config.env == 'ci'
