@@ -229,7 +229,7 @@ describe('user workout apis', () => {
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
             const [_, otherAccessToken] = await createUserAndToken();
-            const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
             expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
