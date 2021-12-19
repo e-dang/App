@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
-import {Header, Screen} from '@components';
-import {Button, Center, Heading, Stack} from 'native-base';
+import {Screen} from '@components';
+import {Button, Center, Heading, VStack} from 'native-base';
 import {useDispatch, useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 import {signOut} from '@store';
@@ -19,26 +19,24 @@ function SettingsScreen() {
     };
 
     return (
-        <>
-            <Header />
-            <Screen testID="settingsScreen">
-                <Center flex={4}>
+        <Screen testID="settingsScreen">
+            <VStack space={2}>
+                <Center>
                     <Heading>Settings</Heading>
                 </Center>
-                <Center flex={3}>
-                    <Stack direction="column" space={2} width="90%">
-                        <Button
-                            testID="signOutBtn"
-                            variant="outline"
-                            colorScheme="secondary"
-                            borderRadius={100}
-                            onPress={handleSignOut}>
-                            Sign Out
-                        </Button>
-                    </Stack>
+                <Center>
+                    <Button
+                        testID="signOutBtn"
+                        variant="outline"
+                        colorScheme="secondary"
+                        borderRadius={100}
+                        width="90%"
+                        onPress={handleSignOut}>
+                        Sign Out
+                    </Button>
                 </Center>
-            </Screen>
-        </>
+            </VStack>
+        </Screen>
     );
 }
 

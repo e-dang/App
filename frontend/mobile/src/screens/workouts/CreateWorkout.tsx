@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {BackButton, Header, NameInput, Screen} from '@components';
-import {Button, Center} from 'native-base';
+import {BackButton, Header, HeaderButton, NameInput, Screen} from '@components';
+import {Box, Center, Heading, VStack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WorkoutStackParamList} from '.';
@@ -23,24 +23,23 @@ export function CreateWorkoutScreen() {
     };
 
     return (
-        <>
+        <Screen testID="createWorkoutScreen">
             <Header
-                leftContent={
-                    <BackButton testID="backBtn" onPress={handleBack}>
-                        Back
-                    </BackButton>
-                }
+                leftContent={<BackButton onPress={handleBack}>Back</BackButton>}
                 rightContent={
-                    <Button testID="doneBtn" colorScheme="primary" variant="ghost" onPress={handleDone}>
+                    <HeaderButton testID="doneBtn" colorScheme="primary" variant="ghost" onPress={handleDone}>
                         Done
-                    </Button>
+                    </HeaderButton>
                 }
             />
-            <Screen testID="createWorkoutScreen">
+            <VStack space={2}>
+                <Box>
+                    <Heading>New Workout</Heading>
+                </Box>
                 <Center>
                     <NameInput onChangeText={(value) => setName(value)} value={name} />
                 </Center>
-            </Screen>
-        </>
+            </VStack>
+        </Screen>
     );
 }

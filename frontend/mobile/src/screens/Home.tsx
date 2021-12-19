@@ -1,8 +1,8 @@
 import React, {memo} from 'react';
 import {Platform} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {Header, Screen} from '@components';
-import {Button, Center, Stack, Text} from 'native-base';
+import {Screen} from '@components';
+import {Button, Center, Stack, Text, VStack} from 'native-base';
 
 function HomeScreen() {
     const {t} = useTranslation();
@@ -13,21 +13,20 @@ function HomeScreen() {
     });
 
     return (
-        <>
-            <Header />
-            <Screen testID="homeScreen">
-                <Center flex={4}>
+        <Screen testID="homeScreen">
+            <VStack space={2}>
+                <Center>
                     <Text>{t('welcome')}</Text>
                 </Center>
-                <Center flex={3}>
+                <Center>
                     <Stack direction="column" space={2} width="90%">
                         <Text>{t('instructions')}</Text>
                         <Text>{instructions}</Text>
                         <Button onPress={() => null}>{t('fetchUser')}</Button>
                     </Stack>
                 </Center>
-            </Screen>
-        </>
+            </VStack>
+        </Screen>
     );
 }
 

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Screen, LoadingModal, BackButton, Header, PasswordInput, EmailInput, NameInput} from '@components';
-import {Box, Button, Center, Divider, Heading, Stack, Text} from 'native-base';
+import {Box, Button, Center, Divider, Heading, Spacer, Stack, Text} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from '@hooks';
 import {setCredentials} from '@store';
@@ -37,37 +37,38 @@ export function SignUp() {
     };
 
     return (
-        <>
+        <Screen testID="emailSignUpScreen">
             <Header
                 leftContent={
-                    <BackButton testID="backBtn" alignSelf="flex-start" onPress={handleBack}>
+                    <BackButton alignSelf="flex-start" onPress={handleBack}>
                         Welcome
                     </BackButton>
                 }
             />
-            <Screen testID="emailSignUpScreen">
-                <LoadingModal isLoading={isLoading} />
-                <Center flex={4}>
+            <Spacer />
+            <Box justifyContent="flex-start" flex={4}>
+                <Center>
                     <Heading>Sign Up</Heading>
                 </Center>
-                <Center flex={3}>
-                    <Stack width="90%" space={2}>
-                        <NameInput error={error} onChangeText={(value) => setName(value)} value={name} />
-                        <EmailInput error={error} onChangeText={(value) => setEmail(value)} value={email} />
-                        <PasswordInput error={error} onChangeText={(value) => setPassword(value)} value={password} />
-                        <Button testID="signUpBtn" colorScheme="primary" borderRadius={100} onPress={handleSignUp}>
-                            Sign Up
+            </Box>
+            <Center flex={3}>
+                <Stack width="90%" space={2}>
+                    <NameInput error={error} onChangeText={(value) => setName(value)} value={name} />
+                    <EmailInput error={error} onChangeText={(value) => setEmail(value)} value={email} />
+                    <PasswordInput error={error} onChangeText={(value) => setPassword(value)} value={password} />
+                    <Button testID="signUpBtn" colorScheme="primary" borderRadius={100} onPress={handleSignUp}>
+                        Sign Up
+                    </Button>
+                    <Divider my={3} />
+                    <Box>
+                        <Text alignSelf="center">Already have an account?</Text>
+                        <Button testID="signInBtn" variant="ghost" onPress={handleSignIn}>
+                            Sign In
                         </Button>
-                        <Divider my={3} />
-                        <Box>
-                            <Text alignSelf="center">Already have an account?</Text>
-                            <Button testID="signInBtn" variant="ghost" onPress={handleSignIn}>
-                                Sign In
-                            </Button>
-                        </Box>
-                    </Stack>
-                </Center>
-            </Screen>
-        </>
+                    </Box>
+                </Stack>
+            </Center>
+            <LoadingModal isLoading={isLoading} />
+        </Screen>
     );
 }

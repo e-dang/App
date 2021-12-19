@@ -9,10 +9,9 @@ export interface HeaderProps {
 
 export const Header: FC<HeaderProps> = ({leftContent, rightContent, barStyle = 'dark-content'}) => {
     return (
-        <>
-            <Box safeAreaTop />
+        <Box>
             <StatusBar barStyle={barStyle} />
-            <HStack px={1} pb={3} justifyContent="space-between" alignItems="center">
+            <HStack justifyContent="space-between" alignItems="center">
                 <HStack space={4} alignItems="center">
                     {leftContent}
                 </HStack>
@@ -20,6 +19,6 @@ export const Header: FC<HeaderProps> = ({leftContent, rightContent, barStyle = '
                     {rightContent}
                 </HStack>
             </HStack>
-        </>
+        </Box>
     );
 };

@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
-import {Header, Screen} from '@components';
-import {Box, Button, Center, Heading, Spinner, Text} from 'native-base';
+import {Screen} from '@components';
+import {Box, Button, Center, Heading, Spinner, Text, VStack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ExerciseStackParamList} from '.';
@@ -17,13 +17,12 @@ const ExerciseScreen: FC = ({children}) => {
     };
 
     return (
-        <>
-            <Header />
-            <Screen testID="listExercisesScreen">
-                <Center flex={4} justifyContent="flex-start">
+        <Screen testID="listExercisesScreen">
+            <VStack space={2}>
+                <Center justifyContent="flex-start">
                     <Heading>Exercises</Heading>
                 </Center>
-                <Center flex={3}>{children}</Center>
+                <Center>{children}</Center>
                 <Button
                     testID="createExerciseBtn"
                     variant="solid"
@@ -32,8 +31,8 @@ const ExerciseScreen: FC = ({children}) => {
                     onPress={handleCreateExercise}>
                     Create Exercise
                 </Button>
-            </Screen>
-        </>
+            </VStack>
+        </Screen>
     );
 };
 

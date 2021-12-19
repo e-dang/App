@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {useListWorkoutsQuery} from '@api/workoutApi';
-import {Header, Screen} from '@components';
-import {Box, Button, Center, FlatList, Heading, Spinner, Text} from 'native-base';
+import {Screen} from '@components';
+import {Box, Button, Center, FlatList, Heading, Spinner, Text, VStack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {WorkoutStackParamList} from './WorkoutStack';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -16,13 +16,12 @@ export const WorkoutScreen: FC = ({children}) => {
     };
 
     return (
-        <>
-            <Header />
-            <Screen testID="listWorkoutsScreen">
-                <Center flex={4} justifyContent="flex-start">
+        <Screen testID="listWorkoutsScreen">
+            <VStack space={2}>
+                <Center justifyContent="flex-start">
                     <Heading>Workouts</Heading>
                 </Center>
-                <Center flex={3}>{children}</Center>
+                <Center>{children}</Center>
                 <Button
                     testID="createWorkoutBtn"
                     variant="solid"
@@ -31,8 +30,8 @@ export const WorkoutScreen: FC = ({children}) => {
                     onPress={handleCreateWorkout}>
                     Create Workout
                 </Button>
-            </Screen>
-        </>
+            </VStack>
+        </Screen>
     );
 };
 
