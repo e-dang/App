@@ -6,6 +6,7 @@ import {HeaderButton} from '@components';
 export const BackButton: FC<IButtonProps> = ({children, ...props}) => {
     return (
         <HeaderButton
+            testID="backBtn"
             {...props}
             startIcon={<NBIcon as={Icon} name="chevron-left" size={5} color="black" mr={-2} />}
             _text={{color: 'black'}}
