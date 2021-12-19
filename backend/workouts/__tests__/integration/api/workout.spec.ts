@@ -5,28 +5,14 @@ import {User, Workout} from '@entities';
 import MockDate from 'mockdate';
 import {decode} from 'jsonwebtoken';
 import {AuthenticationError, WorkoutNotFoundError} from '@errors';
-import {createToken} from './utils';
+import {createAdminUserAndToken, createUserAndToken} from './utils';
 
 /**
- * Workout APIs
+ * Test Groups
  *
  * @group integration
  * @group workout
  */
-
-async function createUserAndToken(): Promise<[User, string]> {
-    const userId = randomUUID();
-    const accessToken = await createToken({userId, roles: ['user']});
-    const user = await User.create({id: userId}).save();
-    return [user, accessToken];
-}
-
-async function createAdminUserAndToken(): Promise<[User, string]> {
-    const userId = randomUUID();
-    const accessToken = await createToken({userId, roles: ['admin']});
-    const user = await User.create({id: userId}).save();
-    return [user, accessToken];
-}
 
 describe('admin workout apis', () => {
     const url = '/api/v1/workouts/';
@@ -243,7 +229,7 @@ describe('user workout apis', () => {
 
         test('returns 403 status code if requester is not the owner of the workout', async () => {
             const [_, otherAccessToken] = await createUserAndToken();
-            const res = await supertest(app).get(url).set('Authorization', `Token ${otherAccessToken}`).send();
+            const res = await supertest(app).post(url).set('Authorization', `Token ${otherAccessToken}`).send();
 
             expect(res.statusCode).toBe(403);
             expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');

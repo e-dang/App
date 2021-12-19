@@ -16,3 +16,10 @@ export interface Workout {
     createdAt: string;
     lastUpdatedAt: string;
 }
+
+export interface Exercise {
+    id: string;
+    name: string;
+    createdAt: string;
+    lastUpdatedAt: string;
+}
