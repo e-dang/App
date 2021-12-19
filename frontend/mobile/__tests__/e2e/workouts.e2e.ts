@@ -36,7 +36,7 @@ describe('create workout flow', () => {
         await expect(workoutNameInput).toBeVisible();
         await expect(doneBtn).toBeVisible();
 
-        workoutNameInput.typeText('My Test Workout');
+        workoutNameInput.typeText(workoutName);
         await expect(workoutNameInput).toHaveText(workoutName);
 
         await doneBtn.tap();
