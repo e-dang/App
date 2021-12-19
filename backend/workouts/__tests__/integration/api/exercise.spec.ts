@@ -61,4 +61,68 @@ describe('user exercise apis', () => {
             expect(res.body).toEqual(new AuthenticationError().json);
         });
     });
+
+    describe('POST /:userId/exercises', () => {
+        let exerciseData: {
+            name: string;
+        };
+
+        beforeEach(() => {
+            exerciseData = {
+                name: 'My test exercise',
+            };
+        });
+
+        test('returns 201 status code and returns the new exercise for the requesting user on success', async () => {
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send(exerciseData);
+
+            expect(res.statusCode).toBe(201);
+            expect(user.getExercise({id: res.body.data.id})).not.toBeUndefined();
+        });
+
+        test('returns 400 status code when name field is missing from body', async () => {
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('name');
+            expect(res.body.errors[0].location).toEqual('body');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 400 status code when name field is blank', async () => {
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send({name: ''});
+
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors[0].param).toEqual('name');
+            expect(res.body.errors[0].location).toEqual('body');
+            expect(res.body.errors[0].msg).toEqual('This field is required.');
+        });
+
+        test('returns 401 status code if token is expired', async () => {
+            const payload: any = decode(accessToken);
+            MockDate.set(payload.exp * 1000 + 2000);
+            const res = await supertest(app).post(url).set('Authorization', `Token ${accessToken}`).send(exerciseData);
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+
+        test('returns 403 status code if requester is not the owner of the workout', async () => {
+            const [_, otherAccessToken] = await createUserAndToken();
+            const res = await supertest(app)
+                .post(url)
+                .set('Authorization', `Token ${otherAccessToken}`)
+                .send(exerciseData);
+
+            expect(res.statusCode).toBe(403);
+            expect(res.body.errors[0].msg).toEqual('You are not authorized to access this resource.');
+        });
+
+        test('returns 401 status code if no access token is provided', async () => {
+            const res = await supertest(app).post(url).send(exerciseData);
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toEqual(new AuthenticationError().json);
+        });
+    });
 });
