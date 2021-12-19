@@ -14,6 +14,8 @@ spec:
           paths:
             - path: /api/v1/[0-9a-f-]{36}/workouts
               pathType: Prefix
+            - path: /api/v1/[0-9a-f-]{36}/exercises
+              pathType: Prefix
       tls:
         - hosts:
             - dev.erickdang.com
