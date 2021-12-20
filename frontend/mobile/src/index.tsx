@@ -5,7 +5,6 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/lib/integration/react';
 import {App} from '@src/wrapper';
 import {persistor, store} from '@store';
-import {navigationRef} from '@utils/navigationService';
 import '@i18n';
 import {enableScreens} from 'react-native-screens';
 import {NativeBaseProvider} from 'native-base';
@@ -20,7 +19,7 @@ export default function Root() {
         <NativeBaseProvider>
             <Provider store={store}>
                 <PersistGate loading={<View />} persistor={persistor}>
-                    <NavigationContainer ref={navigationRef}>
+                    <NavigationContainer>
                         <App />
                     </NavigationContainer>
                 </PersistGate>
