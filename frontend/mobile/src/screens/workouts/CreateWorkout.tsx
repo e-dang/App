@@ -13,7 +13,7 @@ export type CreateWorkoutNavProps = StackNavigationProp<WorkoutStackParamList & 
 export function CreateWorkoutScreen() {
     const navigation = useNavigation<CreateWorkoutNavProps>();
     const [createWorkout] = useCreateWorkoutMutation();
-    const [workoutForm, setWorkoutForm] = useState<CreateWorkoutRequest>({name: ''});
+    const [workoutForm, setWorkoutForm] = useState<CreateWorkoutRequest>({name: '', notes: ''});
 
     const handleBack = () => {
         navigation.navigate('listWorkouts');
@@ -49,7 +49,12 @@ export function CreateWorkoutScreen() {
                     />
                 </Center>
                 <Box>
-                    <TextArea testID="noteInput" onChangeText={() => null} placeholder={'Notes...'} />
+                    <TextArea
+                        testID="noteInput"
+                        onChangeText={(value) => setWorkoutForm({...workoutForm, notes: value})}
+                        placeholder={'Notes...'}
+                        value={workoutForm.notes}
+                    />
                 </Box>
                 <Center>
                     <BasicButton startIcon={<NBIcon as={Icon} name="plus" size={5} />} onPress={handleAddExercises}>

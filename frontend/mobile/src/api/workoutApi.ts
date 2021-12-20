@@ -4,6 +4,7 @@ import {baseApi} from './baseApi';
 
 export interface CreateWorkoutRequest {
     name: string;
+    notes: string;
 }
 
 const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ['Workout']});
