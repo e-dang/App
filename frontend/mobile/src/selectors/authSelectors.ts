@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 import {RootState, AuthState} from '@store';
-import {Buffer} from 'buffer';
+import {decode} from '@utils';
 
 export const selectAuthState = (state: RootState) => state.auth;
 
@@ -15,8 +15,7 @@ export const isAuthTokenValid = createSelector(selectAuthToken, (token: AuthStat
         return false;
     }
 
-    const tokenParts = token.accessToken.split('.');
-    const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+    const payload = decode(token.accessToken);
     const currTime = new Date().getTime() / 1000; // convert to seconds
 
     // must have more than 1 second to be valid
