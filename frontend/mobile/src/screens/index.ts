@@ -6,3 +6,5 @@ export * from './SignIn';
 export * from './ForgotPassword';
 export * from './workouts';
 export * from './exercises';
+export * from './AppStack';
+export * from './HomeTabs';

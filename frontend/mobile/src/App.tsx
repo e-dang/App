@@ -1,13 +1,12 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import RNBootSplash from 'react-native-bootsplash';
-import {SignUp, Welcome, SignIn, ForgotPassword} from '@screens';
+import {SignUp, Welcome, SignIn, ForgotPassword, AppStackScreen} from '@screens';
 import {useSelector} from '@hooks';
 import {selectAuthToken} from '@selectors';
 import {useLazyGetAuthUserQuery} from '@api';
 import {useDispatch} from '@hooks';
 import {setAuthUser} from '@store';
-import {AppStackScreen} from '@screens/AppStack';
 
 export type AuthStackParamList = {
     welcome: undefined;
