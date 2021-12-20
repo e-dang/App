@@ -4,7 +4,7 @@ import {Box, Center, Heading, VStack, Icon as NBIcon, TextArea} from 'native-bas
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WorkoutStackParamList} from '.';
-import {useCreateWorkoutMutation} from '@api';
+import {CreateWorkoutRequest, useCreateWorkoutMutation} from '@api';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {AppStackParamList} from '@screens/AppStack';
 
@@ -13,14 +13,14 @@ export type CreateWorkoutNavProps = StackNavigationProp<WorkoutStackParamList & 
 export function CreateWorkoutScreen() {
     const navigation = useNavigation<CreateWorkoutNavProps>();
     const [createWorkout] = useCreateWorkoutMutation();
-    const [name, setName] = useState<string>('');
+    const [workoutForm, setWorkoutForm] = useState<CreateWorkoutRequest>({name: ''});
 
     const handleBack = () => {
         navigation.navigate('listWorkouts');
     };
 
     const handleDone = () => {
-        createWorkout({name});
+        createWorkout(workoutForm);
         navigation.navigate('listWorkouts');
     };
 
@@ -43,7 +43,10 @@ export function CreateWorkoutScreen() {
                     <Heading>New Workout</Heading>
                 </Box>
                 <Center>
-                    <NameInput onChangeText={(value) => setName(value)} value={name} />
+                    <NameInput
+                        onChangeText={(value) => setWorkoutForm({...workoutForm, name: value})}
+                        value={workoutForm.name}
+                    />
                 </Center>
                 <Box>
                     <TextArea testID="noteInput" onChangeText={() => null} placeholder={'Notes...'} />
