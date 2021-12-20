@@ -1,13 +1,18 @@
+import {Exercise} from '@src/types';
 import {device, element, by, expect} from 'detox';
-import {createUser, signIn} from './utils';
+import {createExercises, createUser, signIn} from './utils';
 
 describe('create workout flow', () => {
     let email: string;
     let password: string;
+    let accessToken: string;
+    let exercises: Partial<Exercise>[];
 
     beforeEach(async () => {
         await device.reloadReactNative();
-        ({email, password} = await createUser());
+        exercises = [{name: 'Barbell Bench Press'}, {name: 'Dumbbell Bench Press'}];
+        ({email, password, accessToken} = await createUser());
+        await createExercises(accessToken, exercises);
     });
 
     test('user can create a new workout', async () => {
@@ -48,25 +53,30 @@ describe('create workout flow', () => {
         await addExerciseBtn.tap();
 
         // a screen with a list of exercises to select from appear and the user selects multiple exercises
-        const exerciseListScreen = element(by.id('exerciseListScreen'));
-        await expect(exerciseListScreen).toBeVisible();
+        const addExerciseScreen = element(by.id('addExerciseScreen'));
+        await expect(addExerciseScreen).toBeVisible();
 
-        const exercises = ['Barbell Bench Press', 'Dumbbell Bench Press'];
-        for (let val of exercises) {
-            const exercise = element(by.text(val));
-            await expect(exercise).toBeVisible();
-            await exercise.tap();
+        for (let exercise of exercises) {
+            const exerciseEle = element(by.text(exercise.name as string));
+            await expect(exerciseEle).toBeVisible();
+            await exerciseEle.tap();
+        }
+
+        // both exercises are now highlighted with a check mark inidicating their selection
+        for (let exercise of exercises) {
+            const exerciseEle = element(by.label('selectedListItem').withDescendant(by.text(exercise.name as string)));
+            await expect(exerciseEle).toExist();
         }
 
         // they finish their selection and can now see the exercises on the create workout screen
         const finishAddExerciseBtn = element(by.text(`Add (${exercises.length})`));
         await expect(finishAddExerciseBtn).toBeVisible();
         await finishAddExerciseBtn.tap();
-        await expect(exerciseListScreen).not.toBeVisible();
+        await expect(addExerciseScreen).not.toBeVisible();
         await expect(createWorkoutScreen).toBeVisible();
 
-        for (let [idx, val] of exercises.entries()) {
-            const exerciseCard = element(by.id(`exerciseCard${idx}`).withDescendant(by.text(val)));
+        for (let exercise of exercises) {
+            const exerciseCard = element(by.label('exerciseCard').withDescendant(by.text(exercise.name as string)));
             await expect(exerciseCard).toBeVisible();
         }
 
