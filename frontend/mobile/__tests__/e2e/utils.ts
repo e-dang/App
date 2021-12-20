@@ -2,7 +2,10 @@ import {by, element} from 'detox';
 import {v4 as uuidv4} from 'uuid';
 import axios from 'axios';
 import {SignInRequest, SignUpRequest} from '@api';
+import {decode} from '@utils';
+import {Exercise} from '@src/types';
 
+const BASE_URL = 'https://dev.erickdang.com/api/v1';
 const MAILHOG_URL = 'https://mail.dev.erickdang.com/api/v2/search';
 
 export function generateEmail() {
@@ -16,9 +19,13 @@ export async function createUser(userData: Partial<SignUpRequest> = {}) {
         password: userData.password || 'Mytestpassword123!',
     };
 
-    await axios.post('https://dev.erickdang.com/api/v1/auth/signup', data);
+    const response = await axios.post(`${BASE_URL}/auth/signup`, data);
 
-    return data;
+    return {
+        ...data,
+        accessToken: response.data.data.accessToken,
+        refreshToken: extractCookies(response.headers).rt.value,
+    };
 }
 
 export async function signOut() {
@@ -42,3 +49,41 @@ export async function signIn({email, password}: SignInRequest) {
     element(by.id('passwordInput')).typeText(password);
     await element(by.id('signInBtn')).tap();
 }
+
+export async function createExercises(accessToken: string, exercises: Partial<Exercise>[]) {
+    const payload = decode(accessToken);
+
+    for (let exercise of exercises) {
+        await axios.post(`${BASE_URL}/${payload.userId}/exercises`, exercise, {
+            headers: {Authorization: `Token ${accessToken}`},
+        });
+    }
+}
+
+interface Cookies {
+    [x: string]: {
+        value: string;
+        flags: {
+            [x: string]: string | boolean;
+        };
+    };
+}
+
+// https://gist.github.com/the-vampiire/a564af41ed0ce8eb7c30dbe6c0f627d8
+const shapeFlags = (flags: any) =>
+    flags.reduce((shapedFlags: any, flag: any) => {
+        const [flagName, rawValue] = flag.split('=');
+        // edge case where a cookie has a single flag and "; " split results in trailing ";"
+        const value = rawValue ? rawValue.replace(';', '') : true;
+        return {...shapedFlags, [flagName]: value};
+    }, {});
+
+const extractCookies = (headers: any): Cookies => {
+    const cookies = headers['set-cookie']; // Cookie[]
+
+    return cookies.reduce((shapedCookies: Cookies, cookieString: string) => {
+        const [rawCookie, ...flags] = cookieString.split('; ');
+        const [cookieName, value] = rawCookie.split('=');
+        return {...shapedCookies, [cookieName]: {value, flags: shapeFlags(flags)}};
+    }, {});
+};
