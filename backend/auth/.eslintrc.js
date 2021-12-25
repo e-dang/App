@@ -1,4 +1,4 @@
-const jestPackage = require('jest/package.json');
+const jestPackage = require("jest/package.json");
 
 module.exports = {
   settings: {
@@ -6,7 +6,12 @@ module.exports = {
       version: jestPackage.version,
     },
   },
-  parserOptions: {
-    project: `${__dirname}/tsconfig.eslint.json`,
-  },
+  overrides: [
+    {
+      files: ["**/*.ts", "**/*.tsx"],
+      parserOptions: {
+        project: `${__dirname}/tsconfig.json`,
+      },
+    },
+  ],
 };
