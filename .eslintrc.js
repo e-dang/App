@@ -1,6 +1,9 @@
 module.exports = {
   root: true,
   extends: ['airbnb', 'eslint:recommended', 'plugin:promise/recommended', 'plugin:prettier/recommended'],
+  rules: {
+    'import/no-extraneous-dependencies': ['error', {devDependencies: true}],
+  },
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx'],
