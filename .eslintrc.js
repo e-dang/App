@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   extends: ["airbnb", "eslint:recommended", "plugin:promise/recommended", "plugin:prettier/recommended"],
   rules: {
+    // check for dependencies in devDependencies as well
     "import/no-extraneous-dependencies": ["error", {devDependencies: true}],
   },
   overrides: [
@@ -27,17 +28,21 @@ module.exports = {
         sourceType: "module",
       },
       rules: {
+        // default exports are annoying
         "import/prefer-default-export": "off",
+        // use _ to indicate throw away variables and args
         "@typescript-eslint/no-unused-vars": [
           "error",
           {varsIgnorePattern: "^_", argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_"},
         ],
+        // makes verbose ugly code when using async/await
         "@typescript-eslint/no-misused-promises": [
           "error",
           {
             checksVoidReturn: false,
           },
         ],
+        "no-plusplus": "off",
       },
     },
   ],
