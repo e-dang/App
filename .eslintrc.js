@@ -43,7 +43,45 @@ module.exports = {
           },
         ],
         "no-plusplus": "off",
+        "max-classes-per-file": "off",
+        "no-underscore-dangle": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "variable",
+            format: ["camelCase", "PascalCase", "UPPER_CASE"],
+            leadingUnderscore: "allow", // allows for throw away vars
+          },
+          {
+            selector: "function",
+            format: ["camelCase", "PascalCase"],
+          },
+          {
+            selector: "typeLike",
+            format: ["PascalCase"],
+          },
+        ],
+
+        // turn off temporarily until solution for req.body typing is figured out
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+
+        // turn of temprorarily until AccessTokenPayload has its own properties
+        "@typescript-eslint/no-empty-interface": "off",
+
+        // turn off until logger gets implemented
+        "no-console": "off",
       },
+      overrides: [
+        {
+          files: ["**/__tests__/**"],
+          rules: {
+            // allow unbound methods for expectation calls in tests
+            "@typescript-eslint/unbound-method": "off",
+            "jest/unbound-method": "error",
+          },
+        },
+      ],
     },
   ],
 };
