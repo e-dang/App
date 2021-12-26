@@ -44,7 +44,6 @@
     "jest": "^27.4.0",
     "jest-mock": "^27.4.2",
     "jest-runner-groups": "^2.1.0",
-    "jsonwebtoken": "^8.5.1",
     "mockdate": "^3.0.5",
     "moment": "^2.29.1",
     "nodemon": "^2.0.15",
