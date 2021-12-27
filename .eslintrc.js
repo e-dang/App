@@ -61,6 +61,16 @@ module.exports = {
             format: ["PascalCase"],
           },
         ],
+        "react/function-component-definition": [
+          "error",
+          {
+            namedComponents: "arrow-function",
+            unnamedComponents: "arrow-function",
+          },
+        ],
+        "react/jsx-props-no-spreading": "off",
+        // allow explicitly not handling error
+        "no-void": "off",
 
         // turn off temporarily until solution for req.body typing is figured out
         "@typescript-eslint/no-unsafe-member-access": "off",
@@ -79,6 +89,10 @@ module.exports = {
             // allow unbound methods for expectation calls in tests
             "@typescript-eslint/unbound-method": "off",
             "jest/unbound-method": "error",
+            // allow for loops
+            "no-restricted-syntax": "off",
+            // allow awaits in loops
+            "no-await-in-loop": "off",
           },
         },
       ],
