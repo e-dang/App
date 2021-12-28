@@ -16,7 +16,7 @@ enableScreens();
 
 export default () => {
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider config={{suppressColorAccessibilityWarning: true}}>
       <Provider store={store}>
         <PersistGate loading={<View />} persistor={persistor}>
           <NavigationContainer>
