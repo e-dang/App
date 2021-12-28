@@ -17,7 +17,7 @@ module.exports = {
     simulator: {
       type: "ios.simulator",
       device: {
-        id: "C01FB298-7F87-4A4D-B220-F56E3BD439D1",
+        id: "6006EA6B-C580-4619-A7D9-9F2DC5281659",
         type: "iPhone 12",
         name: "iPhone 12 Detox",
       },
