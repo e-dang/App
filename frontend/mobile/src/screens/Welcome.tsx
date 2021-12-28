@@ -66,7 +66,12 @@ export const Welcome = () => {
           <Divider my={3} />
           <Box>
             <Text alignSelf="center">Already have an account?</Text>
-            <Button testID="signInBtn" variant="ghost" onPress={handleSignIn}>
+            <Button
+              testID="signInBtn"
+              bgColor="transparent"
+              variant="ghost"
+              colorScheme="primary"
+              onPress={handleSignIn}>
               Sign In
             </Button>
           </Box>

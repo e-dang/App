@@ -45,7 +45,7 @@ export const SignIn = () => {
       <Header
         leftContent={<BackButton onPress={handleBack}>Welcome</BackButton>}
         rightContent={
-          <HeaderButton testID="forgotPasswordBtn" colorScheme="primary" variant="ghost" onPress={handleForgotPassword}>
+          <HeaderButton testID="forgotPasswordBtn" colorScheme="primary" onPress={handleForgotPassword}>
             Forgot password?
           </HeaderButton>
         }
@@ -66,7 +66,12 @@ export const SignIn = () => {
           <Divider my={3} />
           <Box>
             <Text alignSelf="center">Don&lsquo;t have an account?</Text>
-            <Button testID="signUpBtn" colorScheme="primary" variant="ghost" onPress={handleSignUp}>
+            <Button
+              testID="signUpBtn"
+              bgColor="transparent"
+              variant="ghost"
+              colorScheme="primary"
+              onPress={handleSignUp}>
               Sign Up
             </Button>
           </Box>
