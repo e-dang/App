@@ -1,2 +1,2 @@
-export * from './workoutSchemas';
-export * from './exerciseSchemas';
+export * from "./workoutSchemas";
+export * from "./exerciseSchemas";

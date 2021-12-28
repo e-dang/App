@@ -1,9 +1,9 @@
-import {createValidationSchemaMiddleware} from '@src/middleware';
-import {notEmptyValidator} from './validators';
+import {createValidationSchemaMiddleware} from "@src/middleware";
+import {notEmptyValidator} from "./validators";
 
 export const validateCreateExerciseRequest = createValidationSchemaMiddleware({
-    name: {
-        in: ['body'],
-        ...notEmptyValidator,
-    },
+  name: {
+    in: ["body"],
+    ...notEmptyValidator,
+  },
 });

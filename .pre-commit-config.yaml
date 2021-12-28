@@ -44,3 +44,16 @@ repos:
     rev: v2.0.3
     hooks:
       - id: forbid-secrets
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.5.0
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - '@typescript-eslint/eslint-plugin@^5.8.0'
+          - '@typescript-eslint/parser@^5.8.0'
+          - eslint@^8.5.0
+          - eslint-config-prettier@^8.3.0
+          - eslint-plugin-prettier@^4.0.0
+        files: \.[jt]sx?$
+        types: [file]
