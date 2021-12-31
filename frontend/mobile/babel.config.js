@@ -18,7 +18,7 @@ module.exports = {
           "@store": "./src/store",
           "@hooks": "./src/hooks",
           "@selectors": "./src/selectors",
-          "@entities": "./src/entites",
+          "@entities": "./src/entities",
         },
       },
     ],
