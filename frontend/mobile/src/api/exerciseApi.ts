@@ -1,6 +1,6 @@
 import {Exercise, exerciseAdapter} from "@entities";
 import {EntityState} from "@reduxjs/toolkit";
-import {ApiResponse} from "./authApi";
+import {ApiListResponse, ApiResponse} from "./types";
 import {baseApi} from "./baseApi";
 
 export interface CreateExerciseRequest {
@@ -16,7 +16,7 @@ export const exerciseApi = taggedBaseApi.injectEndpoints({
         url: ":userId/exercises/",
         method: "GET",
       }),
-      transformResponse: (response: ApiResponse<Exercise[]>) =>
+      transformResponse: (response: ApiListResponse<Exercise>) =>
         exerciseAdapter.addMany(exerciseAdapter.getInitialState(), response.data),
       providesTags: (result) =>
         result
