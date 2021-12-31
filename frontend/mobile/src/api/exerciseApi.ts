@@ -1,4 +1,5 @@
-import {Exercise} from "@entities";
+import {Exercise, exerciseAdapter} from "@entities";
+import {EntityState} from "@reduxjs/toolkit";
 import {ApiResponse} from "./authApi";
 import {baseApi} from "./baseApi";
 
@@ -10,23 +11,26 @@ const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["Exercise"]});
 
 export const exerciseApi = taggedBaseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listExercises: builder.query<ApiResponse<Exercise[]>, void>({
+    listExercises: builder.query<EntityState<Exercise>, void>({
       query: () => ({
         url: ":userId/exercises/",
         method: "GET",
       }),
+      transformResponse: (response: ApiResponse<Exercise[]>) =>
+        exerciseAdapter.addMany(exerciseAdapter.getInitialState(), response.data),
       providesTags: (result) =>
         result
-          ? [...result.data.map(({id}) => ({type: "Exercise" as const, id})), {type: "Exercise", id: "LIST"}]
+          ? [...result.ids.map((id) => ({type: "Exercise" as const, id})), {type: "Exercise", id: "LIST"}]
           : [{type: "Exercise", id: "LIST"}],
     }),
-    createExercise: builder.mutation<Exercise, CreateExerciseRequest>({
+    createExercise: builder.mutation<EntityState<Exercise>, CreateExerciseRequest>({
       query: (exercise) => ({
         url: ":userId/exercises/",
         method: "POST",
         body: exercise,
       }),
-      transformResponse: (response: ApiResponse<Exercise>) => response.data,
+      transformResponse: (response: ApiResponse<Exercise>) =>
+        exerciseAdapter.addOne(exerciseAdapter.getInitialState(), response.data),
       invalidatesTags: [{type: "Exercise", id: "LIST"}],
     }),
   }),

@@ -37,7 +37,7 @@ const ExerciseScreen = ({children}: ChildrenProps) => {
 };
 
 export const ListExerciseScreen = () => {
-  const {data = {data: []}, isLoading} = useListExercisesQuery();
+  const {data = {ids: [], entities: {}}, isLoading} = useListExercisesQuery();
 
   if (isLoading) {
     return (
@@ -51,7 +51,7 @@ export const ListExerciseScreen = () => {
     <ExerciseScreen>
       <FlatList
         testID="exerciseList"
-        data={data.data}
+        data={Object.values(data.entities)}
         ListEmptyComponent={<Text>You Don&apos;t Have Any Exercises...</Text>}
         renderItem={({item}) => (
           <Box>
