@@ -1,4 +1,4 @@
-import {Exercise} from "@src/types";
+import {Exercise} from "@entities";
 import {ApiResponse} from "./authApi";
 import {baseApi} from "./baseApi";
 

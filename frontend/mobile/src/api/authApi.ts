@@ -1,4 +1,4 @@
-import {AuthToken, User} from "@src/types";
+import {AuthToken, User} from "@entities";
 import {baseApi} from "./baseApi";
 
 export interface ApiResponse<T> {

@@ -3,7 +3,7 @@ import {v4 as uuidv4} from "uuid";
 import axios from "axios";
 import {SignInRequest, SignUpRequest} from "@api";
 import {decode} from "@utils";
-import {Exercise} from "@src/types";
+import {Exercise} from "@entities";
 
 const BASE_URL = "https://dev.erickdang.com/api/v1";
 const MAILHOG_URL = "https://mail.dev.erickdang.com/api/v2/search";

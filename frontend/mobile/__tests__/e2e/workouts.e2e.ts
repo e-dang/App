@@ -1,4 +1,4 @@
-import {Exercise} from "@src/types";
+import {Exercise} from "@entities";
 import {device, element, by, expect} from "detox";
 import {createExercises, createUser, signIn} from "./utils";
 

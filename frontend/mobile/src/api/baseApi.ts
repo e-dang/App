@@ -9,7 +9,7 @@ import {selectAuthToken, selectAuthUserId} from "@selectors";
 import {setCredentials, signOut} from "@store/authSlice"; // avoid circular import
 import {RootState} from "@store";
 import {BaseQueryApi} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
-import {AuthToken} from "@src/types";
+import {AuthToken} from "@entities";
 
 export const BASE_URL = "https://dev.erickdang.com/api/v1/";
 

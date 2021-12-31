@@ -6,7 +6,7 @@ import {StackNavigationProp} from "@react-navigation/stack";
 import {useListExercisesQuery} from "@api";
 import {AppStackParamList} from "@screens/AppStack";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
-import {Exercise} from "@src/types";
+import {Exercise} from "@entities";
 import {ListRenderItem} from "react-native";
 import type {WorkoutStackParamList} from "./WorkoutStack";
 
