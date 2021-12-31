@@ -51,7 +51,7 @@ export const ListWorkoutsScreen = () => {
       <FlatList
         testID="workoutList"
         data={data.data}
-        ListEmptyComponent={<Text>You Don&lsquo;t Have Any Workouts...</Text>}
+        ListEmptyComponent={<Text>You Don&apos;t Have Any Workouts...</Text>}
         renderItem={({item}) => (
           <Box>
             <Text>{item.name}</Text>

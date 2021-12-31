@@ -65,7 +65,7 @@ export const SignIn = () => {
           </Button>
           <Divider my={3} />
           <Box>
-            <Text alignSelf="center">Don&lsquo;t have an account?</Text>
+            <Text alignSelf="center">Don&apos;t have an account?</Text>
             <Button
               testID="signUpBtn"
               bgColor="transparent"
