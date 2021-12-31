@@ -7,6 +7,6 @@ export interface Workout extends Entity {
   lastUpdatedAt: string;
 }
 
-export const workotAdapter = createEntityAdapter<Workout>({
+export const workoutAdapter = createEntityAdapter<Workout>({
   sortComparer: (a, b) => a.name.localeCompare(b.name),
 });
