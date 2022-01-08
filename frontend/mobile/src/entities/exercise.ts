@@ -1,4 +1,3 @@
-import {createEntityAdapter} from "@reduxjs/toolkit";
 import {Entity} from "./entity";
 
 export interface Exercise extends Entity {
@@ -6,7 +5,3 @@ export interface Exercise extends Entity {
   createdAt: string;
   lastUpdatedAt: string;
 }
-
-export const exerciseAdapter = createEntityAdapter<Exercise>({
-  sortComparer: (a, b) => a.name.localeCompare(b.name),
-});

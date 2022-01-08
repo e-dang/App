@@ -37,12 +37,20 @@ const ExerciseScreen = ({children}: ChildrenProps) => {
 };
 
 export const ListExerciseScreen = () => {
-  const {data = {ids: [], entities: {}}, isLoading} = useListExercisesQuery();
+  const query = useListExercisesQuery();
 
-  if (isLoading) {
+  if (query.isUninitialized || query.isLoading) {
     return (
       <ExerciseScreen>
-        <Spinner animating={isLoading} accessibilityLabel="Loading indicator" />
+        <Spinner animating accessibilityLabel="Loading indicator" />
+      </ExerciseScreen>
+    );
+  }
+
+  if (query.isError) {
+    return (
+      <ExerciseScreen>
+        <Text>There was an error.</Text>
       </ExerciseScreen>
     );
   }
@@ -51,7 +59,7 @@ export const ListExerciseScreen = () => {
     <ExerciseScreen>
       <FlatList
         testID="exerciseList"
-        data={Object.values(data.entities)}
+        data={query.data.data}
         ListEmptyComponent={<Text>You Don&apos;t Have Any Exercises...</Text>}
         renderItem={({item}) => (
           <Box>
