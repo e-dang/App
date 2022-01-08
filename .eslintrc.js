@@ -10,6 +10,7 @@ module.exports = {
       files: ["**/*.ts", "**/*.tsx"],
       extends: [
         "airbnb-typescript",
+        "airbnb/hooks",
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
