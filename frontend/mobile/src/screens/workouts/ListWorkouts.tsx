@@ -36,12 +36,20 @@ export const WorkoutScreen = ({children}: ChildrenProps) => {
 };
 
 export const ListWorkoutsScreen = () => {
-  const {data = {data: []}, isLoading} = useListWorkoutsQuery();
+  const query = useListWorkoutsQuery();
 
-  if (isLoading) {
+  if (query.isUninitialized || query.isLoading) {
     return (
       <WorkoutScreen>
-        <Spinner animating={isLoading} accessibilityLabel="Loading indicator" />
+        <Spinner animating accessibilityLabel="Loading indicator" />
+      </WorkoutScreen>
+    );
+  }
+
+  if (query.isError) {
+    return (
+      <WorkoutScreen>
+        <Text>There was an error.</Text>
       </WorkoutScreen>
     );
   }
@@ -50,7 +58,7 @@ export const ListWorkoutsScreen = () => {
     <WorkoutScreen>
       <FlatList
         testID="workoutList"
-        data={data.data}
+        data={query.data.data}
         ListEmptyComponent={<Text>You Don&apos;t Have Any Workouts...</Text>}
         renderItem={({item}) => (
           <Box>

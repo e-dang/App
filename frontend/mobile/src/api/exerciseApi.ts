@@ -1,5 +1,5 @@
-import {Exercise} from "@src/types";
-import {ApiResponse} from "./authApi";
+import {Exercise} from "@entities";
+import {ApiListResponse, ApiResponse} from "./types";
 import {baseApi} from "./baseApi";
 
 export interface CreateExerciseRequest {
@@ -10,7 +10,7 @@ const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["Exercise"]});
 
 export const exerciseApi = taggedBaseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listExercises: builder.query<ApiResponse<Exercise[]>, void>({
+    listExercises: builder.query<ApiListResponse<Exercise>, void>({
       query: () => ({
         url: ":userId/exercises/",
         method: "GET",

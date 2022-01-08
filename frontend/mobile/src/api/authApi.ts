@@ -1,9 +1,7 @@
-import {AuthToken, User} from "@src/types";
+import {AuthToken, User} from "@entities";
 import {baseApi} from "./baseApi";
+import {ApiResponse} from "./types";
 
-export interface ApiResponse<T> {
-  data: T;
-}
 export interface SignUpRequest {
   name: string;
   email: string;

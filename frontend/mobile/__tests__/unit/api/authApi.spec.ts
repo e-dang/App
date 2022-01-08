@@ -2,7 +2,7 @@ import fetchMock, {enableFetchMocks} from "jest-fetch-mock";
 import {ApiResponse, authApi, ForgotPasswordRequest, SignInRequest, SignUpRequest} from "@api";
 import {authReducer} from "@store/authSlice";
 import {expectCorrectRequest, setupApiStore} from "@tests/unit/utils";
-import {AuthToken} from "@src/types";
+import {AuthToken} from "@entities";
 
 enableFetchMocks();
 
