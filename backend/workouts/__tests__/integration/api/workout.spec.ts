@@ -14,8 +14,8 @@ import {createAdminUserAndToken, createUserAndToken, decode} from "./utils";
  * @group workout
  */
 
-describe("admin workout apis", () => {
-  const url = "/api/v1/workouts/";
+describe("admin workout template apis", () => {
+  const url = "/api/v1/templates/workouts/";
   let user: User;
   let accessToken: string;
   let adminUser: User;
@@ -68,21 +68,21 @@ describe("admin workout apis", () => {
   });
 });
 
-describe("user workout apis", () => {
+describe("user workout template apis", () => {
   let url: string;
   let accessToken: string;
   let user: User;
 
   beforeEach(async () => {
     [user, accessToken] = await createUserAndToken();
-    url = `/api/v1/${user.id}/workouts`;
+    url = `/api/v1/templates/${user.id}/workouts`;
   });
 
   afterEach(() => {
     MockDate.reset();
   });
 
-  describe("GET /workouts/:userId", () => {
+  describe("GET /templates/:userId/workouts", () => {
     test("returns only the workouts owned by the requesting user and 200 status code", async () => {
       await user.addWorkoutTemplates([{name: "test1"}, {name: "test2"}]);
       await user.addWorkoutTemplate({name: "test3"});
@@ -127,7 +127,7 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("GET /workouts/:userId/:workoutId", () => {
+  describe("GET /templates/:userId/workouts/:workoutId", () => {
     let detailUrl: string;
     let workout: WorkoutTemplate;
 
@@ -193,7 +193,7 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("POST /workouts/:userId", () => {
+  describe("POST /templates/:userId/workouts", () => {
     let workoutData: {
       name: string;
     };
@@ -240,7 +240,7 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("PATCH /workouts/:userId/:workoutId", () => {
+  describe("PATCH /templates/:userId/workouts/:workoutId", () => {
     let detailUrl: string;
     let workout: WorkoutTemplate;
     const newName = "test workout2";
@@ -316,7 +316,7 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("DELETE /workouts/:userId/:workoutId", () => {
+  describe("DELETE /templates/:userId/workouts/:workoutId", () => {
     let detailUrl: string;
     let workout: WorkoutTemplate;
 

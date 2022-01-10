@@ -77,4 +77,5 @@ workoutRouter.delete(
 
 export const workoutApis: ApiGroup = {
   router: workoutRouter,
+  pathPrefix: "templates",
 };
