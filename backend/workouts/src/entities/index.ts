@@ -1,8 +1,8 @@
 import {User} from "./User";
 import {WorkoutTemplate} from "./WorkoutTemplate";
-import {Exercise} from "./Exercise";
+import {ExerciseType} from "./ExerciseType";
 
-export const entities = [User, WorkoutTemplate, Exercise];
+export const entities = [User, WorkoutTemplate, ExerciseType];
 export * from "./User";
 export * from "./WorkoutTemplate";
-export * from "./Exercise";
+export * from "./ExerciseType";

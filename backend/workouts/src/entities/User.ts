@@ -1,5 +1,5 @@
 import {Entity, PrimaryColumn, BaseEntity, OneToMany, DeepPartial} from "typeorm";
-import {Exercise} from "./Exercise";
+import {ExerciseType} from "./ExerciseType";
 import {WorkoutTemplate} from "./WorkoutTemplate";
 
 @Entity("users")
@@ -10,8 +10,8 @@ export class User extends BaseEntity {
   @OneToMany("WorkoutTemplate", "owner", {cascade: true})
   workoutTemplates: WorkoutTemplate[];
 
-  @OneToMany("Exercise", "owner", {cascade: true})
-  exercises: Exercise[];
+  @OneToMany("ExerciseType", "owner", {cascade: true})
+  exerciseTypes: ExerciseType[];
 
   addWorkoutTemplate(data: Omit<DeepPartial<WorkoutTemplate>, "owner">) {
     return WorkoutTemplate.create({owner: this, ...data}).save();
@@ -30,19 +30,19 @@ export class User extends BaseEntity {
     return WorkoutTemplate.findOne({owner: this, id});
   }
 
-  addExercise(data: Omit<DeepPartial<Exercise>, "owner">) {
-    return Exercise.create({owner: this, ...data}).save();
+  addExerciseType(data: Omit<DeepPartial<ExerciseType>, "owner">) {
+    return ExerciseType.create({owner: this, ...data}).save();
   }
 
-  addExercises(data: Omit<DeepPartial<Exercise>, "owner">[]) {
-    return Promise.all(data.map((val) => Exercise.create({owner: this, ...val}).save()));
+  addExerciseTypes(data: Omit<DeepPartial<ExerciseType>, "owner">[]) {
+    return Promise.all(data.map((val) => ExerciseType.create({owner: this, ...val}).save()));
   }
 
-  async getSerializedExercises() {
-    return (await Exercise.find({owner: this})).map((exericse) => exericse.serialize());
+  async getSerializedExerciseTypes() {
+    return (await ExerciseType.find({owner: this})).map((exericse) => exericse.serialize());
   }
 
-  async getExercise(properties: Omit<Partial<Exercise>, "owner">) {
-    return Exercise.findOne({...properties, owner: this});
+  async getExerciseType(properties: Omit<Partial<ExerciseType>, "owner">) {
+    return ExerciseType.findOne({...properties, owner: this});
   }
 }

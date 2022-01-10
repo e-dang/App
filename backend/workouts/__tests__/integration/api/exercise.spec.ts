@@ -1,4 +1,4 @@
-import {ExerciseDetail, User} from "@entities";
+import {ExerciseTypeDetail, User} from "@entities";
 import {AuthenticationError} from "@errors";
 import {app} from "@src/app";
 import supertest from "supertest";
@@ -25,15 +25,15 @@ describe("user exercise apis", () => {
 
   describe("GET /:userId/exercises", () => {
     test("returns 200 status code and all non deleted exercises owned by requesting user on success", async () => {
-      await user.addExercises([{name: "test1"}, {name: "test2"}]);
-      await user.addExercise({name: "test3"});
-      await (await user.addExercise({name: "test4"})).softRemove();
+      await user.addExerciseTypes([{name: "test1"}, {name: "test2"}]);
+      await user.addExerciseType({name: "test3"});
+      await (await user.addExerciseType({name: "test4"})).softRemove();
       await user.reload();
       const res = await supertest(app).get(url).set("Authorization", `Token ${accessToken}`).send();
 
       expect(res.statusCode).toBe(200);
-      expect(res.body.data).toEqual(await user.getSerializedExercises());
-      const names = (res.body.data as ExerciseDetail[]).map((exercise) => exercise.name).sort();
+      expect(res.body.data).toEqual(await user.getSerializedExerciseTypes());
+      const names = (res.body.data as ExerciseTypeDetail[]).map((exercise) => exercise.name).sort();
       expect(names).toEqual(["test1", "test2", "test3"]);
     });
 
@@ -77,7 +77,7 @@ describe("user exercise apis", () => {
       const res = await supertest(app).post(url).set("Authorization", `Token ${accessToken}`).send(exerciseData);
 
       expect(res.statusCode).toBe(201);
-      expect(user.getExercise({id: res.body.data.id})).not.toBeUndefined();
+      expect(user.getExerciseType({id: res.body.data.id})).not.toBeUndefined();
     });
 
     test("returns 400 status code when name field is missing from body", async () => {

@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import type {User} from "./User";
 
-export interface ExerciseDetail {
+export interface ExerciseTypeDetail {
   id: string;
   owner: string;
   name: string;
@@ -18,8 +18,8 @@ export interface ExerciseDetail {
   lastUpdatedAt: string;
 }
 
-@Entity("exercises")
-export class Exercise extends BaseEntity {
+@Entity("exerciseTypes")
+export class ExerciseType extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -41,7 +41,7 @@ export class Exercise extends BaseEntity {
   @DeleteDateColumn({type: "timestamptz"})
   deletedAt: Date;
 
-  serialize(): ExerciseDetail {
+  serialize(): ExerciseTypeDetail {
     return {
       id: this.id,
       owner: this.ownerId,
