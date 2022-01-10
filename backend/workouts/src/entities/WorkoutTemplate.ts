@@ -17,7 +17,7 @@ export interface WorkoutTemplateDetail {
   lastUpdatedAt: string;
 }
 
-@Entity("workouts")
+@Entity("workoutTemplates")
 export class WorkoutTemplate extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
