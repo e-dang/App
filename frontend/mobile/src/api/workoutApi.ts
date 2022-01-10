@@ -13,7 +13,7 @@ export const workoutApi = taggedBaseApi.injectEndpoints({
   endpoints: (builder) => ({
     listWorkoutTemplates: builder.query<ApiListResponse<WorkoutTemplate>, void>({
       query: () => ({
-        url: ":userId/workouts/",
+        url: "templates/:userId/workouts/",
         method: "GET",
       }),
       providesTags: (result) =>
@@ -26,7 +26,7 @@ export const workoutApi = taggedBaseApi.injectEndpoints({
     }),
     createWorkoutTemplate: builder.mutation<WorkoutTemplate, CreateWorkoutRequest>({
       query: (workout) => ({
-        url: ":userId/workouts/",
+        url: "templates/:userId/workouts/",
         method: "POST",
         body: workout,
       }),

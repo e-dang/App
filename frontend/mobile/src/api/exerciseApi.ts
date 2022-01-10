@@ -12,7 +12,7 @@ export const exerciseApi = taggedBaseApi.injectEndpoints({
   endpoints: (builder) => ({
     listExerciseTypes: builder.query<ApiListResponse<ExerciseType>, void>({
       query: () => ({
-        url: ":userId/exercises/",
+        url: "types/:userId/exercises/",
         method: "GET",
       }),
       providesTags: (result) =>
@@ -22,7 +22,7 @@ export const exerciseApi = taggedBaseApi.injectEndpoints({
     }),
     createExerciseType: builder.mutation<ExerciseType, CreateExerciseRequest>({
       query: (exercise) => ({
-        url: ":userId/exercises/",
+        url: "types/:userId/exercises/",
         method: "POST",
         body: exercise,
       }),
