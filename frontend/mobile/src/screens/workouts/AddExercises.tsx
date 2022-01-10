@@ -3,7 +3,7 @@ import {Header, ChildrenProps, HeaderButton, Screen} from "@components";
 import {Box, Center, Icon, Heading, SectionList, Spinner, Text, VStack, HStack, Pressable, Divider} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
-import {useListExercisesQuery} from "@api";
+import {useListExerciseTypesQuery} from "@api";
 import {CancelButton} from "@components/basic/CancelButton";
 import {AppStackParamList} from "@screens/AppStack";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
@@ -79,7 +79,7 @@ const ExerciseScreen: FC<ExerciseScreenProps> = ({children, getSelected}) => {
 };
 
 export const AddExercisesScreen = () => {
-  const query = useListExercisesQuery();
+  const query = useListExerciseTypesQuery();
   const sections = useAlphabeticalSections(query.data?.data, "name");
   const {selections, select, isSelected, getSelected} = useSelectable(query.data?.data);
 

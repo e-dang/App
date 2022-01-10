@@ -4,7 +4,7 @@ import {Box, Button, Center, Heading, Spinner, Text, VStack} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {FlatList} from "react-native-gesture-handler";
-import {useListExercisesQuery} from "@api";
+import {useListExerciseTypesQuery} from "@api";
 import type {ExerciseStackParamList} from "./ExerciseStack";
 
 type ListExerciseNavProps = StackNavigationProp<ExerciseStackParamList, "listExercises">;
@@ -37,7 +37,7 @@ const ExerciseScreen = ({children}: ChildrenProps) => {
 };
 
 export const ListExerciseScreen = () => {
-  const query = useListExercisesQuery();
+  const query = useListExerciseTypesQuery();
 
   if (query.isUninitialized || query.isLoading) {
     return (
