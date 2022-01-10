@@ -1,5 +1,5 @@
 import React from "react";
-import {useListWorkoutsQuery} from "@api/workoutApi";
+import {useListWorkoutTemplatesQuery} from "@api/workoutApi";
 import {Screen, ChildrenProps} from "@components";
 import {Box, Button, Center, FlatList, Heading, Spinner, Text, VStack} from "native-base";
 import {useNavigation} from "@react-navigation/native";
@@ -36,7 +36,7 @@ export const WorkoutScreen = ({children}: ChildrenProps) => {
 };
 
 export const ListWorkoutsScreen = () => {
-  const query = useListWorkoutsQuery();
+  const query = useListWorkoutTemplatesQuery();
 
   if (query.isUninitialized || query.isLoading) {
     return (

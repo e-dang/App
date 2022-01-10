@@ -7,30 +7,33 @@ export interface CreateWorkoutRequest {
   notes: string;
 }
 
-const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["Workout"]});
+const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["WorkoutTemplate"]});
 
 export const workoutApi = taggedBaseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listWorkouts: builder.query<ApiListResponse<WorkoutTemplate>, void>({
+    listWorkoutTemplates: builder.query<ApiListResponse<WorkoutTemplate>, void>({
       query: () => ({
         url: ":userId/workouts/",
         method: "GET",
       }),
       providesTags: (result) =>
         result
-          ? [...result.data.map(({id}) => ({type: "Workout" as const, id})), {type: "Workout", id: "LIST"}]
-          : [{type: "Workout", id: "LIST"}],
+          ? [
+              ...result.data.map(({id}) => ({type: "WorkoutTemplate" as const, id})),
+              {type: "WorkoutTemplate", id: "LIST"},
+            ]
+          : [{type: "WorkoutTemplate", id: "LIST"}],
     }),
-    createWorkout: builder.mutation<WorkoutTemplate, CreateWorkoutRequest>({
+    createWorkoutTemplate: builder.mutation<WorkoutTemplate, CreateWorkoutRequest>({
       query: (workout) => ({
         url: ":userId/workouts/",
         method: "POST",
         body: workout,
       }),
       transformResponse: (response: ApiResponse<WorkoutTemplate>) => response.data,
-      invalidatesTags: [{type: "Workout", id: "LIST"}],
+      invalidatesTags: [{type: "WorkoutTemplate", id: "LIST"}],
     }),
   }),
 });
 
-export const {useListWorkoutsQuery, useCreateWorkoutMutation} = workoutApi;
+export const {useListWorkoutTemplatesQuery, useCreateWorkoutTemplateMutation} = workoutApi;
