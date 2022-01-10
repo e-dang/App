@@ -1,11 +1,6 @@
-import {WorkoutTemplate} from "@entities";
+import {CreateWorkoutTemplateForm, WorkoutTemplate} from "@entities";
 import {ApiListResponse, ApiResponse} from "./types";
 import {baseApi} from "./baseApi";
-
-export interface CreateWorkoutRequest {
-  name: string;
-  notes: string;
-}
 
 const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["WorkoutTemplate"]});
 
@@ -24,7 +19,7 @@ export const workoutApi = taggedBaseApi.injectEndpoints({
             ]
           : [{type: "WorkoutTemplate", id: "LIST"}],
     }),
-    createWorkoutTemplate: builder.mutation<WorkoutTemplate, CreateWorkoutRequest>({
+    createWorkoutTemplate: builder.mutation<WorkoutTemplate, CreateWorkoutTemplateForm>({
       query: (workout) => ({
         url: "templates/:userId/workouts/",
         method: "POST",

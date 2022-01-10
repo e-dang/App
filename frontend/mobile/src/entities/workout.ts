@@ -1,7 +1,12 @@
 import {Entity} from "./entity";
+import {CreateExerciseGroupTemplateForm, ExerciseGroupTemplate} from "./exerciseGroup";
 
-export interface WorkoutTemplate extends Entity {
+interface WorkoutTemplateProperties<T> {
   name: string;
-  createdAt: string;
-  lastUpdatedAt: string;
+  notes: string;
+  exerciseGroups: T[];
 }
+
+export interface WorkoutTemplate extends Entity, WorkoutTemplateProperties<ExerciseGroupTemplate> {}
+
+export type CreateWorkoutTemplateForm = WorkoutTemplateProperties<CreateExerciseGroupTemplateForm>;
