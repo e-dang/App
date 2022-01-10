@@ -7,7 +7,7 @@ import {useListExercisesQuery} from "@api";
 import {CancelButton} from "@components/basic/CancelButton";
 import {AppStackParamList} from "@screens/AppStack";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
-import {Exercise} from "@entities";
+import {ExerciseType} from "@entities";
 import {ListRenderItem} from "react-native";
 import {useAlphabeticalSections, useSelectable} from "@hooks";
 import _ from "lodash";
@@ -48,7 +48,7 @@ const ListItem = ({children, onPress, isSelected = true}: ListItemProps) => {
 };
 
 interface ExerciseScreenProps {
-  getSelected: () => Exercise[];
+  getSelected: () => ExerciseType[];
 }
 
 const ExerciseScreen: FC<ExerciseScreenProps> = ({children, getSelected}) => {
@@ -91,7 +91,7 @@ export const AddExercisesScreen = () => {
     );
   }
 
-  const renderItem: ListRenderItem<Exercise> = ({item, separators}) => (
+  const renderItem: ListRenderItem<ExerciseType> = ({item, separators}) => (
     <ListItem
       onPress={() => {
         select(item);

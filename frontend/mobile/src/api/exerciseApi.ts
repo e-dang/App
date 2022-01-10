@@ -1,4 +1,4 @@
-import {Exercise} from "@entities";
+import {ExerciseType} from "@entities";
 import {ApiListResponse, ApiResponse} from "./types";
 import {baseApi} from "./baseApi";
 
@@ -10,7 +10,7 @@ const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["Exercise"]});
 
 export const exerciseApi = taggedBaseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listExercises: builder.query<ApiListResponse<Exercise>, void>({
+    listExercises: builder.query<ApiListResponse<ExerciseType>, void>({
       query: () => ({
         url: ":userId/exercises/",
         method: "GET",
@@ -20,13 +20,13 @@ export const exerciseApi = taggedBaseApi.injectEndpoints({
           ? [...result.data.map(({id}) => ({type: "Exercise" as const, id})), {type: "Exercise", id: "LIST"}]
           : [{type: "Exercise", id: "LIST"}],
     }),
-    createExercise: builder.mutation<Exercise, CreateExerciseRequest>({
+    createExercise: builder.mutation<ExerciseType, CreateExerciseRequest>({
       query: (exercise) => ({
         url: ":userId/exercises/",
         method: "POST",
         body: exercise,
       }),
-      transformResponse: (response: ApiResponse<Exercise>) => response.data,
+      transformResponse: (response: ApiResponse<ExerciseType>) => response.data,
       invalidatesTags: [{type: "Exercise", id: "LIST"}],
     }),
   }),

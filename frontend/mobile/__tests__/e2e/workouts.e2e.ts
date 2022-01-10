@@ -1,4 +1,4 @@
-import {Exercise} from "@entities";
+import {ExerciseType} from "@entities";
 import {device, element, by, expect} from "detox";
 import {createExercises, createUser, signIn} from "./utils";
 
@@ -6,7 +6,7 @@ describe("create workout flow", () => {
   let email: string;
   let password: string;
   let accessToken: string;
-  let exercises: Partial<Exercise>[];
+  let exercises: Partial<ExerciseType>[];
 
   beforeEach(async () => {
     await device.reloadReactNative();
