@@ -1,33 +1,33 @@
 import {Entity, PrimaryColumn, BaseEntity, OneToMany, DeepPartial} from "typeorm";
 import {Exercise} from "./Exercise";
-import {Workout} from "./Workout";
+import {WorkoutTemplate} from "./WorkoutTemplate";
 
 @Entity("users")
 export class User extends BaseEntity {
   @PrimaryColumn("uuid")
   id: string;
 
-  @OneToMany("Workout", "owner", {cascade: true})
-  workouts: Workout[];
+  @OneToMany("WorkoutTemplate", "owner", {cascade: true})
+  workoutTemplates: WorkoutTemplate[];
 
   @OneToMany("Exercise", "owner", {cascade: true})
   exercises: Exercise[];
 
-  addWorkout(data: Omit<DeepPartial<Workout>, "owner">) {
-    return Workout.create({owner: this, ...data}).save();
+  addWorkoutTemplate(data: Omit<DeepPartial<WorkoutTemplate>, "owner">) {
+    return WorkoutTemplate.create({owner: this, ...data}).save();
   }
 
-  addWorkouts(data: Omit<DeepPartial<Workout>, "owner">[]) {
-    return Promise.all(data.map((val) => Workout.create({owner: this, ...val}).save()));
+  addWorkoutTemplates(data: Omit<DeepPartial<WorkoutTemplate>, "owner">[]) {
+    return Promise.all(data.map((val) => WorkoutTemplate.create({owner: this, ...val}).save()));
   }
 
-  async getSerializedWorkouts() {
-    const workouts = await Workout.find({owner: this});
+  async getSerializedWorkoutTemplates() {
+    const workouts = await WorkoutTemplate.find({owner: this});
     return workouts.map((workout) => workout.serialize());
   }
 
-  async getWorkout(id: string) {
-    return Workout.findOne({owner: this, id});
+  async getWorkoutTemplate(id: string) {
+    return WorkoutTemplate.findOne({owner: this, id});
   }
 
   addExercise(data: Omit<DeepPartial<Exercise>, "owner">) {

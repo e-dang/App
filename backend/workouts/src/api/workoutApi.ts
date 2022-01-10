@@ -1,5 +1,5 @@
 import {ApiGroup, AuthenticatedRequest} from "@api";
-import {Workout} from "@entities";
+import {WorkoutTemplate} from "@entities";
 import {WorkoutNotFoundError} from "@errors";
 import {validateDeleteWorkoutRequest, validatePatchWorkoutRequest, validateWorkoutDetailRequest} from "@schemas";
 import {validateIsAdmin, validateIsOwner, verifyAuthN} from "@src/middleware";
@@ -11,12 +11,12 @@ const workoutRouter = Router();
 workoutRouter.use(verifyAuthN);
 
 workoutRouter.get("/workouts", validateIsAdmin, async (req: AuthenticatedRequest, res: Response) => {
-  const workouts = (await Workout.find()).map((workout) => workout.serialize());
+  const workouts = (await WorkoutTemplate.find()).map((workout) => workout.serialize());
   return res.status(200).json({data: workouts});
 });
 
 workoutRouter.get("/:userId/workouts", validateIsOwner, async (req: AuthenticatedRequest, res: Response) => {
-  return res.status(200).json({data: await req.user.getSerializedWorkouts()});
+  return res.status(200).json({data: await req.user.getSerializedWorkoutTemplates()});
 });
 
 workoutRouter.get(
@@ -24,7 +24,7 @@ workoutRouter.get(
   validateIsOwner,
   validateWorkoutDetailRequest,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const workout = await req.user.getWorkout(req.params.workoutId);
+    const workout = await req.user.getWorkoutTemplate(req.params.workoutId);
 
     if (!workout || workout.isDeleted) {
       return next(new WorkoutNotFoundError(req.user.id, req.params.workoutId));
@@ -35,7 +35,7 @@ workoutRouter.get(
 );
 
 workoutRouter.post("/:userId/workouts", validateIsOwner, async (req: AuthenticatedRequest, res: Response) => {
-  const workout = await req.user.addWorkout(req.body as DeepPartial<Workout>);
+  const workout = await req.user.addWorkoutTemplate(req.body as DeepPartial<WorkoutTemplate>);
   return res.status(201).json({data: workout.serialize()});
 });
 
@@ -44,7 +44,7 @@ workoutRouter.patch(
   validateIsOwner,
   validatePatchWorkoutRequest,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const workout = await req.user.getWorkout(req.params.workoutId);
+    const workout = await req.user.getWorkoutTemplate(req.params.workoutId);
 
     if (!workout) {
       return next(new WorkoutNotFoundError(req.user.id, req.params.workoutId));
@@ -62,7 +62,7 @@ workoutRouter.delete(
   validateIsOwner,
   validateDeleteWorkoutRequest,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const workout = await req.user.getWorkout(req.params.workoutId);
+    const workout = await req.user.getWorkoutTemplate(req.params.workoutId);
 
     if (!workout) {
       return next(new WorkoutNotFoundError(req.user.id, req.params.workoutId));

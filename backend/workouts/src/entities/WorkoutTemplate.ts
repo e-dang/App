@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import type {User} from "./User";
 
-export interface WorkoutDetail {
+export interface WorkoutTemplateDetail {
   id: string;
   owner: string;
   name: string;
@@ -18,7 +18,7 @@ export interface WorkoutDetail {
 }
 
 @Entity("workouts")
-export class Workout extends BaseEntity {
+export class WorkoutTemplate extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -40,7 +40,7 @@ export class Workout extends BaseEntity {
   @UpdateDateColumn({type: "timestamptz"})
   lastUpdatedAt: Date;
 
-  serialize(): WorkoutDetail {
+  serialize(): WorkoutTemplateDetail {
     return {
       id: this.id,
       owner: this.ownerId,
