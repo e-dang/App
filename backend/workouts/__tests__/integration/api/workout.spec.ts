@@ -1,7 +1,7 @@
 import {app} from "@src/app";
 import {randomUUID} from "crypto";
 import supertest from "supertest";
-import {User, Workout, WorkoutDetail} from "@entities";
+import {User, WorkoutTemplate, WorkoutTemplateDetail} from "@entities";
 import MockDate from "mockdate";
 import {AuthenticationError, WorkoutNotFoundError} from "@errors";
 import {AccessTokenPayload} from "@src/middleware";
@@ -14,8 +14,8 @@ import {createAdminUserAndToken, createUserAndToken, decode} from "./utils";
  * @group workout
  */
 
-describe("admin workout apis", () => {
-  const url = "/api/v1/workouts/";
+describe("admin workout template apis", () => {
+  const url = "/api/v1/templates/workouts/";
   let user: User;
   let accessToken: string;
   let adminUser: User;
@@ -32,14 +32,14 @@ describe("admin workout apis", () => {
 
   describe("GET /workouts", () => {
     test("returns all workouts in the database and 200 status code", async () => {
-      const workouts1 = await user.addWorkouts([{name: "test1"}, {name: "test2"}]);
-      const workouts2 = await adminUser.addWorkouts([{name: "test2"}, {name: "test3"}]);
+      const workouts1 = await user.addWorkoutTemplates([{name: "test1"}, {name: "test2"}]);
+      const workouts2 = await adminUser.addWorkoutTemplates([{name: "test2"}, {name: "test3"}]);
       const workoutIds = [...workouts1, ...workouts2].map((workout) => workout.id);
 
       const res = await supertest(app).get(url).set("Authorization", `Token ${adminAccessToken}`).send();
 
       expect(res.statusCode).toBe(200);
-      const retWorkoutIds = (res.body.data as WorkoutDetail[]).map((workout) => workout.id);
+      const retWorkoutIds = (res.body.data as WorkoutTemplateDetail[]).map((workout) => workout.id);
       expect(new Set(retWorkoutIds)).toEqual(new Set(workoutIds));
     });
 
@@ -68,30 +68,30 @@ describe("admin workout apis", () => {
   });
 });
 
-describe("user workout apis", () => {
+describe("user workout template apis", () => {
   let url: string;
   let accessToken: string;
   let user: User;
 
   beforeEach(async () => {
     [user, accessToken] = await createUserAndToken();
-    url = `/api/v1/${user.id}/workouts`;
+    url = `/api/v1/templates/${user.id}/workouts`;
   });
 
   afterEach(() => {
     MockDate.reset();
   });
 
-  describe("GET /workouts/:userId", () => {
+  describe("GET /templates/:userId/workouts", () => {
     test("returns only the workouts owned by the requesting user and 200 status code", async () => {
-      await user.addWorkouts([{name: "test1"}, {name: "test2"}]);
-      await user.addWorkout({name: "test3"});
+      await user.addWorkoutTemplates([{name: "test1"}, {name: "test2"}]);
+      await user.addWorkoutTemplate({name: "test3"});
       await user.reload();
       const res = await supertest(app).get(url).set("Authorization", `Token ${accessToken}`).send();
 
       expect(res.statusCode).toBe(200);
-      expect(res.body.data).toEqual(await user.getSerializedWorkouts());
-      const names = (res.body.data as WorkoutDetail[]).map((workout) => workout.name).sort();
+      expect(res.body.data).toEqual(await user.getSerializedWorkoutTemplates());
+      const names = (res.body.data as WorkoutTemplateDetail[]).map((workout) => workout.name).sort();
       expect(names).toEqual(["test1", "test2", "test3"]);
     });
 
@@ -127,12 +127,12 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("GET /workouts/:userId/:workoutId", () => {
+  describe("GET /templates/:userId/workouts/:workoutId", () => {
     let detailUrl: string;
-    let workout: Workout;
+    let workout: WorkoutTemplate;
 
     beforeEach(async () => {
-      workout = await user.addWorkout({name: "test workout"});
+      workout = await user.addWorkoutTemplate({name: "test workout"});
       detailUrl = `${url}/${workout.id}`;
     });
 
@@ -193,7 +193,7 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("POST /workouts/:userId", () => {
+  describe("POST /templates/:userId/workouts", () => {
     let workoutData: {
       name: string;
     };
@@ -208,7 +208,7 @@ describe("user workout apis", () => {
       const res = await supertest(app).post(url).set("Authorization", `Token ${accessToken}`).send(workoutData);
 
       expect(res.statusCode).toBe(201);
-      expect(user.getWorkout((res.body.data as WorkoutDetail).id)).not.toBeUndefined();
+      expect(user.getWorkoutTemplate((res.body.data as WorkoutTemplateDetail).id)).not.toBeUndefined();
     });
 
     // test('automatically assigns a generic name to workout if name is not provided', async () => {
@@ -240,13 +240,13 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("PATCH /workouts/:userId/:workoutId", () => {
+  describe("PATCH /templates/:userId/workouts/:workoutId", () => {
     let detailUrl: string;
-    let workout: Workout;
+    let workout: WorkoutTemplate;
     const newName = "test workout2";
 
     beforeEach(async () => {
-      workout = await user.addWorkout({name: "oldname"});
+      workout = await user.addWorkoutTemplate({name: "oldname"});
       detailUrl = `${url}/${workout.id}`;
     });
 
@@ -316,12 +316,12 @@ describe("user workout apis", () => {
     });
   });
 
-  describe("DELETE /workouts/:userId/:workoutId", () => {
+  describe("DELETE /templates/:userId/workouts/:workoutId", () => {
     let detailUrl: string;
-    let workout: Workout;
+    let workout: WorkoutTemplate;
 
     beforeEach(async () => {
-      workout = await user.addWorkout({name: "workout1"});
+      workout = await user.addWorkoutTemplate({name: "workout1"});
       detailUrl = `${url}/${workout.id}`;
     });
 

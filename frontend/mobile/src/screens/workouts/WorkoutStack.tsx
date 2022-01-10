@@ -1,12 +1,12 @@
 import React from "react";
 import {createStackNavigator} from "@react-navigation/stack";
-import {Exercise} from "@entities";
+import {ExerciseType} from "@entities";
 import {CreateWorkoutScreen} from "./CreateWorkout";
 import {ListWorkoutsScreen} from "./ListWorkouts";
 
 export type WorkoutStackParamList = {
   listWorkouts: undefined;
-  createWorkout: {selectedExercises: Exercise[]} | undefined;
+  createWorkout: {selectedExercises: ExerciseType[]} | undefined;
 };
 
 const WorkoutStack = createStackNavigator<WorkoutStackParamList>();

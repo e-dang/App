@@ -3,7 +3,7 @@ import {v4 as uuidv4} from "uuid";
 import axios from "axios";
 import {SignInRequest, SignUpRequest} from "@api";
 import {decode} from "@utils";
-import {Exercise} from "@entities";
+import {ExerciseType} from "@entities";
 
 const BASE_URL = "https://dev.erickdang.com/api/v1";
 const MAILHOG_URL = "https://mail.dev.erickdang.com/api/v2/search";
@@ -83,7 +83,7 @@ export async function signIn({email, password}: SignInRequest) {
   await element(by.id("signInBtn")).tap();
 }
 
-export async function createExercises(accessToken: string, exercises: Partial<Exercise>[]) {
+export async function createExercises(accessToken: string, exercises: Partial<ExerciseType>[]) {
   const payload = decode<{userId: string}>(accessToken);
 
   for (const exercise of exercises) {

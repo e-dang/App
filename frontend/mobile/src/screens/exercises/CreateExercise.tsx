@@ -1,4 +1,4 @@
-import {CreateExerciseRequest, useCreateExerciseMutation} from "@api";
+import {CreateExerciseRequest, useCreateExerciseTypeMutation} from "@api";
 import {BackButton, Header, HeaderButton, NameInput, Screen} from "@components";
 import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
@@ -11,7 +11,7 @@ type CreateExerciseNavProps = StackNavigationProp<ExerciseStackParamList, "creat
 
 export const CreateExerciseScreen = () => {
   const navigation = useNavigation<CreateExerciseNavProps>();
-  const [createExercise] = useCreateExerciseMutation();
+  const [createExercise] = useCreateExerciseTypeMutation();
   const [exerciseForm, setExerciseForm] = useState<CreateExerciseRequest>({name: ""});
 
   const handleBack = () => {
