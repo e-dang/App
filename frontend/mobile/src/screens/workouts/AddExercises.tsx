@@ -48,7 +48,7 @@ const ListItem = ({children, onPress, isSelected = true}: ListItemProps) => {
 };
 
 interface ExerciseScreenProps {
-  getSelected?: () => Exercise[];
+  getSelected: () => Exercise[];
 }
 
 const ExerciseScreen: FC<ExerciseScreenProps> = ({children, getSelected}) => {
@@ -59,8 +59,7 @@ const ExerciseScreen: FC<ExerciseScreenProps> = ({children, getSelected}) => {
   };
 
   const handleAddExercises = () => {
-    const selectedExercises = getSelected ? getSelected() : undefined;
-    navigation.navigate("createWorkout", {selectedExercises});
+    navigation.navigate("createWorkout", {selectedExercises: getSelected()});
   };
 
   return (
@@ -86,7 +85,7 @@ export const AddExercisesScreen = () => {
 
   if (query.isLoading) {
     return (
-      <ExerciseScreen>
+      <ExerciseScreen getSelected={getSelected}>
         <Spinner animating={query.isLoading} accessibilityLabel="Loading indicator" />
       </ExerciseScreen>
     );
