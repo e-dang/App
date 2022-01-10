@@ -1,4 +1,4 @@
-exclude: 'node_modules|migrations|.git|.tox|flux-system|ios|android|charts|chart'
+exclude: "node_modules|migrations|.git|.tox|flux-system|ios|android|charts|chart"
 default_stages: [commit]
 fail_fast: true
 
@@ -24,7 +24,7 @@ repos:
     rev: 3.9.0
     hooks:
       - id: flake8
-        args: ['--config=setup.cfg']
+        args: ["--config=setup.cfg"]
         additional_dependencies: [flake8-isort]
 
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -45,15 +45,24 @@ repos:
     hooks:
       - id: forbid-secrets
 
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.5.0
-    hooks:
-      - id: eslint
-        additional_dependencies:
-          - '@typescript-eslint/eslint-plugin@^5.8.0'
-          - '@typescript-eslint/parser@^5.8.0'
-          - eslint@^8.5.0
-          - eslint-config-prettier@^8.3.0
-          - eslint-plugin-prettier@^4.0.0
-        files: \.[jt]sx?$
-        types: [file]
+  # throwing errors when eslint ran with npm/yarn doesn't...literally so fucking annoying.
+  # comment out just in case solution in pre-commit is found before another framework is used.
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: v8.5.0
+  #   hooks:
+  #     - id: eslint
+  #       additional_dependencies:
+  #         - "@typescript-eslint/eslint-plugin@^5.8.0"
+  #         - "@typescript-eslint/parser@^5.8.0"
+  #         - eslint@8.5.0
+  #         - eslint-config-airbnb@19.0.4
+  #         - eslint-config-airbnb-typescript@^16.1.0
+  #         - eslint-config-prettier@^8.3.0
+  #         - eslint-plugin-prettier@^4.0.0
+  #         - eslint-plugin-jest@^25.3.0
+  #         - eslint-plugin-jsx-a11y@^6.5.1
+  #         - eslint-plugin-promise@^6.0.0
+  #         - eslint-plugin-react@^7.28.0
+  #         - eslint-plugin-react-hooks@^4.3.0
+  #       files: \.[jt]sx?$
+  #       types: [file]
