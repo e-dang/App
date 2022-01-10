@@ -65,6 +65,8 @@ export const ListWorkoutsScreen = () => {
             <Text>{item.name}</Text>
           </Box>
         )}
+        onRefresh={query.refetch}
+        refreshing={query.isFetching}
       />
     </WorkoutScreen>
   );
