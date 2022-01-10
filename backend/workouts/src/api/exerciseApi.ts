@@ -25,4 +25,5 @@ exerciseRouter.post(
 
 export const exerciseApi: ApiGroup = {
   router: exerciseRouter,
+  pathPrefix: "types",
 };

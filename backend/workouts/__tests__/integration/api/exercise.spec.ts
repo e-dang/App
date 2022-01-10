@@ -20,10 +20,10 @@ describe("user exercise apis", () => {
 
   beforeEach(async () => {
     [user, accessToken] = await createUserAndToken();
-    url = `/api/v1/${user.id}/exercises`;
+    url = `/api/v1/types/${user.id}/exercises`;
   });
 
-  describe("GET /:userId/exercises", () => {
+  describe("GET /types/:userId/exercises", () => {
     test("returns 200 status code and all non deleted exercises owned by requesting user on success", async () => {
       await user.addExerciseTypes([{name: "test1"}, {name: "test2"}]);
       await user.addExerciseType({name: "test3"});
@@ -62,7 +62,7 @@ describe("user exercise apis", () => {
     });
   });
 
-  describe("POST /:userId/exercises", () => {
+  describe("POST /types/:userId/exercises", () => {
     let exerciseData: {
       name: string;
     };
