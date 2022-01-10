@@ -1,13 +1,16 @@
-import React, {useState} from "react";
-import {Header, HeaderButton, Screen, ChildrenProps, CancelButton} from "@components";
-import {Box, Center, Icon, Heading, FlatList, Spinner, Text, VStack, HStack, Pressable, Divider} from "native-base";
+import React, {FC} from "react";
+import {Header, ChildrenProps, HeaderButton, Screen} from "@components";
+import {Box, Center, Icon, Heading, SectionList, Spinner, Text, VStack, HStack, Pressable, Divider} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {useListExercisesQuery} from "@api";
+import {CancelButton} from "@components/basic/CancelButton";
 import {AppStackParamList} from "@screens/AppStack";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
 import {Exercise} from "@entities";
 import {ListRenderItem} from "react-native";
+import {useAlphabeticalSections, useSelectable} from "@hooks";
+import _ from "lodash";
 import type {WorkoutStackParamList} from "./WorkoutStack";
 
 type AddExercisesNavProps = StackNavigationProp<WorkoutStackParamList & AppStackParamList, "workoutAddExercises">;
@@ -44,7 +47,11 @@ const ListItem = ({children, onPress, isSelected = true}: ListItemProps) => {
   );
 };
 
-const ExerciseScreen = ({children}: ChildrenProps) => {
+interface ExerciseScreenProps {
+  getSelected?: () => Exercise[];
+}
+
+const ExerciseScreen: FC<ExerciseScreenProps> = ({children, getSelected}) => {
   const navigation = useNavigation<AddExercisesNavProps>();
 
   const handleBack = () => {
@@ -52,7 +59,8 @@ const ExerciseScreen = ({children}: ChildrenProps) => {
   };
 
   const handleAddExercises = () => {
-    //     navigation.navigate('createExercise');
+    const selectedExercises = getSelected ? getSelected() : undefined;
+    navigation.navigate("createWorkout", {selectedExercises});
   };
 
   return (
@@ -71,58 +79,48 @@ const ExerciseScreen = ({children}: ChildrenProps) => {
   );
 };
 
-interface SelectionProps {
-  isSelected: boolean;
-}
-
-type ExerciseListItem = Exercise & SelectionProps;
-
-function addSelectionProps(data: Exercise[]): ExerciseListItem[] {
-  return data.map((val) => ({...val, isSelected: false}));
-}
-
-function makeSelection(data: ExerciseListItem[], itemId: string) {
-  return data.map((val) => (itemId === val.id ? {...val, isSelected: !val.isSelected} : val));
-}
-
 export const AddExercisesScreen = () => {
-  const {data = {data: []}, isLoading} = useListExercisesQuery();
-  const [formattedData, setFormattedData] = useState<ExerciseListItem[]>(addSelectionProps(data.data));
+  const query = useListExercisesQuery();
+  const sections = useAlphabeticalSections(query.data?.data, "name");
+  const {selections, select, isSelected, getSelected} = useSelectable(query.data?.data);
 
-  React.useEffect(() => {
-    setFormattedData(addSelectionProps(data.data));
-  }, [data]);
-
-  if (isLoading) {
+  if (query.isLoading) {
     return (
       <ExerciseScreen>
-        <Spinner animating={isLoading} accessibilityLabel="Loading indicator" />
+        <Spinner animating={query.isLoading} accessibilityLabel="Loading indicator" />
       </ExerciseScreen>
     );
   }
 
-  const renderItem: ListRenderItem<ExerciseListItem> = ({item, separators}) => (
+  const renderItem: ListRenderItem<Exercise> = ({item, separators}) => (
     <ListItem
       onPress={() => {
-        setFormattedData(makeSelection(formattedData, item.id));
+        select(item);
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        item.isSelected ? separators.unhighlight() : separators.highlight();
+        isSelected(item) ? separators.unhighlight() : separators.highlight();
       }}
-      isSelected={item.isSelected}>
+      isSelected={isSelected(item)}>
       {item.name}
     </ListItem>
   );
 
   return (
-    <ExerciseScreen>
-      <FlatList
+    <ExerciseScreen getSelected={getSelected}>
+      <SectionList
         width="100%"
         testID="exerciseList"
-        data={formattedData}
-        ListEmptyComponent={<Text>You Don&lsquo;t Have Any Exercises...</Text>}
+        sections={sections}
+        ListEmptyComponent={<Text>You Don&apos;t Have Any Exercises...</Text>}
         keyExtractor={(item) => item.id as string}
-        extraData={formattedData}
+        extraData={selections}
         renderItem={renderItem}
+        renderSectionHeader={({section: {title}}) => (
+          <Box>
+            <Heading fontSize="lg" mt="8" pb="4">
+              {title}
+            </Heading>
+          </Box>
+        )}
         ItemSeparatorComponent={({highlighted}) => <Divider bg={highlighted ? "green.600:alpha.30" : undefined} />}
       />
     </ExerciseScreen>
