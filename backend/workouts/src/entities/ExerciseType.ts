@@ -5,9 +5,11 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import {ExerciseTemplate} from "./ExerciseTemplate";
 import type {User} from "./User";
 
 export interface ExerciseTypeDetail {
@@ -40,6 +42,9 @@ export class ExerciseType extends BaseEntity {
 
   @DeleteDateColumn({type: "timestamptz"})
   deletedAt: Date;
+
+  @OneToMany("ExerciseTemplate", "type")
+  exerciseTemplates: ExerciseTemplate[];
 
   serialize(): ExerciseTypeDetail {
     return {
