@@ -1,4 +1,4 @@
-import {Entity, PrimaryColumn, BaseEntity, OneToMany, DeepPartial} from "typeorm";
+import {Entity, PrimaryColumn, BaseEntity, OneToMany, DeepPartial, FindOneOptions} from "typeorm";
 import {ExerciseType} from "./ExerciseType";
 import {WorkoutTemplate} from "./WorkoutTemplate";
 
@@ -14,7 +14,7 @@ export class User extends BaseEntity {
   exerciseTypes: ExerciseType[];
 
   addWorkoutTemplate(data: Omit<DeepPartial<WorkoutTemplate>, "owner">) {
-    return WorkoutTemplate.create({owner: this, ...data}).save();
+    return WorkoutTemplate.create({...data, owner: this}).save();
   }
 
   addWorkoutTemplates(data: Omit<DeepPartial<WorkoutTemplate>, "owner">[]) {
@@ -26,8 +26,8 @@ export class User extends BaseEntity {
     return workouts.map((workout) => workout.serialize());
   }
 
-  async getWorkoutTemplate(id: string) {
-    return WorkoutTemplate.findOne({owner: this, id});
+  async getWorkoutTemplate(id: string, options?: FindOneOptions<WorkoutTemplate>) {
+    return WorkoutTemplate.findOne({owner: this, id}, options);
   }
 
   addExerciseType(data: Omit<DeepPartial<ExerciseType>, "owner">) {
