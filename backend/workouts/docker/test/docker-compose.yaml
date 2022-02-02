@@ -1,0 +1,34 @@
+services:
+  workouts:
+    image: ericdang/workouts:dev
+    environment:
+      - dbHost=postgres
+      - dbPort=5432
+      - dbUser=postgres
+      - dbPassword=postgres
+      - dbName=workouts
+      - allowedHosts=http://localhost
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - node_modules:/home/node/app/node_modules
+      - ../../:/home/node/app
+    networks:
+      - workouts-test
+
+  postgres:
+    image: postgres:13.4
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=workouts
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - workouts-test
+
+networks:
+  workouts-test:
+
+volumes:
+  node_modules:
+  postgres:

@@ -1,4 +1,4 @@
-import * as jose from "jose";
+import {importSPKI} from "jose";
 import fs from "fs";
 import path from "path";
 
@@ -39,27 +39,25 @@ function getConfigValue<T extends CastableType>(name: string, type: SimpleConstr
 const accessTokenAlg = "EdDSA";
 
 interface Config {
-  env: string;
+  apiVersion: string;
+  httpPort: number;
   dbHost: string;
   dbPort: number;
   dbUser: string;
   dbPassword: string;
   dbName: string;
-  apiVersion: string;
-  allowedHosts: string;
-  httpPort: number;
-  accessTokenPublicKey: Promise<jose.KeyLike>;
+  allowedHosts: string[];
+  accessTokenPublicKey: ReturnType<typeof importSPKI>;
 }
 
 export const config: Config = {
-  env: process.env.NODE_ENV,
+  apiVersion: "1",
+  httpPort: getConfigValue("httpPort", Number, 3000),
   dbHost: getConfigValue("dbHost", String),
   dbPort: getConfigValue("dbPort", Number),
   dbUser: getConfigValue("dbUser", String),
   dbPassword: getConfigValue("dbPassword", String),
   dbName: getConfigValue("dbName", String),
-  httpPort: getConfigValue("httpPort", Number),
-  apiVersion: "v1",
-  allowedHosts: "https://dev.erickdang.com",
-  accessTokenPublicKey: jose.importSPKI(getConfigValue("accessTokenPublic", String), accessTokenAlg),
+  allowedHosts: getConfigValue("allowedHosts", String).split(","),
+  accessTokenPublicKey: importSPKI(getConfigValue("accessTokenPublic", String), accessTokenAlg),
 };
