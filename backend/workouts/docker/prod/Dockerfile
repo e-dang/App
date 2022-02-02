@@ -10,9 +10,9 @@ RUN yarn compile
 
 FROM node:${NODE_VERSION} as run
 ENV NODE_ENV=production
-WORKDIR /home/node/app
 RUN apk update && apk upgrade && apk add --no-cache dumb-init
 USER node
+WORKDIR /home/node/app
 COPY --chown=node:node package.json .
 COPY --chown=node:node yarn.lock .
 RUN yarn install --production --frozen-lockfile
