@@ -1,6 +1,6 @@
 services:
   workouts:
-    image: ericdang/workouts:dev
+    image: workouts:dev
     ports:
       - "3000:3000"
     environment:

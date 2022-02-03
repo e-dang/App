@@ -1,6 +1,6 @@
 services:
   workouts:
-    image: ericdang/workouts:dev
+    image: workouts:dev
     environment:
       - dbHost=postgres
       - dbPort=5432

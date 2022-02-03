@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build:dev": "docker build -t ericdang/workouts:dev -f docker/dev/Dockerfile .",
-    "build:prod": "docker build -t ericdang/workouts:${TAG} -f docker/prod/Dockerfile .",
+    "build:dev": "docker build -t workouts:dev -f docker/dev/Dockerfile .",
+    "build:prod": "docker build -t workouts:prod -f docker/prod/Dockerfile .",
     "precompile": "rimraf dist",
     "compile": "nest build",
     "up:dev": "docker compose -f docker/dev/docker-compose.yaml -p dev up",
