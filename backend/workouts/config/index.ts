@@ -36,8 +36,6 @@ function getConfigValue<T extends CastableType>(name: string, type: SimpleConstr
   throw new Error(`Please specify a value for the configuration '${name}'.`);
 }
 
-const accessTokenAlg = "EdDSA";
-
 interface Config {
   apiVersion: string;
   httpPort: number;
@@ -63,6 +61,6 @@ export const config: Config = {
   allowedHosts: getConfigValue("allowedHosts", String).split(","),
   accessTokenPublicKey: importSPKI(
     getConfigValue("accessTokenPublicKey", String).replace(/\\n/g, "\n"),
-    accessTokenAlg,
+    getConfigValue("accessTokenAlg", String),
   ),
 };
