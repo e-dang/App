@@ -2326,10 +2326,10 @@ eslint-config-airbnb-typescript@^16.1.0:
   dependencies:
     eslint-config-airbnb-base "^15.0.0"
 
-eslint-config-edang@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-edang/-/eslint-config-edang-1.0.0.tgz#0a1aae4c094092b253dd9121aa23972f1e4999c4"
-  integrity sha512-LHer5/s4QNccf/XtNuHUKdpgXwI24V8lISSTETPSJIrWwzuEAKppK+Kdiw0RZKys/AfikFgm+ziAfbwsVd4sLQ==
+eslint-config-edang@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-edang/-/eslint-config-edang-1.0.1.tgz#5b824d715280d891c1e889977cbc8e17d43e5ea2"
+  integrity sha512-4uVY8JbH2S/lMijPmmpN3le2CjVB9cH4NAedIdSatvYBSJlXjiB02OZ3yElfbv2qNThUt2jeabS9bbrGgQ2bQg==
 
 eslint-config-prettier@^8.3.0:
   version "8.3.0"
