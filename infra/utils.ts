@@ -1,9 +1,9 @@
-import * as pulumi from '@pulumi/pulumi';
-import {execSync} from 'child_process';
-import {load} from 'js-yaml';
+import * as pulumi from "@pulumi/pulumi";
+import {execSync} from "child_process";
+import {load} from "js-yaml";
 
 interface RawDecryptedSecret {
-    [x: string]: string;
+  [x: string]: string;
 }
 
 // Work around of typescript stupidity
@@ -12,14 +12,14 @@ export const wrapperPulumiSecret = (val: pulumi.Input<string>) => pulumi.secret<
 export type PulumiSecret = ReturnType<typeof wrapperPulumiSecret>;
 
 export interface DecryptedSecret {
-    [x: string]: PulumiSecret;
+  [x: string]: PulumiSecret;
 }
 
 export function decryptSopsFile<T extends DecryptedSecret>(filepath: string) {
-    const yamlOutput = load(execSync(`sops -d ${filepath}`).toString()) as RawDecryptedSecret;
-    const secretOutput: DecryptedSecret = {};
-    for (const key in yamlOutput) {
-        secretOutput[key] = pulumi.secret(yamlOutput[key]);
-    }
-    return secretOutput as T;
+  const yamlOutput = load(execSync(`sops -d ${filepath}`).toString()) as RawDecryptedSecret;
+  const secretOutput: DecryptedSecret = {};
+  for (const key of Object.keys(yamlOutput)) {
+    secretOutput[key] = pulumi.secret(yamlOutput[key]);
+  }
+  return secretOutput as T;
 }

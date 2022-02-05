@@ -1,35 +1,34 @@
-import {Workout} from '@src/types';
-import {ApiResponse} from './authApi';
-import {baseApi} from './baseApi';
+import {CreateWorkoutTemplateForm, WorkoutTemplate} from "@entities";
+import {ApiListResponse, ApiResponse} from "./types";
+import {baseApi} from "./baseApi";
 
-export interface CreateWorkoutRequest {
-    name: string;
-}
-
-const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ['Workout']});
+const taggedBaseApi = baseApi.enhanceEndpoints({addTagTypes: ["WorkoutTemplate"]});
 
 export const workoutApi = taggedBaseApi.injectEndpoints({
-    endpoints: (builder) => ({
-        listWorkouts: builder.query<ApiResponse<Workout[]>, void>({
-            query: () => ({
-                url: ':userId/workouts/',
-                method: 'GET',
-            }),
-            providesTags: (result) =>
-                result
-                    ? [...result.data.map(({id}) => ({type: 'Workout' as const, id})), {type: 'Workout', id: 'LIST'}]
-                    : [{type: 'Workout', id: 'LIST'}],
-        }),
-        createWorkout: builder.mutation<Workout, CreateWorkoutRequest>({
-            query: (workout) => ({
-                url: ':userId/workouts/',
-                method: 'POST',
-                body: workout,
-            }),
-            transformResponse: (response: ApiResponse<Workout>) => response.data,
-            invalidatesTags: [{type: 'Workout', id: 'LIST'}],
-        }),
+  endpoints: (builder) => ({
+    listWorkoutTemplates: builder.query<ApiListResponse<WorkoutTemplate>, void>({
+      query: () => ({
+        url: "templates/:userId/workouts/",
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({id}) => ({type: "WorkoutTemplate" as const, id})),
+              {type: "WorkoutTemplate", id: "LIST"},
+            ]
+          : [{type: "WorkoutTemplate", id: "LIST"}],
     }),
+    createWorkoutTemplate: builder.mutation<WorkoutTemplate, CreateWorkoutTemplateForm>({
+      query: (workout) => ({
+        url: "templates/:userId/workouts/",
+        method: "POST",
+        body: workout,
+      }),
+      transformResponse: (response: ApiResponse<WorkoutTemplate>) => response.data,
+      invalidatesTags: [{type: "WorkoutTemplate", id: "LIST"}],
+    }),
+  }),
 });
 
-export const {useListWorkoutsQuery, useCreateWorkoutMutation} = workoutApi;
+export const {useListWorkoutTemplatesQuery, useCreateWorkoutTemplateMutation} = workoutApi;

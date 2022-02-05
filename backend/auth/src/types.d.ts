@@ -1,7 +1,7 @@
-import {User} from '@entities';
+import {User} from "@entities";
 
-declare module 'express' {
-    export interface Request {
-        user?: User;
-    }
+declare module "express" {
+  export interface Request {
+    user?: User;
+  }
 }

@@ -8,13 +8,15 @@ spec:
     ingress:
       annotations:
         cert-manager.io/issuer: letsencrypt
-        nginx.ingress.kubernetes.io/use-regex: 'true'
+        nginx.ingress.kubernetes.io/use-regex: "true"
       hosts:
         - host: dev.erickdang.com
           paths:
-            - path: /api/v1/[0-9a-f-]{36}/workouts
+            - path: /api/v1/templates/
               pathType: Prefix
-            - path: /api/v1/[0-9a-f-]{36}/exercises
+            - path: /api/v1/records/
+              pathType: Prefix
+            - path: /api/v1/types/
               pathType: Prefix
       tls:
         - hosts:
@@ -25,4 +27,4 @@ spec:
         images:
           - name: ericdang/workouts
             newName: ericdang/workouts
-            newTag: dev-e4896000-1639877002 # {"$imagepolicy": "flux-system:workouts:tag"}
+            newTag: dev-e4896000-1639877003 # {"$imagepolicy": "flux-system:workouts:tag"}

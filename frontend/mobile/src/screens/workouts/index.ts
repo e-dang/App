@@ -1,1 +1,2 @@
-export * from './WorkoutStack';
+export * from "./WorkoutStack";
+export * from "./AddExercises";
