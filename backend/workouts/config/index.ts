@@ -24,7 +24,7 @@ function getConfigValue<T extends CastableType>(name: string, type: SimpleConstr
 
   // otherwise look for files containing value
   const secretsDir = path.join(__dirname, "secrets");
-  if (fs.readdirSync(secretsDir, {encoding: "utf-8"}).includes(name)) {
+  if (fs.existsSync(secretsDir) && fs.readdirSync(secretsDir, {encoding: "utf-8"}).includes(name)) {
     return castTo(fs.readFileSync(path.join(secretsDir, name), {encoding: "utf-8"}).toString(), type);
   }
 
@@ -59,5 +59,8 @@ export const config: Config = {
   dbPassword: getConfigValue("dbPassword", String),
   dbName: getConfigValue("dbName", String),
   allowedHosts: getConfigValue("allowedHosts", String).split(","),
-  accessTokenPublicKey: importSPKI(getConfigValue("accessTokenPublic", String), accessTokenAlg),
+  accessTokenPublicKey: importSPKI(
+    getConfigValue("accessTokenPublicKey", String).replace(/\\n/g, "\n"),
+    accessTokenAlg,
+  ),
 };
