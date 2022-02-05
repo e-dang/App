@@ -2,6 +2,7 @@ name: Workouts
 
 env:
   DOCKER_BUILDKIT: 1
+  COMPOSE_INTERACTIVE_NO_CLI: 1
   DIRECTORY: backend/workouts
 
 on:
