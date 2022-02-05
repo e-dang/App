@@ -5,8 +5,6 @@ services:
       - "3000:3000"
     env_file:
       - ../../.env.app.dev
-    volumes:
-      - ../../config/secrets:/home/node/app/config/secrets
     networks:
       - workouts-prod
 
