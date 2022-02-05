@@ -9,6 +9,7 @@ services:
       - ../../:/home/node/app
     networks:
       - workouts-test
+    stop_signal: SIGKILL
 
   postgres:
     image: postgres:13.4
