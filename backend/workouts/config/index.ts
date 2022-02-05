@@ -46,6 +46,7 @@ interface Config {
   dbUser: string;
   dbPassword: string;
   dbName: string;
+  dbSSL: boolean;
   allowedHosts: string[];
   accessTokenPublicKey: ReturnType<typeof importSPKI>;
 }
@@ -58,6 +59,7 @@ export const config: Config = {
   dbUser: getConfigValue("dbUser", String),
   dbPassword: getConfigValue("dbPassword", String),
   dbName: getConfigValue("dbName", String),
+  dbSSL: getConfigValue("dbSSL", Boolean),
   allowedHosts: getConfigValue("allowedHosts", String).split(","),
   accessTokenPublicKey: importSPKI(
     getConfigValue("accessTokenPublicKey", String).replace(/\\n/g, "\n"),

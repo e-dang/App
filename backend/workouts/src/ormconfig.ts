@@ -10,6 +10,7 @@ let typeOrmConfig: TypeOrmModuleOptions = {
   username: config.dbUser,
   password: config.dbPassword,
   database: config.dbName,
+  ssl: config.dbSSL,
   migrations: ["dist/src/migrations/*{.ts,.js}"],
 };
 
@@ -17,14 +18,12 @@ if (process.env.NODE_ENV === undefined) {
   typeOrmConfig = {
     ...typeOrmConfig,
     entities,
-    ssl: false,
   };
 } else if (process.env.NODE_ENV === "development") {
   typeOrmConfig = {
     ...typeOrmConfig,
     synchronize: false,
     migrationsRun: false,
-    ssl: false,
   };
 } else if (process.env.NODE_ENV === "test") {
   typeOrmConfig = {
@@ -32,14 +31,12 @@ if (process.env.NODE_ENV === undefined) {
     entities,
     synchronize: false,
     migrationsRun: true,
-    ssl: false,
   };
 } else if (process.env.NODE_ENV === "production") {
   typeOrmConfig = {
     ...typeOrmConfig,
     synchronize: false,
     migrationsRun: false,
-    ssl: true,
   };
 }
 
