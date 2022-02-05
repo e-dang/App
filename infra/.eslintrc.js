@@ -10,6 +10,15 @@ module.exports = {
       parserOptions: {
         project: `${__dirname}/tsconfig.json`,
       },
+      rules: {
+        "@typescript-eslint/no-unused-vars": ["error", {varsIgnorePattern: "^_"}], // should set resource to variable in pulumi code
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            leadingUnderscore: "allow", // allows for throw away vars
+          },
+        ],
+      },
     },
   ],
 };
