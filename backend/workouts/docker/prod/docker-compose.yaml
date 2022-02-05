@@ -1,0 +1,26 @@
+services:
+  workouts:
+    image: workouts:prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../../.env.app.dev
+    volumes:
+      - ../../config/secrets:/home/node/app/config/secrets
+    networks:
+      - workouts-prod
+
+  postgres:
+    image: postgres:13.4
+    env_file:
+      - ../../.env.db.dev
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - workouts-prod
+
+networks:
+  workouts-prod:
+
+volumes:
+  postgres:
