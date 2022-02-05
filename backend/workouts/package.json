@@ -31,8 +31,8 @@
     "clean:test:db": "docker container rm test-postgres-1 && docker volume rm test_postgres",
     "lint": "eslint \"{src,__tests__,config,scripts}/**/*.ts\"",
     "generate:dev:env": "ts-node scripts/gen-dev-env.ts",
-    "generate:keys": "npx ts-node scripts/genKeys.ts",
-    "generate:token": "npx ts-node -r tsconfig-paths/register scripts/genToken.ts"
+    "generate:keys": "ts-node scripts/gen-keys.ts",
+    "generate:token": "ts-node -r tsconfig-paths/register scripts/gen-token.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
