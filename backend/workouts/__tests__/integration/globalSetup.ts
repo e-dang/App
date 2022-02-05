@@ -9,5 +9,5 @@ export default async () => {
   const pkcs8Pem = await jose.exportPKCS8(privateKey);
   const spkiPem = await jose.exportSPKI(publicKey);
   process.env.accessTokenPrivateKey = pkcs8Pem;
-  process.env.accessTokenPublic = spkiPem;
+  process.env.accessTokenPublicKey = spkiPem;
 };
