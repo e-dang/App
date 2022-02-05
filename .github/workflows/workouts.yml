@@ -91,6 +91,9 @@ jobs:
           docker load --input /tmp/workouts.tar
           docker image ls -a
 
+      - name: Generate env files
+        run: cd ${DIRECTORY} && yarn generate:env
+
       - name: Start test stack
         run: cd ${DIRECTORY} && yarn up:test --wait
 
