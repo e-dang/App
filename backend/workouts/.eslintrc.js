@@ -6,12 +6,7 @@ module.exports = {
       version: jestPackage.version,
     },
   },
-  overrides: [
-    {
-      files: ["**/*.ts", "**/*.tsx"],
-      parserOptions: {
-        project: `${__dirname}/tsconfig.json`,
-      },
-    },
-  ],
+  parserOptions: {
+    project: `${__dirname}/tsconfig.json`,
+  },
 };

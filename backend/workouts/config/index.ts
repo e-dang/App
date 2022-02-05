@@ -1,4 +1,4 @@
-import * as jose from "jose";
+import {importSPKI} from "jose";
 import fs from "fs";
 import path from "path";
 
@@ -24,7 +24,7 @@ function getConfigValue<T extends CastableType>(name: string, type: SimpleConstr
 
   // otherwise look for files containing value
   const secretsDir = path.join(__dirname, "secrets");
-  if (fs.readdirSync(secretsDir, {encoding: "utf-8"}).includes(name)) {
+  if (fs.existsSync(secretsDir) && fs.readdirSync(secretsDir, {encoding: "utf-8"}).includes(name)) {
     return castTo(fs.readFileSync(path.join(secretsDir, name), {encoding: "utf-8"}).toString(), type);
   }
 
@@ -36,30 +36,31 @@ function getConfigValue<T extends CastableType>(name: string, type: SimpleConstr
   throw new Error(`Please specify a value for the configuration '${name}'.`);
 }
 
-const accessTokenAlg = "EdDSA";
-
 interface Config {
-  env: string;
+  apiVersion: string;
+  httpPort: number;
   dbHost: string;
   dbPort: number;
   dbUser: string;
   dbPassword: string;
   dbName: string;
-  apiVersion: string;
-  allowedHosts: string;
-  httpPort: number;
-  accessTokenPublicKey: Promise<jose.KeyLike>;
+  dbSSL: boolean;
+  allowedHosts: string[];
+  accessTokenPublicKey: ReturnType<typeof importSPKI>;
 }
 
 export const config: Config = {
-  env: process.env.NODE_ENV,
+  apiVersion: "1",
+  httpPort: getConfigValue("httpPort", Number, 3000),
   dbHost: getConfigValue("dbHost", String),
   dbPort: getConfigValue("dbPort", Number),
   dbUser: getConfigValue("dbUser", String),
   dbPassword: getConfigValue("dbPassword", String),
   dbName: getConfigValue("dbName", String),
-  httpPort: getConfigValue("httpPort", Number),
-  apiVersion: "v1",
-  allowedHosts: "https://dev.erickdang.com",
-  accessTokenPublicKey: jose.importSPKI(getConfigValue("accessTokenPublic", String), accessTokenAlg),
+  dbSSL: getConfigValue("dbSSL", Boolean),
+  allowedHosts: getConfigValue("allowedHosts", String).split(","),
+  accessTokenPublicKey: importSPKI(
+    getConfigValue("accessTokenPublicKey", String).replace(/\\n/g, "\n"),
+    getConfigValue("accessTokenAlg", String),
+  ),
 };
