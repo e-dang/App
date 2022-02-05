@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "postinstall": "yarn generate:env",
     "build:dev": "docker build -t workouts:dev -f docker/dev/Dockerfile .",
     "build:prod": "docker build -t workouts:prod -f docker/prod/Dockerfile .",
     "precompile": "rimraf dist",
@@ -29,7 +30,7 @@
     "clean:test:app": "docker container rm test-workouts-1 && docker volume rm test_node_modules test_dist",
     "clean:test:db": "docker container rm test-postgres-1 && docker volume rm test_postgres",
     "lint": "eslint \"{src,__tests__,config,scripts}/**/*.ts\"",
-    "generate:dev:env": "ts-node scripts/gen-dev-env.ts",
+    "generate:env": "ts-node scripts/gen-dev-env.ts",
     "generate:keys": "ts-node scripts/gen-keys.ts",
     "generate:token": "ts-node -r tsconfig-paths/register scripts/gen-token.ts"
   },
