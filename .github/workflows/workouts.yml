@@ -84,7 +84,7 @@ jobs:
         uses: actions/setup-node@v2
 
       - name: Install dependencies
-        run: yarn install
+        run: cd ${DIRECTORY} && yarn install
 
       - name: Generate env files
         run: cd ${DIRECTORY} && yarn generate:env
