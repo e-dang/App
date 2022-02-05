@@ -3,13 +3,8 @@ services:
     image: workouts:dev
     ports:
       - "3000:3000"
-    environment:
-      - dbHost=postgres
-      - dbPort=5432
-      - dbUser=postgres
-      - dbPassword=postgres
-      - dbName=workouts
-      - allowedHosts=http://localhost,https://dev.erickdang.com
+    env_file:
+      - ../../.env.app.dev
     command: ["tail", "-f", "/dev/null"]
     volumes:
       - node_modules:/home/node/app/node_modules
@@ -19,10 +14,8 @@ services:
 
   postgres:
     image: postgres:13.4
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=workouts
+    env_file:
+      - ../../.env.db.dev
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
