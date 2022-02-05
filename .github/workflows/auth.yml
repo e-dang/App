@@ -81,7 +81,7 @@ jobs:
           sudo chmod +x /usr/local/bin/telepresence
 
       - name: Install kubectl
-        uses: azure/setup-kubectl@v1
+        uses: azure/setup-kubectl@v2.0
         with:
           version: 'latest'
 
