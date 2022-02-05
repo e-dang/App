@@ -6,7 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "postinstall": "yarn generate:env",
     "build:dev": "docker build -t workouts:dev -f docker/dev/Dockerfile .",
     "build:prod": "docker build -t workouts:prod -f docker/prod/Dockerfile .",
     "precompile": "rimraf dist",
