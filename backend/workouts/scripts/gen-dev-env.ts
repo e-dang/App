@@ -40,6 +40,8 @@ function writeAppEnv(rawConfig: Config) {
   for (const key of Object.keys(appConfig)) {
     if (typeof appConfig[key] === "string") {
       appConfig[key] = (appConfig[key] as string).replace(/\n/g, "\\n"); // strings can only be on one line in env files
+    } else {
+      appConfig[key] = rawConfig[key];
     }
   }
 
