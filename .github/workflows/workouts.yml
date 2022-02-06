@@ -111,7 +111,7 @@ jobs:
         run: cd ${DIRECTORY} && yarn up:test --wait
 
       - name: Run tests
-        run: cd ${DIRECTORY} && yarn test:int
+        run: docker compose -p test exec -T workouts yarn jest --config=jest.config.int.js
 
   push-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
