@@ -7,7 +7,7 @@ services:
       - ../../.env.app.dev
     command: ["tail", "-f", "/dev/null"]
     volumes:
-      - node_modules:/home/node/app/node_modules
+      - /home/node/app/node_modules
       - ../../:/home/node/app
     networks:
       - workouts-dev
@@ -18,13 +18,9 @@ services:
     env_file:
       - ../../.env.db.dev
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
     networks:
       - workouts-dev
 
 networks:
   workouts-dev:
-
-volumes:
-  node_modules:
-  postgres:

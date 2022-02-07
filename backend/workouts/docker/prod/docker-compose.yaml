@@ -13,12 +13,9 @@ services:
     env_file:
       - ../../.env.db.dev
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
     networks:
       - workouts-prod
 
 networks:
   workouts-prod:
-
-volumes:
-  postgres:
