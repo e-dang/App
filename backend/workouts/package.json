@@ -29,9 +29,9 @@
     "clean:test": "docker compose -f docker/test/docker-compose.yaml -p test rm -v",
     "clean:prod": "docker compose -f docker/prod/docker-compose.yaml -p prod rm -v",
     "lint": "eslint \"{src,__tests__,config,scripts}/**/*.ts\"",
-    "generate:env": "ts-node scripts/gen-dev-env.ts",
-    "generate:keys": "ts-node scripts/gen-keys.ts",
-    "generate:token": "ts-node -r tsconfig-paths/register scripts/gen-token.ts"
+    "gen:env": "ts-node scripts/gen-env.ts",
+    "gen:keys": "ts-node scripts/gen-keys.ts",
+    "gen:token": "ts-node -r tsconfig-paths/register scripts/gen-token.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
