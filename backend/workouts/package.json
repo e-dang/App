@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "setup": "yarn compile && yarn gen:env",
     "build:dev": "docker build -t workouts:dev -f docker/dev/Dockerfile .",
     "build:prod": "docker build -t workouts:prod -f docker/prod/Dockerfile .",
     "precompile": "rimraf dist",
@@ -25,6 +26,7 @@
     "test:debug": "docker compose -p test exec workouts node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "migration:generate": "typeorm migration:generate --config dist/src/ormconfig.js -d src/migrations",
     "migration:run": "typeorm migration:run --config dist/src/ormconfig.js",
+    "clean": "rimraf dist coverage .jest .env.app.dev .env.db.dev",
     "clean:dev": "docker compose -f docker/dev/docker-compose.yaml -p dev rm -v",
     "clean:test": "docker compose -f docker/test/docker-compose.yaml -p test rm -v",
     "clean:prod": "docker compose -f docker/prod/docker-compose.yaml -p prod rm -v",
