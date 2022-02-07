@@ -149,7 +149,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ${{ env.DIRECTORY }}
           file: ${{ env.DIRECTORY }}/docker/prod/Dockerfile
           push: true
           tags: ericdang/workouts:${{ steps.tag.outputs.TAG }}
