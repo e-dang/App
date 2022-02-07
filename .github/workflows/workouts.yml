@@ -95,12 +95,8 @@ jobs:
         run: yarn install
         working-directory: ${{ env.DIRECTORY }}
 
-      - name: Generate env files
-        run: yarn generate:env
-        working-directory: ${{ env.DIRECTORY }}
-
-      - name: Compile
-        run: yarn compile
+      - name: Setup environment
+        run: yarn setup
         working-directory: ${{ env.DIRECTORY }}
 
       - name: Download Docker image
