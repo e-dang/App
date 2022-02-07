@@ -10,4 +10,5 @@ module.exports = {
   testTimeout: 10000,
   globalSetup: "./__tests__/integration/globalSetup.ts",
   testRegex: ".spec.ts$",
+  cacheDirectory: "./.jest",
 };
