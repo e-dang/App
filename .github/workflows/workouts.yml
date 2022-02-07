@@ -30,10 +30,12 @@ jobs:
         uses: actions/setup-node@v2
 
       - name: Install dependencies
-        run: cd ${DIRECTORY} && yarn install
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Install dependencies
-        run: cd ${DIRECTORY} && yarn lint
+        run: yarn lint
+        working-directory: ${{ env.DIRECTORY }}
 
   build:
     runs-on: ubuntu-latest
@@ -45,7 +47,8 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build dev Docker image
-        run: cd ${DIRECTORY} && yarn build:dev
+        run: yarn build:dev
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Export dev Docker image
         run: docker save workouts:dev > /tmp/workouts.tar
@@ -71,12 +74,11 @@ jobs:
           path: /tmp
 
       - name: Load image
-        run: |
-          docker load --input /tmp/workouts.tar
-          docker image ls -a
+        run: docker load --input /tmp/workouts.tar
 
       - name: Unit test
-        run: cd ${DIRECTORY} && yarn test:unit
+        run: yarn test:unit
+        working-directory: ${{ env.DIRECTORY }}
 
   integration-test:
     runs-on: ubuntu-latest
@@ -90,13 +92,16 @@ jobs:
         uses: actions/setup-node@v2
 
       - name: Install dependencies
-        run: cd ${DIRECTORY} && yarn install
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Generate env files
-        run: cd ${DIRECTORY} && yarn generate:env
+        run: yarn generate:env
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Compile
-        run: cd ${DIRECTORY} && yarn compile
+        run: yarn compile
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Download Docker image
         uses: actions/download-artifact@v2
@@ -105,12 +110,11 @@ jobs:
           path: /tmp
 
       - name: Load image
-        run: |
-          docker load --input /tmp/workouts.tar
-          docker image ls -a
+        run: docker load --input /tmp/workouts.tar
 
       - name: Start test stack
-        run: cd ${DIRECTORY} && yarn up:test --wait
+        run: yarn up:test --wait
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Run tests
         run: docker compose -p test exec -T workouts yarn jest --config=jest.config.int.js
