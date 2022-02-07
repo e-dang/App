@@ -95,6 +95,9 @@ jobs:
       - name: Generate env files
         run: cd ${DIRECTORY} && yarn generate:env
 
+      - name: Compile
+        run: cd ${DIRECTORY} && yarn compile
+
       - name: Download Docker image
         uses: actions/download-artifact@v2
         with:
