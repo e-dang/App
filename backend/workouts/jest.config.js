@@ -8,7 +8,7 @@ module.exports = {
   testEnvironment: "node",
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {prefix: path.resolve(__dirname)}),
   testTimeout: 10000,
-  globalSetup: "./__tests__/integration/globalSetup.ts",
+  globalSetup: "./__tests__/globalSetup.ts",
   testRegex: ".spec.ts$",
   cacheDirectory: "./.jest",
 };
