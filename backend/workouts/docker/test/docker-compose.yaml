@@ -3,6 +3,8 @@ services:
     image: workouts:dev
     env_file:
       - ../../.env.app.dev
+    environment:
+      - NODE_ENV=test
     command: ["tail", "-f", "/dev/null"]
     volumes:
       - /home/node/app/node_modules
