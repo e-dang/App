@@ -113,7 +113,8 @@ jobs:
         working-directory: ${{ env.DIRECTORY }}
 
       - name: Run tests
-        run: docker compose -p test exec -T workouts yarn jest --config=jest.config.int.js
+        run: docker compose -p test exec -T workouts yarn jest __tests__/integration
+        working-directory: ${{ env.DIRECTORY }}
 
   push-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
