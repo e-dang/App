@@ -1,6 +1,6 @@
 import {MiddlewareConsumer, Module, NestModule} from "@nestjs/common";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {APP_GUARD} from "@nestjs/core";
+import {APP_FILTER, APP_GUARD} from "@nestjs/core";
 import {AuthenticationMiddleware} from "@core/middleware/authentication.middleware";
 import {WorkoutTemplatesModule} from "@workout-templates/workout-templates.module";
 import {ExerciseGroupTemplatesModule} from "@exercise-group-templates/exercise-group-templates.module";
@@ -14,6 +14,7 @@ import pino from "pino";
 import {Request, Response} from "express";
 import {AuthenticatedRequest} from "@core/types";
 import {randomUUID} from "crypto";
+import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
 import TypeOrmConfig from "./ormconfig";
 
 @Module({
@@ -65,6 +66,10 @@ import TypeOrmConfig from "./ormconfig";
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
     },
   ],
 })
