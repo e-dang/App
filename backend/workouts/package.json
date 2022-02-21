@@ -45,6 +45,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "express": "^4.17.2",
+    "helmet": "^5.0.2",
     "jose": "^4.3.8",
     "nestjs-pino": "^2.5.0",
     "pg": "^8.7.1",
