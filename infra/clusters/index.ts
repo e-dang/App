@@ -32,7 +32,7 @@ const cluster = new containerservice.ManagedCluster("aks", {
   },
   dnsPrefix: `tracker-${env}`,
   enableRBAC: true,
-  kubernetesVersion: "1.20.9",
+  kubernetesVersion: "1.21.9",
   identity: {
     type: "SystemAssigned",
   },
