@@ -1,11 +1,10 @@
 import {config} from "@config";
-import {enableLogging} from "@core/logger";
-import {INestApplication, ValidationPipe, VersioningType} from "@nestjs/common";
+import {INestApplication, Logger, ValidationPipe, VersioningType} from "@nestjs/common";
 import {NestFactory} from "@nestjs/core";
 import {AppModule} from "./app.module";
 
 export function appGlobalsSetup(app: INestApplication) {
-  enableLogging(app);
+  app.useLogger(app.get(Logger));
   app.enableCors({origin: config.allowedHosts});
   app.setGlobalPrefix("api");
   app.enableVersioning({
