@@ -1,36 +1,44 @@
 {
   "compilerOptions": {
-    "lib": ["es5", "es6"],
-    "target": "es5",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "./dist",
+    "declaration": true,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@api": ["src/api"],
-      "@api/*": ["src/api/*"],
-      "@entities": ["src/entities"],
-      "@entities/*": ["src/entities/*"],
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"],
+      "@core": ["src/core"],
+      "@core/*": ["src/core/*"],
+      "@health": ["src/health"],
+      "@health/*": ["src/health/*"],
+      "@users": ["src/users"],
+      "@users/*": ["src/users/*"],
       "@auth": ["src/auth"],
       "@auth/*": ["src/auth/*"],
-      "@schemas": ["src/schemas"],
-      "@schemas/*": ["src/schemas/*"],
+      "@jwt": ["src/jwt"],
+      "@jwt/*": ["src/jwt/*"],
       "@emailer": ["src/emailer"],
       "@emailer/*": ["src/emailer/*"],
-      "@errors": ["src/errors"],
-      "@errors/*": ["src/errors/*"],
-      "@config": ["config"],
-      "@config/*": ["config/*"],
+      "@password-hasher": ["src/password-hasher"],
+      "@password-hasher/*": ["src/password-hasher/*"],
+      "@password-reset": ["src/password-reset"],
+      "@password-reset/*": ["src/password-reset/*"],
       "@src": ["src"],
-      "@src/*": ["src/*"],
-      "@tests": ["__tests__"],
-      "@tests/*": ["__tests__/*"]
+      "@src/*": ["src/*"]
     },
     "plugins": [
       {
@@ -39,5 +47,5 @@
       }
     ]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

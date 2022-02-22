@@ -1,0 +1,26 @@
+services:
+  auth:
+    image: auth:dev
+    env_file:
+      - ../../.env.app.dev
+    environment:
+      - NODE_ENV=test
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - /home/node/app/node_modules
+      - ../../:/home/node/app
+    networks:
+      - auth-test
+    stop_signal: SIGKILL
+
+  postgres:
+    image: postgres:13.4
+    env_file:
+      - ../../.env.db.dev
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - auth-test
+
+networks:
+  auth-test:
