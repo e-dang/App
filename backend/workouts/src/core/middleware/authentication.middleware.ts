@@ -1,5 +1,6 @@
-import {config} from "@config";
 import {Injectable, NestMiddleware, UnauthorizedException} from "@nestjs/common";
+import {ConfigService} from "@nestjs/config";
+import {Configuration} from "@src/config";
 import {NextFunction, Request, Response} from "express";
 import {jwtVerify} from "jose";
 import {getRepository} from "typeorm";
@@ -8,12 +9,14 @@ import {AccessTokenPayload, AuthenticatedRequest} from "../types";
 
 @Injectable()
 export class AuthenticationMiddleware implements NestMiddleware {
+  constructor(private readonly configService: ConfigService<Configuration>) {}
+
   async use(req: Request, res: Response, next: NextFunction) {
     const token = this.parseAccessToken(req);
 
     let payload: AccessTokenPayload;
     try {
-      const decoded = await jwtVerify(token, await config.accessTokenPublicKey);
+      const decoded = await jwtVerify(token, await this.configService.get("accessTokenPublicKey"));
       payload = decoded.payload as AccessTokenPayload;
 
       const repo = getRepository(User);
