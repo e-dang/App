@@ -1,3 +1,4 @@
+import {FactoryProvider} from "@nestjs/common";
 import {ClassConstructor, instanceToInstance, plainToInstance} from "class-transformer";
 import {validateSync} from "class-validator";
 import fs from "fs";
@@ -23,7 +24,6 @@ export function validate<T extends object>(config: Record<string, unknown>, klas
 }
 
 function readConfig(filepath: string) {
-  console.log(process.env);
   const secretsDir = path.join(process.env.PWD, "secrets", filepath);
   if (!fs.existsSync(secretsDir)) {
     return {};
@@ -32,7 +32,7 @@ function readConfig(filepath: string) {
   return {};
 }
 
-export function register<T extends object>(filepath: string, klass: ClassConstructor<T>) {
+export function register<T extends object>(filepath: string, klass: ClassConstructor<T>): FactoryProvider {
   const config = {...process.env, ...readConfig(filepath)};
   return {
     provide: klass,
