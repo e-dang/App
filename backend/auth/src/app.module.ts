@@ -13,6 +13,7 @@ import {emailConfig} from "@emailer/email.config";
 import {jwtConfig} from "@jwt/jwt.config";
 import {passwordHasherConfig} from "@password-hasher/password-hasher.config";
 import {passwordResetConfig} from "@password-reset/password-reset.config";
+import {APP_FILTER} from "@nestjs/core";
 import {LoggerModule} from "./logger/logger.module";
 
 @Module({
@@ -42,7 +43,7 @@ import {LoggerModule} from "./logger/logger.module";
   controllers: [],
   providers: [
     {
-      provide: "APP_FILTER",
+      provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     },
   ],
