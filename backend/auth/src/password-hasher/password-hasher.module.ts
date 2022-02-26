@@ -1,6 +1,6 @@
 // import config from "@config";
 import {Module} from "@nestjs/common";
-import {PasswordHasherConfig} from "@src/config/password-hasher.config";
+import {PasswordHasherConfig} from "@password-hasher/password-hasher.config";
 import {Algorithm} from "./algorithms/algorithm";
 import {PBKDF2} from "./algorithms/pbkdf2";
 import {ALGORITHMS, ALGORITHM} from "./constants";

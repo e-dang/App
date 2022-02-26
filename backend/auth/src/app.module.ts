@@ -16,7 +16,7 @@ import {loggerConfig, LoggerConfig} from "@config/logger.config";
 import path from "path";
 import {emailConfig} from "@config/email.config";
 import {jwtConfig} from "@config/jwt.config";
-import {passwordHasherConfig} from "@config/password-hasher.config";
+import {passwordHasherConfig} from "@password-hasher/password-hasher.config";
 import {passwordResetConfig} from "@password-reset/password-reset.config";
 
 @Module({

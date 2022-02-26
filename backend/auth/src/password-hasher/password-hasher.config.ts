@@ -1,5 +1,5 @@
 import {IsDefined, IsEnum, IsNumber, IsPositive} from "class-validator";
-import {createConfigProvider} from "./app.config";
+import {createConfigProvider} from "../config/app.config";
 
 enum PasswordHasherAlgorithm {
   PBKDF2 = "pbkdf2",

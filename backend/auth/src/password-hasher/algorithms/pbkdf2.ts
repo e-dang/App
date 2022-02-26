@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {PasswordHasherConfig} from "@src/config/password-hasher.config";
+import {PasswordHasherConfig} from "@password-hasher/password-hasher.config";
 import {randomBytes, pbkdf2Sync} from "crypto";
 import {Algorithm} from "./algorithm";
 
