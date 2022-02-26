@@ -5,7 +5,7 @@ import crypto from "crypto";
 import base32 from "hi-base32";
 import {ExpiredTokenException} from "@core/exceptions/expired-token";
 import {InvalidTokenException} from "@core/exceptions/invalid-token";
-import {PasswordResetConfig} from "@src/config/password-reset.config";
+import {PasswordResetConfig} from "@password-reset/password-reset.config";
 
 @Injectable()
 export class PasswordResetService {

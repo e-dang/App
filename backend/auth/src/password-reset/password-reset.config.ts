@@ -1,5 +1,5 @@
 import {IsDefined, IsEnum, IsNumber, IsPositive, IsString} from "class-validator";
-import {createConfigProvider} from "./app.config";
+import {createConfigProvider} from "../config/app.config";
 
 enum PasswordResetTokenAlgorithm {
   SHA256 = "sha256",

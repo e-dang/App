@@ -17,7 +17,7 @@ import path from "path";
 import {emailConfig} from "@config/email.config";
 import {jwtConfig} from "@config/jwt.config";
 import {passwordHasherConfig} from "@config/password-hasher.config";
-import {passwordResetConfig} from "@config/password-reset.config";
+import {passwordResetConfig} from "@password-reset/password-reset.config";
 
 @Module({
   imports: [
