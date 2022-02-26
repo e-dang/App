@@ -1,16 +1,28 @@
-import {IsDefined, IsNumber, IsPositive, IsString} from "class-validator";
+import {IsDefined, IsEnum, IsNumber, IsPositive} from "class-validator";
+import {createConfigProvider} from "./app.config";
 
+enum PasswordHasherAlgorithm {
+  PBKDF2 = "pbkdf2",
+}
 export class PasswordHasherConfig {
-  @IsString()
+  @IsEnum(PasswordHasherAlgorithm)
   @IsDefined()
-  readonly passwordHasher: string;
+  readonly passwordHasher: PasswordHasherAlgorithm;
 
   @IsPositive()
   @IsNumber()
   @IsDefined()
   readonly passwordIterations: number;
 
+  @IsPositive()
   @IsNumber()
   @IsDefined()
   readonly passwordSaltLength: number;
 }
+
+export const passwordHasherConfig = createConfigProvider(PasswordHasherConfig, (validatedConfig) => {
+  return {
+    provide: PasswordHasherConfig,
+    useFactory: () => validatedConfig,
+  };
+});

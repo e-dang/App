@@ -1,6 +1,5 @@
 // import config from "@config";
 import {Module} from "@nestjs/common";
-import {ConfigModule} from "@src/config/config.module";
 import {PasswordHasherConfig} from "@src/config/password-hasher.config";
 import {Algorithm} from "./algorithms/algorithm";
 import {PBKDF2} from "./algorithms/pbkdf2";
@@ -8,7 +7,6 @@ import {ALGORITHMS, ALGORITHM} from "./constants";
 import {PasswordHasherService} from "./password-hasher.service";
 
 @Module({
-  imports: [ConfigModule.forFeature(PasswordHasherConfig)],
   providers: [
     {
       provide: ALGORITHMS,

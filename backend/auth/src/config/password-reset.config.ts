@@ -1,9 +1,13 @@
-import {IsDefined, IsNumber, IsPositive, IsString} from "class-validator";
+import {IsDefined, IsEnum, IsNumber, IsPositive, IsString} from "class-validator";
+import {createConfigProvider} from "./app.config";
 
+enum PasswordResetTokenAlgorithm {
+  SHA256 = "sha256",
+}
 export class PasswordResetConfig {
-  @IsString()
+  @IsEnum(PasswordResetTokenAlgorithm)
   @IsDefined()
-  readonly passwordResetTokenAlg: string;
+  readonly passwordResetTokenAlg: PasswordResetTokenAlgorithm;
 
   @IsString()
   @IsDefined()
@@ -14,3 +18,10 @@ export class PasswordResetConfig {
   @IsDefined()
   readonly passwordResetTokenExp: number;
 }
+
+export const passwordResetConfig = createConfigProvider(PasswordResetConfig, (validatedConfig) => {
+  return {
+    provide: PasswordResetConfig,
+    useFactory: () => validatedConfig,
+  };
+});

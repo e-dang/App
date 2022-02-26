@@ -1,5 +1,5 @@
 import {IsDefined, IsEnum} from "class-validator";
-import {Environment} from "./app.config";
+import {createConfigProvider, Environment} from "./app.config";
 
 enum LogLevel {
   Silent = "silent",
@@ -24,3 +24,10 @@ export class LoggerConfig {
     return process.env.NODE_ENV === Environment.Production ? undefined : {target: "pino-pretty"};
   }
 }
+
+export const loggerConfig = createConfigProvider(LoggerConfig, (validatedConfig) => {
+  return {
+    provide: LoggerConfig,
+    useFactory: () => validatedConfig,
+  };
+});

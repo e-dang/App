@@ -7,25 +7,9 @@ import {JwtConfig} from "@src/config/jwt.config";
 
 @Injectable()
 export class JwtService {
-  private accessTokenPrivateKey: Promise<jose.KeyLike>;
+  constructor(private readonly config: JwtConfig) {}
 
-  private accessTokenPublicKey: Promise<jose.KeyLike>;
-
-  private refreshTokenPrivateKey: Uint8Array;
-
-  constructor(private readonly config: JwtConfig) {
-    this.accessTokenPrivateKey = jose.importPKCS8(
-      config.accessTokenPrivateKey.replace(/\\n/g, "\n"),
-      config.accessTokenAlg,
-    );
-    this.accessTokenPublicKey = jose.importSPKI(
-      config.accessTokenPublicKey.replace(/\\n/g, "\n"),
-      config.accessTokenAlg,
-    );
-    this.refreshTokenPrivateKey = new TextEncoder().encode(config.refreshTokenSecret);
-  }
-
-  async createAccessToken(user: User) {
+  createAccessToken(user: User) {
     const payload: AccessTokenPayload = {
       userId: user.id,
       role: user.role,
@@ -37,10 +21,10 @@ export class JwtService {
       .setIssuer(this.config.jwtIssuer)
       .setAudience(this.config.jwtAudience)
       .setExpirationTime(this.config.jwtAccessTokenExp)
-      .sign(await this.accessTokenPrivateKey);
+      .sign(this.config.accessTokenPrivateKey);
   }
 
-  async createRefreshToken(user: User) {
+  createRefreshToken(user: User) {
     const payload: RefreshTokenPayload = {
       userId: user.id,
       tokenVersion: user.tokenVersion,
@@ -52,7 +36,7 @@ export class JwtService {
       .setIssuer(this.config.jwtIssuer)
       .setAudience(this.config.jwtAudience)
       .setExpirationTime(this.config.jwtRefreshTokenExp)
-      .sign(this.refreshTokenPrivateKey);
+      .sign(this.config.refreshTokenSecret);
   }
 
   async createJwt(user: User) {
@@ -64,13 +48,13 @@ export class JwtService {
   }
 
   async verifyAccessToken(token: string) {
-    const decoded = await jose.jwtVerify(token, await this.accessTokenPublicKey);
+    const decoded = await jose.jwtVerify(token, this.config.accessTokenPublicKey);
     return decoded.payload as AccessTokenPayload;
   }
 
   async verifyRefreshToken(token: string) {
     try {
-      return (await jose.jwtVerify(token, this.refreshTokenPrivateKey)).payload as RefreshTokenPayload;
+      return (await jose.jwtVerify(token, this.config.refreshTokenSecret)).payload as RefreshTokenPayload;
     } catch (err) {
       throw new InvalidTokenException();
     }

@@ -3,8 +3,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {UsersModule} from "@users/users.module";
 import {AuthModule} from "@auth/auth.module";
 import {ConfigModule} from "@config/config.module";
-import {DatabaseConfig} from "@config/database.config";
-import {AppConfig} from "@config/app.config";
+import {databaseConfig, DatabaseConfig} from "@config/database.config";
+import {appConfigProvider} from "@config/app.config";
 import {HealthModule} from "@health/health.module";
 import {LoggerModule} from "nestjs-pino";
 import pino from "pino";
@@ -12,12 +12,16 @@ import {randomUUID} from "crypto";
 import {Request, Response} from "express";
 import {AuthenticatedRequest} from "@core/types";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
-import {LoggerConfig} from "@config/logger.config";
+import {loggerConfig, LoggerConfig} from "@config/logger.config";
+import path from "path";
+import {emailConfig} from "@config/email.config";
+import {jwtConfig} from "@config/jwt.config";
+import {passwordHasherConfig} from "@config/password-hasher.config";
+import {passwordResetConfig} from "@config/password-reset.config";
 
 @Module({
   imports: [
     LoggerModule.forRootAsync({
-      imports: [ConfigModule.forFeature(LoggerConfig)],
       useFactory: (config: LoggerConfig) => {
         return {
           pinoHttp: {
@@ -58,26 +62,22 @@ import {LoggerConfig} from "@config/logger.config";
       inject: [LoggerConfig],
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forFeature(DatabaseConfig)],
-      useFactory: (config: DatabaseConfig) => {
-        return {
-          type: "postgres",
-          host: config.dbHost,
-          port: config.dbPort,
-          username: config.dbUser,
-          password: config.dbPassword,
-          database: config.dbName,
-          ssl: config.dbSsl,
-          migrationsRun: config.runMigrations,
-          synchronize: false,
-          entities: ["dist/**/*.entity{.ts,.js}"],
-          migrations: ["dist/src/migrations/*{.ts,.js}"],
-          autoLoadEntities: true,
-        };
-      },
+      useFactory: (config: DatabaseConfig) => config.ormModuleConfig,
       inject: [DatabaseConfig],
     }),
-    ConfigModule.forFeature(AppConfig),
+    ConfigModule.forRoot({
+      load: [
+        appConfigProvider,
+        loggerConfig,
+        databaseConfig,
+        emailConfig,
+        jwtConfig,
+        passwordHasherConfig,
+        passwordResetConfig,
+      ],
+      isGlobal: true,
+      configDir: path.join(process.env.PWD, "secrets"),
+    }),
     HealthModule,
     UsersModule,
     AuthModule,

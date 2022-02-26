@@ -1,18 +1,15 @@
-import {DatabaseConfig} from "@src/config/database.config";
-import {validate} from "@src/config/validate";
+import {ConfigModule} from "@config/config.module";
+import {DatabaseConfig, databaseConfig} from "@src/config/database.config";
+import path from "path";
 
-const config = validate(process.env, DatabaseConfig);
+const configDir = path.join(__dirname, "secrets");
 
-export default {
-  type: "postgres",
-  host: config.dbHost,
-  port: config.dbPort,
-  username: config.dbUser,
-  password: config.dbPassword,
-  database: config.dbName,
-  ssl: config.dbSsl,
-  runMigrations: config.runMigrations,
-  synchronize: false,
-  entities: ["dist/**/*.entity{.ts,.js}"],
-  migrations: ["dist/src/migrations/*{.ts,.js}"],
-};
+ConfigModule.forRoot({
+  isGlobal: true,
+  configDir,
+  load: [databaseConfig],
+});
+
+const config = databaseConfig(ConfigModule.getRawConfigs(configDir)).useFactory() as DatabaseConfig;
+
+export default config.ormConfig;
