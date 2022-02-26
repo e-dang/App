@@ -6,61 +6,18 @@ import {ConfigModule} from "@config/config.module";
 import {databaseConfig, DatabaseConfig} from "@config/database.config";
 import {appConfigProvider} from "@config/app.config";
 import {HealthModule} from "@health/health.module";
-import {LoggerModule} from "nestjs-pino";
-import pino from "pino";
-import {randomUUID} from "crypto";
-import {Request, Response} from "express";
-import {AuthenticatedRequest} from "@core/types";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
-import {loggerConfig, LoggerConfig} from "@config/logger.config";
+import {loggerConfig} from "@src/logger/logger.config";
 import path from "path";
 import {emailConfig} from "@emailer/email.config";
 import {jwtConfig} from "@jwt/jwt.config";
 import {passwordHasherConfig} from "@password-hasher/password-hasher.config";
 import {passwordResetConfig} from "@password-reset/password-reset.config";
+import {LoggerModule} from "./logger/logger.module";
 
 @Module({
   imports: [
-    LoggerModule.forRootAsync({
-      useFactory: (config: LoggerConfig) => {
-        return {
-          pinoHttp: {
-            base: undefined,
-            level: config.logLevel,
-            formatters: {
-              level: (label) => ({level: label}),
-            },
-            wrapSerializers: false,
-            serializers: {
-              req: (req: Request) => ({
-                id: req.id,
-                method: req.method,
-                url: req.originalUrl || req.url,
-                user: (req as AuthenticatedRequest).user?.id,
-                ip: req.socket.remoteAddress || req.ip,
-                query: req.query,
-                params: req.params,
-                headers: {
-                  "user-agent": req.headers["user-agent"],
-                  "content-length": req.headers["content-length"],
-                },
-              }),
-              res: (res: Response) => ({
-                statusCode: res.statusCode,
-                statusMessage: res.statusMessage,
-                headers: {
-                  "content-length": res.getHeader("content-length"),
-                },
-              }),
-            },
-            genReqId: (req) => req.headers["x-request-id"] || randomUUID(),
-            timestamp: pino.stdTimeFunctions.isoTime,
-            transport: config.transport,
-          },
-        };
-      },
-      inject: [LoggerConfig],
-    }),
+    LoggerModule,
     TypeOrmModule.forRootAsync({
       useFactory: (config: DatabaseConfig) => config.ormModuleConfig,
       inject: [DatabaseConfig],
