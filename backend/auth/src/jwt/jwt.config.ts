@@ -1,6 +1,6 @@
 import {IsDefined, IsEnum, IsString} from "class-validator";
 import {importPKCS8, importSPKI, KeyLike} from "jose";
-import {createConfigProvider} from "./app.config";
+import {createConfigProvider} from "../config/app.config";
 
 enum AccessTokenAlgorithm {
   EdDSA = "EdDSA",

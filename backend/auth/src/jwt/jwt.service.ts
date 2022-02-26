@@ -3,7 +3,7 @@ import {Injectable} from "@nestjs/common";
 import {User} from "@users/entities/user.entity";
 import * as jose from "jose";
 import {InvalidTokenException} from "@core/exceptions/invalid-token";
-import {JwtConfig} from "@src/config/jwt.config";
+import {JwtConfig} from "@jwt/jwt.config";
 
 @Injectable()
 export class JwtService {
