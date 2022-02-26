@@ -1,6 +1,6 @@
-import {IsDefined, IsEnum, IsNumber, IsPositive} from "class-validator";
+import {IsDefined, IsEnum, IsNumber, IsPositive, ValidateIf} from "class-validator";
 import {register} from "@config";
-import {PasswordHasherAlgorithms} from "./constants";
+import {PasswordHasherAlgorithms, PBKDF2Digest} from "./constants";
 
 export class PasswordHasherConfig {
   @IsEnum(PasswordHasherAlgorithms)
@@ -10,12 +10,25 @@ export class PasswordHasherConfig {
   @IsPositive()
   @IsNumber()
   @IsDefined()
-  readonly passwordIterations: number;
+  @ValidateIf((obj: PasswordHasherConfig) => obj.passwordHasher === PasswordHasherAlgorithms.PBKDF2)
+  readonly pbkdf2Iterations: number;
 
   @IsPositive()
   @IsNumber()
   @IsDefined()
-  readonly passwordSaltLength: number;
+  @ValidateIf((obj: PasswordHasherConfig) => obj.passwordHasher === PasswordHasherAlgorithms.PBKDF2)
+  readonly pbkdf2SaltLength: number;
+
+  @IsPositive()
+  @IsNumber()
+  @IsDefined()
+  @ValidateIf((obj: PasswordHasherConfig) => obj.passwordHasher === PasswordHasherAlgorithms.PBKDF2)
+  readonly pbkdf2keylen: number;
+
+  @IsEnum(PBKDF2Digest)
+  @IsDefined()
+  @ValidateIf((obj: PasswordHasherConfig) => obj.passwordHasher === PasswordHasherAlgorithms.PBKDF2)
+  readonly pbkdf2Digest: PBKDF2Digest;
 }
 
 export const passwordHasherConfig = register(PasswordHasherConfig);
