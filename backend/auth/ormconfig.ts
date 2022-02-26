@@ -1,6 +1,6 @@
 import {ConfigModule} from "@config/config.module";
 import {FactoryProvider} from "@nestjs/common";
-import {DatabaseConfig, databaseConfig} from "@src/config/database.config";
+import {DatabaseConfig, databaseConfig} from "@src/database/database.config";
 import path from "path";
 
 const configDir = path.join(__dirname, "secrets");

@@ -2,7 +2,7 @@ import {TypeOrmModuleOptions} from "@nestjs/typeorm";
 import {Transform} from "class-transformer";
 import {IsBoolean, IsDefined, IsNumber, IsPositive, IsString} from "class-validator";
 import {ConnectionOptions} from "typeorm";
-import {register} from "./register";
+import {register} from "../config/register";
 
 class InputDatabaseConfigValidator {
   @IsString()

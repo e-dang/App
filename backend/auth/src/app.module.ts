@@ -3,7 +3,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {UsersModule} from "@users/users.module";
 import {AuthModule} from "@auth/auth.module";
 import {ConfigModule} from "@config/config.module";
-import {databaseConfig, DatabaseConfig} from "@config/database.config";
+import {databaseConfig, DatabaseConfig} from "@database";
 import {appConfigProvider} from "@src/app.config";
 import {HealthModule} from "@health/health.module";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
