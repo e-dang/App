@@ -16,12 +16,12 @@ export class JwtService {
     };
 
     return new jose.SignJWT(payload)
-      .setProtectedHeader({alg: this.config.accessTokenAlg, type: "JWT"})
+      .setProtectedHeader({alg: this.config.jwtAccessTokenAlg, type: "JWT"})
       .setIssuedAt()
       .setIssuer(this.config.jwtIssuer)
       .setAudience(this.config.jwtAudience)
       .setExpirationTime(this.config.jwtAccessTokenExp)
-      .sign(this.config.accessTokenPrivateKey);
+      .sign(this.config.jwtAccessTokenPrivateKey);
   }
 
   createRefreshToken(user: User) {
@@ -31,12 +31,12 @@ export class JwtService {
     };
 
     return new jose.SignJWT(payload)
-      .setProtectedHeader({alg: this.config.refreshTokenAlg, type: "JWT"})
+      .setProtectedHeader({alg: this.config.jwtRefreshTokenAlg, type: "JWT"})
       .setIssuedAt()
       .setIssuer(this.config.jwtIssuer)
       .setAudience(this.config.jwtAudience)
       .setExpirationTime(this.config.jwtRefreshTokenExp)
-      .sign(this.config.refreshTokenSecret);
+      .sign(this.config.jwtRefreshTokenSecret);
   }
 
   async createJwt(user: User) {
@@ -48,13 +48,13 @@ export class JwtService {
   }
 
   async verifyAccessToken(token: string) {
-    const decoded = await jose.jwtVerify(token, this.config.accessTokenPublicKey);
+    const decoded = await jose.jwtVerify(token, this.config.jwtAccessTokenPublicKey);
     return decoded.payload as AccessTokenPayload;
   }
 
   async verifyRefreshToken(token: string) {
     try {
-      return (await jose.jwtVerify(token, this.config.refreshTokenSecret)).payload as RefreshTokenPayload;
+      return (await jose.jwtVerify(token, this.config.jwtRefreshTokenSecret)).payload as RefreshTokenPayload;
     } catch (err) {
       throw new InvalidTokenException();
     }

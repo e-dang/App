@@ -13,11 +13,11 @@ enum RefreshTokenAlgorithm {
 interface JwtConfigProperties {
   readonly jwtAccessTokenExp: string;
   readonly jwtRefreshTokenExp: string;
-  readonly accessTokenAlg: AccessTokenAlgorithm;
-  readonly refreshTokenAlg: RefreshTokenAlgorithm;
-  readonly refreshTokenSecret: unknown;
-  readonly accessTokenPrivateKey: unknown;
-  readonly accessTokenPublicKey: unknown;
+  readonly jwtAccessTokenAlg: AccessTokenAlgorithm;
+  readonly jwtRefreshTokenAlg: RefreshTokenAlgorithm;
+  readonly jwtRefreshTokenSecret: unknown;
+  readonly jwtAccessTokenPrivateKey: unknown;
+  readonly jwtAccessTokenPublicKey: unknown;
   readonly jwtIssuer: string;
   readonly jwtAudience: string;
 }
@@ -33,23 +33,23 @@ class InputJwtConfigValidator implements JwtConfigProperties {
 
   @IsEnum(AccessTokenAlgorithm)
   @IsDefined()
-  readonly accessTokenAlg: AccessTokenAlgorithm;
+  readonly jwtAccessTokenAlg: AccessTokenAlgorithm;
 
   @IsEnum(RefreshTokenAlgorithm)
   @IsDefined()
-  readonly refreshTokenAlg: RefreshTokenAlgorithm;
+  readonly jwtRefreshTokenAlg: RefreshTokenAlgorithm;
 
   @IsString()
   @IsDefined()
-  readonly refreshTokenSecret: string;
+  readonly jwtRefreshTokenSecret: string;
 
   @IsString()
   @IsDefined()
-  readonly accessTokenPrivateKey: string;
+  readonly jwtAccessTokenPrivateKey: string;
 
   @IsString()
   @IsDefined()
-  readonly accessTokenPublicKey: string;
+  readonly jwtAccessTokenPublicKey: string;
 
   @IsString()
   @IsDefined()
@@ -65,28 +65,32 @@ export class JwtConfig implements JwtConfigProperties {
 
   readonly jwtRefreshTokenExp: string;
 
-  readonly accessTokenAlg: AccessTokenAlgorithm;
+  readonly jwtAccessTokenAlg: AccessTokenAlgorithm;
 
-  readonly refreshTokenAlg: RefreshTokenAlgorithm;
+  readonly jwtRefreshTokenAlg: RefreshTokenAlgorithm;
 
-  readonly refreshTokenSecret: Uint8Array;
+  readonly jwtRefreshTokenSecret: Uint8Array;
 
-  readonly accessTokenPrivateKey: KeyLike;
+  readonly jwtAccessTokenPrivateKey: KeyLike;
 
-  readonly accessTokenPublicKey: KeyLike;
+  readonly jwtAccessTokenPublicKey: KeyLike;
 
   readonly jwtIssuer: string;
 
   readonly jwtAudience: string;
 
-  constructor(validatedConfig: InputJwtConfigValidator, accessTokenPrivateKey: KeyLike, accessTokenPublicKey: KeyLike) {
+  constructor(
+    validatedConfig: InputJwtConfigValidator,
+    jwtAccessTokenPrivateKey: KeyLike,
+    jwtAccessTokenPublicKey: KeyLike,
+  ) {
     this.jwtAccessTokenExp = validatedConfig.jwtAccessTokenExp;
     this.jwtRefreshTokenExp = validatedConfig.jwtRefreshTokenExp;
-    this.accessTokenAlg = validatedConfig.accessTokenAlg;
-    this.refreshTokenAlg = validatedConfig.refreshTokenAlg;
-    this.refreshTokenSecret = new TextEncoder().encode(validatedConfig.refreshTokenSecret);
-    this.accessTokenPrivateKey = accessTokenPrivateKey;
-    this.accessTokenPublicKey = accessTokenPublicKey;
+    this.jwtAccessTokenAlg = validatedConfig.jwtAccessTokenAlg;
+    this.jwtRefreshTokenAlg = validatedConfig.jwtRefreshTokenAlg;
+    this.jwtRefreshTokenSecret = new TextEncoder().encode(validatedConfig.jwtRefreshTokenSecret);
+    this.jwtAccessTokenPrivateKey = jwtAccessTokenPrivateKey;
+    this.jwtAccessTokenPublicKey = jwtAccessTokenPublicKey;
     this.jwtIssuer = validatedConfig.jwtIssuer;
     this.jwtAudience = validatedConfig.jwtAudience;
   }
@@ -96,16 +100,16 @@ export const jwtConfig = register(InputJwtConfigValidator, (validatedConfig) => 
   return {
     provide: JwtConfig,
     useFactory: async () => {
-      const accessTokenPublicKey = await importSPKI(
-        validatedConfig.accessTokenPublicKey.replace(/\\n/g, "\n"),
-        validatedConfig.accessTokenAlg,
+      const jwtAccessTokenPublicKey = await importSPKI(
+        validatedConfig.jwtAccessTokenPublicKey.replace(/\\n/g, "\n"),
+        validatedConfig.jwtAccessTokenAlg,
       );
-      const accessTokenPrivateKey = await importPKCS8(
-        validatedConfig.accessTokenPrivateKey.replace(/\\n/g, "\n"),
-        validatedConfig.accessTokenAlg,
+      const jwtAccessTokenPrivateKey = await importPKCS8(
+        validatedConfig.jwtAccessTokenPrivateKey.replace(/\\n/g, "\n"),
+        validatedConfig.jwtAccessTokenAlg,
       );
 
-      return new JwtConfig(validatedConfig, accessTokenPrivateKey, accessTokenPublicKey);
+      return new JwtConfig(validatedConfig, jwtAccessTokenPrivateKey, jwtAccessTokenPublicKey);
     },
   };
 });
