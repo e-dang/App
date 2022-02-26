@@ -105,7 +105,7 @@ export const jwtConfig = createConfigProvider(InputJwtConfigValidator, (validate
         validatedConfig.accessTokenAlg,
       );
 
-      return new JwtConfig(validatedConfig, accessTokenPublicKey, accessTokenPrivateKey);
+      return new JwtConfig(validatedConfig, accessTokenPrivateKey, accessTokenPublicKey);
     },
   };
 });
