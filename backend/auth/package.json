@@ -25,7 +25,7 @@
     "test:debug": "docker compose -p test-auth exec auth node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "migration:generate": "typeorm migration:generate --config dist/src/ormconfig.js -d src/migrations",
     "migration:run": "typeorm migration:run --config dist/src/ormconfig.js",
-    "clean": "rimraf dist coverage .jest .env.app.dev .env.db.dev",
+    "clean": "rimraf dist coverage .jest .env.app.dev .env.db.dev node_modules",
     "clean:dev": "docker compose -f docker/dev/docker-compose.yaml -p dev-auth rm -v",
     "clean:test": "docker compose -f docker/test/docker-compose.yaml -p test-auth rm -v",
     "clean:prod": "docker compose -f docker/prod/docker-compose.yaml -p prod-auth rm -v",
