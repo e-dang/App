@@ -1,5 +1,5 @@
 import {IsDefined, IsEnum, IsNumber, IsPositive, IsString} from "class-validator";
-import {register} from "./register";
+import {register} from "./config/register";
 
 export enum Environment {
   Development = "development",

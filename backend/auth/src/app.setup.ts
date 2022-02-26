@@ -1,6 +1,6 @@
 import {INestApplication, ValidationPipe, VersioningType} from "@nestjs/common";
 import {NestFactory} from "@nestjs/core";
-import {AppConfig} from "@config/app.config";
+import {AppConfig} from "@src/app.config";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import {Logger} from "nestjs-pino";

@@ -1,6 +1,6 @@
 import {IsDefined, IsEnum} from "class-validator";
 import {register} from "@config";
-import {Environment} from "@config/app.config";
+import {Environment} from "@src/app.config";
 
 enum LogLevel {
   Silent = "silent",

@@ -4,7 +4,7 @@ import {UsersModule} from "@users/users.module";
 import {AuthModule} from "@auth/auth.module";
 import {ConfigModule} from "@config/config.module";
 import {databaseConfig, DatabaseConfig} from "@config/database.config";
-import {appConfigProvider} from "@config/app.config";
+import {appConfigProvider} from "@src/app.config";
 import {HealthModule} from "@health/health.module";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
 import {loggerConfig} from "@src/logger/logger.config";
