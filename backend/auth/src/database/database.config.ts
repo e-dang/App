@@ -34,7 +34,7 @@ class InputDatabaseConfigValidator {
   @Transform(({obj, key}: {obj: Record<string, unknown>; key: string}) => obj[key] === true || obj[key] === "true")
   @IsBoolean()
   @IsDefined()
-  readonly runMigrations: boolean;
+  readonly dbRunMigrations: boolean;
 }
 
 export class DatabaseConfig {
@@ -51,7 +51,7 @@ export class DatabaseConfig {
       password: validatedConfig.dbPassword,
       database: validatedConfig.dbName,
       ssl: validatedConfig.dbSsl,
-      migrationsRun: validatedConfig.runMigrations,
+      migrationsRun: validatedConfig.dbRunMigrations,
       synchronize: false,
       entities: ["dist/**/*.entity{.ts,.js}"],
       migrations: ["dist/src/migrations/*{.ts,.js}"],
