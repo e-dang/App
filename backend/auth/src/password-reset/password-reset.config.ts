@@ -1,5 +1,5 @@
 import {IsDefined, IsEnum, IsNumber, IsPositive, IsString} from "class-validator";
-import {createConfigProvider} from "../config/app.config";
+import {register} from "@config";
 
 enum PasswordResetTokenAlgorithm {
   SHA256 = "sha256",
@@ -19,9 +19,4 @@ export class PasswordResetConfig {
   readonly passwordResetTokenExp: number;
 }
 
-export const passwordResetConfig = createConfigProvider(PasswordResetConfig, (validatedConfig) => {
-  return {
-    provide: PasswordResetConfig,
-    useFactory: () => validatedConfig,
-  };
-});
+export const passwordResetConfig = register(PasswordResetConfig);

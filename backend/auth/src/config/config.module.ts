@@ -1,14 +1,13 @@
-import {DynamicModule, FactoryProvider, Module} from "@nestjs/common";
+import {DynamicModule, Module} from "@nestjs/common";
 import fs from "fs";
 import path from "path";
+import {ConfigProviderFactory} from "./register";
 
 export interface ConfigModuleOptions {
   load: ConfigProviderFactory[];
   isGlobal: boolean;
   configDir: string;
 }
-
-export type ConfigProviderFactory = (config: Record<string, unknown>) => FactoryProvider;
 
 @Module({})
 export class ConfigModule {

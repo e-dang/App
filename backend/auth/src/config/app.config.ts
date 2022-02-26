@@ -1,7 +1,6 @@
-import {FactoryProvider} from "@nestjs/common";
-import {ClassConstructor, plainToInstance, Transform} from "class-transformer";
-import {IsDefined, IsEnum, IsNumber, IsNumberString, IsPositive, IsString, validateSync} from "class-validator";
-import {ConfigProviderFactory} from "./config.module";
+import {Transform} from "class-transformer";
+import {IsDefined, IsEnum, IsNumber, IsNumberString, IsPositive, IsString} from "class-validator";
+import {register} from "./register";
 
 export enum Environment {
   Development = "development",
@@ -53,26 +52,7 @@ export class AppConfig implements AppConfigProperties {
   }
 }
 
-export function createConfigProvider<T extends object, U extends T, V extends T>(
-  validator: ClassConstructor<U>,
-  createConfigClass: (validatedConfig: U) => FactoryProvider<V>,
-): ConfigProviderFactory {
-  return (config: Record<string, unknown>) => {
-    const validatedConfig = plainToInstance(validator, config, {
-      enableImplicitConversion: true,
-    });
-
-    const errors = validateSync(validatedConfig, {skipMissingProperties: false, whitelist: true});
-
-    if (errors.length > 0) {
-      throw new Error(errors.toString());
-    }
-
-    return createConfigClass(validatedConfig);
-  };
-}
-
-export const appConfigProvider = createConfigProvider(InputAppConfigValidator, (validatedConfig) => {
+export const appConfigProvider = register(InputAppConfigValidator, (validatedConfig) => {
   return {
     provide: AppConfig,
     useFactory: () => new AppConfig(validatedConfig),

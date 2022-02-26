@@ -1,5 +1,5 @@
 import {IsDefined, IsEnum, IsNumber, IsPositive} from "class-validator";
-import {createConfigProvider} from "../config/app.config";
+import {register} from "@config";
 
 enum PasswordHasherAlgorithm {
   PBKDF2 = "pbkdf2",
@@ -20,9 +20,4 @@ export class PasswordHasherConfig {
   readonly passwordSaltLength: number;
 }
 
-export const passwordHasherConfig = createConfigProvider(PasswordHasherConfig, (validatedConfig) => {
-  return {
-    provide: PasswordHasherConfig,
-    useFactory: () => validatedConfig,
-  };
-});
+export const passwordHasherConfig = register(PasswordHasherConfig);

@@ -1,6 +1,6 @@
 import {IsUndefinable} from "@core/decoractors/is-undefinable";
 import {IsDefined, IsNumber, IsPositive, IsString, IsUrl, MinLength} from "class-validator";
-import {createConfigProvider} from "../config/app.config";
+import {register} from "@config";
 
 export class EmailConfig {
   @IsString()
@@ -27,9 +27,4 @@ export class EmailConfig {
   readonly passwordResetRedirectUrl: string;
 }
 
-export const emailConfig = createConfigProvider(EmailConfig, (validatedConfig) => {
-  return {
-    provide: EmailConfig,
-    useFactory: () => validatedConfig,
-  };
-});
+export const emailConfig = register(EmailConfig);

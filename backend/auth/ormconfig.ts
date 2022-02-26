@@ -1,4 +1,5 @@
 import {ConfigModule} from "@config/config.module";
+import {FactoryProvider} from "@nestjs/common";
 import {DatabaseConfig, databaseConfig} from "@src/config/database.config";
 import path from "path";
 
@@ -10,6 +11,7 @@ ConfigModule.forRoot({
   load: [databaseConfig],
 });
 
-const config = databaseConfig(ConfigModule.getRawConfigs(configDir)).useFactory() as DatabaseConfig;
+const provider = databaseConfig(ConfigModule.getRawConfigs(configDir)) as FactoryProvider;
+const config = provider.useFactory() as DatabaseConfig;
 
 export default config.ormConfig;

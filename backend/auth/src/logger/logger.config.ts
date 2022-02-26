@@ -1,5 +1,6 @@
 import {IsDefined, IsEnum} from "class-validator";
-import {createConfigProvider, Environment} from "../config/app.config";
+import {register} from "@config";
+import {Environment} from "@config/app.config";
 
 enum LogLevel {
   Silent = "silent",
@@ -25,9 +26,4 @@ export class LoggerConfig {
   }
 }
 
-export const loggerConfig = createConfigProvider(LoggerConfig, (validatedConfig) => {
-  return {
-    provide: LoggerConfig,
-    useFactory: () => validatedConfig,
-  };
-});
+export const loggerConfig = register(LoggerConfig);

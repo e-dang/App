@@ -2,7 +2,7 @@ import {TypeOrmModuleOptions} from "@nestjs/typeorm";
 import {Transform} from "class-transformer";
 import {IsBoolean, IsDefined, IsNumber, IsPositive, IsString} from "class-validator";
 import {ConnectionOptions} from "typeorm";
-import {createConfigProvider} from "./app.config";
+import {register} from "./register";
 
 class InputDatabaseConfigValidator {
   @IsString()
@@ -64,7 +64,7 @@ export class DatabaseConfig {
   }
 }
 
-export const databaseConfig = createConfigProvider(InputDatabaseConfigValidator, (validatedConfig) => {
+export const databaseConfig = register(InputDatabaseConfigValidator, (validatedConfig) => {
   return {
     provide: DatabaseConfig,
     useFactory: () => new DatabaseConfig(validatedConfig),

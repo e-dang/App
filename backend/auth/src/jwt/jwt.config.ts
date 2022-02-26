@@ -1,6 +1,6 @@
 import {IsDefined, IsEnum, IsString} from "class-validator";
 import {importPKCS8, importSPKI, KeyLike} from "jose";
-import {createConfigProvider} from "../config/app.config";
+import {register} from "@config";
 
 enum AccessTokenAlgorithm {
   EdDSA = "EdDSA",
@@ -92,7 +92,7 @@ export class JwtConfig implements JwtConfigProperties {
   }
 }
 
-export const jwtConfig = createConfigProvider(InputJwtConfigValidator, (validatedConfig) => {
+export const jwtConfig = register(InputJwtConfigValidator, (validatedConfig) => {
   return {
     provide: JwtConfig,
     useFactory: async () => {
