@@ -1,9 +1,9 @@
 import {INestApplication, ValidationPipe, VersioningType} from "@nestjs/common";
 import {NestFactory} from "@nestjs/core";
-import {AppConfig} from "@src/app.config";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import {Logger} from "nestjs-pino";
+import {AppConfig} from "./app.config";
 import {AppModule} from "./app.module";
 
 export function appGlobalsSetup(app: INestApplication) {

@@ -1,8 +1,7 @@
-// import config from "@config";
-import {EmailService} from "@emailer/email.service";
 import {Module} from "@nestjs/common";
-import {EmailConfig} from "@emailer/email.config";
 import nodemailer from "nodemailer";
+import {EmailConfig} from "./email.config";
+import {EmailService} from "./email.service";
 import {TRANSPORTER} from "./constants";
 
 @Module({

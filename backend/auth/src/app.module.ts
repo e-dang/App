@@ -1,20 +1,19 @@
 import {Module} from "@nestjs/common";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {UsersModule} from "@users/users.module";
-import {AuthModule} from "@auth/auth.module";
-import {ConfigModule} from "@config/config.module";
+import {APP_FILTER} from "@nestjs/core";
+import {UsersModule} from "@users";
+import {AuthModule} from "@auth";
+import {ConfigModule} from "@config";
 import {databaseConfig, DatabaseConfig} from "@database";
 import {appConfigProvider} from "@src/app.config";
-import {HealthModule} from "@health/health.module";
+import {HealthModule} from "@health";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
-import {loggerConfig} from "@src/logger/logger.config";
+import {LoggerModule, loggerConfig} from "@logger";
 import path from "path";
-import {emailConfig} from "@emailer/email.config";
-import {jwtConfig} from "@jwt/jwt.config";
-import {passwordHasherConfig} from "@password-hasher/password-hasher.config";
-import {passwordResetConfig} from "@password-reset/password-reset.config";
-import {APP_FILTER} from "@nestjs/core";
-import {LoggerModule} from "./logger/logger.module";
+import {emailConfig} from "@emailer";
+import {jwtConfig} from "@jwt";
+import {passwordHasherConfig} from "@password-hasher";
+import {passwordResetConfig} from "@password-reset";
 
 @Module({
   imports: [

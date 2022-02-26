@@ -1,11 +1,10 @@
 import {dateToSeconds} from "@core/utils";
 import {Injectable} from "@nestjs/common";
-import {User} from "@users/entities/user.entity";
+import {User} from "@users";
 import crypto from "crypto";
 import base32 from "hi-base32";
-import {ExpiredTokenException} from "@core/exceptions/expired-token";
-import {InvalidTokenException} from "@core/exceptions/invalid-token";
-import {PasswordResetConfig} from "@password-reset/password-reset.config";
+import {ExpiredTokenException, InvalidTokenException} from "@core/exceptions";
+import {PasswordResetConfig} from "./password-reset.config";
 
 @Injectable()
 export class PasswordResetService {

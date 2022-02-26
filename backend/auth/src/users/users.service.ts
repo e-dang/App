@@ -1,6 +1,6 @@
-import {PasswordHasherService} from "@password-hasher/password-hasher.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
+import {PasswordHasherService} from "@password-hasher";
 import {DeepPartial, FindConditions, Repository} from "typeorm";
 import {Role} from "@core/types";
 import {UpdateUserDto} from "./dto/update-user.dto";

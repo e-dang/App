@@ -10,7 +10,7 @@ import {
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
-import {TransformResponseInterceptor} from "@core/interceptors/transform-response.interceptor";
+import {TransformResponseInterceptor} from "@core/interceptors";
 import {AuthenticatedRequest} from "@core/types";
 import {UsersService} from "./users.service";
 import {UpdateUserDto} from "./dto/update-user.dto";

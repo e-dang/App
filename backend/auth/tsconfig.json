@@ -31,6 +31,8 @@
       "@auth/*": ["src/auth/*"],
       "@database": ["src/database"],
       "@database/*": ["src/database/*"],
+      "@logger": ["src/logger"],
+      "@logger/*": ["src/logger/*"],
       "@jwt": ["src/jwt"],
       "@jwt/*": ["src/jwt/*"],
       "@emailer": ["src/emailer"],

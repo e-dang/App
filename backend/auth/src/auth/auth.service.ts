@@ -1,11 +1,10 @@
 import {BadRequestException, Injectable} from "@nestjs/common";
-import {User} from "@src/users/entities/user.entity";
-import {UsersService} from "@users/users.service";
-import {PasswordHasherService} from "@password-hasher/password-hasher.service";
-import {EmailService} from "@emailer/email.service";
-import {JwtService} from "@jwt/jwt.service";
-import {PasswordResetService} from "@password-reset/password-reset.service";
-import {InvalidTokenException} from "@core/exceptions/invalid-token";
+import {User, UsersService} from "@users";
+import {PasswordHasherService} from "@password-hasher";
+import {EmailService} from "@emailer";
+import {JwtService} from "@jwt";
+import {PasswordResetService} from "@password-reset";
+import {InvalidTokenException} from "@core/exceptions";
 import {ChangePasswordDto} from "./dto/change-password.dto";
 import {ResetPasswordConfirmDto} from "./dto/reset-password-confirm.dto";
 import {ResetPasswordDto} from "./dto/reset-password.dto";

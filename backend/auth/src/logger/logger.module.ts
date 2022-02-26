@@ -1,10 +1,10 @@
-import {LoggerConfig} from "@src/logger/logger.config";
 import {Module} from "@nestjs/common";
 import {LoggerModule as PinoLoggerModule} from "nestjs-pino";
 import pino from "pino";
 import {randomUUID} from "crypto";
 import {Request, Response} from "express";
 import {AuthenticatedRequest} from "@core/types";
+import {LoggerConfig} from "./logger.config";
 
 @Module({
   imports: [

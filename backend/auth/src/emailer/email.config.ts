@@ -1,4 +1,4 @@
-import {IsUndefinable} from "@core/decoractors/is-undefinable";
+import {IsUndefinable} from "@core/decoractors";
 import {IsDefined, IsNumber, IsPositive, IsString, IsUrl, MinLength} from "class-validator";
 import {register} from "@config";
 

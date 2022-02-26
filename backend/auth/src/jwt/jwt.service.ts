@@ -1,9 +1,9 @@
-import {AccessTokenPayload, RefreshTokenPayload} from "@jwt/types";
 import {Injectable} from "@nestjs/common";
-import {User} from "@users/entities/user.entity";
+import {User} from "@users";
 import * as jose from "jose";
-import {InvalidTokenException} from "@core/exceptions/invalid-token";
-import {JwtConfig} from "@jwt/jwt.config";
+import {InvalidTokenException} from "@core/exceptions";
+import {AccessTokenPayload, RefreshTokenPayload} from "./types";
+import {JwtConfig} from "./jwt.config";
 
 @Injectable()
 export class JwtService {
