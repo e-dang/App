@@ -1,5 +1,4 @@
-import {Transform} from "class-transformer";
-import {IsDefined, IsEnum, IsNumber, IsNumberString, IsPositive, IsString} from "class-validator";
+import {IsDefined, IsEnum, IsNumber, IsPositive, IsString} from "class-validator";
 import {register} from "./register";
 
 export enum Environment {
@@ -9,17 +8,12 @@ export enum Environment {
 }
 
 interface AppConfigProperties {
-  readonly apiVersion: string;
   readonly NODE_ENV: Environment;
   readonly httpPort: number;
   readonly allowedHosts: unknown;
 }
 
 class InputAppConfigValidator implements AppConfigProperties {
-  @IsNumberString()
-  @IsDefined()
-  readonly apiVersion: string;
-
   @IsEnum(Environment)
   @IsDefined()
   readonly NODE_ENV: Environment;
@@ -29,14 +23,13 @@ class InputAppConfigValidator implements AppConfigProperties {
   @IsDefined()
   readonly httpPort: number;
 
-  @IsString({each: true})
-  @Transform(({value}: {value: string | unknown}) => (typeof value === "string" ? value.split(",") : value))
+  @IsString()
   @IsDefined()
-  readonly allowedHosts: string[];
+  readonly allowedHosts: string;
 }
 
 export class AppConfig implements AppConfigProperties {
-  readonly apiVersion: string;
+  readonly apiVersion: string = "1";
 
   readonly NODE_ENV: Environment;
 
@@ -45,10 +38,9 @@ export class AppConfig implements AppConfigProperties {
   readonly allowedHosts: string[];
 
   constructor(validatedConfig: InputAppConfigValidator) {
-    this.apiVersion = validatedConfig.apiVersion;
     this.NODE_ENV = validatedConfig.NODE_ENV;
     this.httpPort = validatedConfig.httpPort;
-    this.allowedHosts = validatedConfig.allowedHosts;
+    this.allowedHosts = validatedConfig.allowedHosts.split(",");
   }
 }
 
