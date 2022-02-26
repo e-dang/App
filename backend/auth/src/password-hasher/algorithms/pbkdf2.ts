@@ -1,4 +1,5 @@
 import {Injectable} from "@nestjs/common";
+import {PasswordHasherAlgorithms} from "@password-hasher/constants";
 import {PasswordHasherConfig} from "@password-hasher/password-hasher.config";
 import {randomBytes, pbkdf2Sync} from "crypto";
 import {Algorithm} from "./algorithm";
@@ -9,8 +10,6 @@ export class PBKDF2 extends Algorithm {
     super();
   }
 
-  static readonly alg = "pbkdf2" as const;
-
   private readonly keylen = 64;
 
   private readonly digest = "sha512";
@@ -18,7 +17,7 @@ export class PBKDF2 extends Algorithm {
   hashPassword(password: string) {
     const salt = randomBytes(this.config.passwordSaltLength).toString("hex");
     const hash = pbkdf2Sync(password, salt, this.config.passwordIterations, this.keylen, this.digest).toString("hex");
-    return this.joinPassword(PBKDF2.alg, this.config.passwordIterations, salt, hash);
+    return this.joinPassword(this.name, this.config.passwordIterations, salt, hash);
   }
 
   passwordIsValid(password: string, storedPassword: string) {
@@ -28,6 +27,6 @@ export class PBKDF2 extends Algorithm {
   }
 
   get name() {
-    return PBKDF2.alg;
+    return PasswordHasherAlgorithms.PBKDF2;
   }
 }

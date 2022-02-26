@@ -12,9 +12,9 @@ import {PasswordHasherConfig} from "./password-hasher.config";
       useFactory: (...algorithms: Algorithm[]) => {
         const algMap: Record<string, Algorithm> = {};
 
-        algorithms.forEach((alg) => {
+        for (const alg of algorithms) {
           algMap[alg.name] = alg;
-        });
+        }
 
         return algMap;
       },

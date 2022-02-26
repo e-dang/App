@@ -1,13 +1,11 @@
 import {IsDefined, IsEnum, IsNumber, IsPositive} from "class-validator";
 import {register} from "@config";
+import {PasswordHasherAlgorithms} from "./constants";
 
-enum PasswordHasherAlgorithm {
-  PBKDF2 = "pbkdf2",
-}
 export class PasswordHasherConfig {
-  @IsEnum(PasswordHasherAlgorithm)
+  @IsEnum(PasswordHasherAlgorithms)
   @IsDefined()
-  readonly passwordHasher: PasswordHasherAlgorithm;
+  readonly passwordHasher: PasswordHasherAlgorithms;
 
   @IsPositive()
   @IsNumber()
