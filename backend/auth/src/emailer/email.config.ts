@@ -1,6 +1,6 @@
 import {IsUndefinable} from "@core/decoractors/is-undefinable";
 import {IsDefined, IsNumber, IsPositive, IsString, IsUrl, MinLength} from "class-validator";
-import {createConfigProvider} from "./app.config";
+import {createConfigProvider} from "../config/app.config";
 
 export class EmailConfig {
   @IsString()

@@ -3,7 +3,7 @@ import {User} from "@users/entities/user.entity";
 import {readFileSync} from "fs";
 import nodemailer from "nodemailer";
 import {join} from "path";
-import {EmailConfig} from "@src/config/email.config";
+import {EmailConfig} from "@emailer/email.config";
 import handlebars from "handlebars";
 import {TRANSPORTER} from "./constants";
 

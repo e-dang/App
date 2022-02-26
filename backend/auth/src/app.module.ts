@@ -14,7 +14,7 @@ import {AuthenticatedRequest} from "@core/types";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
 import {loggerConfig, LoggerConfig} from "@config/logger.config";
 import path from "path";
-import {emailConfig} from "@config/email.config";
+import {emailConfig} from "@emailer/email.config";
 import {jwtConfig} from "@jwt/jwt.config";
 import {passwordHasherConfig} from "@password-hasher/password-hasher.config";
 import {passwordResetConfig} from "@password-reset/password-reset.config";
