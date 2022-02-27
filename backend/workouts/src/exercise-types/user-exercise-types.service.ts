@@ -1,7 +1,7 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {instanceToPlain} from "class-transformer";
-import {UserScopedParamDto} from "@core/dto/user-scoped.dto";
+import {UserScopedParamDto} from "@core/dto";
 import {Repository} from "typeorm";
 import {ExerciseType} from "./entities/exercise-type.entity";
 import {CreateExerciseTypeUserDto, UpdateExerciseTypeUserDto} from "./dto/exercise-type-body.dto";

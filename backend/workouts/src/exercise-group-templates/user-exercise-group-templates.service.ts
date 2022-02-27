@@ -1,6 +1,6 @@
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {UserScopedParamDto} from "@core/dto/user-scoped.dto";
+import {UserScopedParamDto} from "@core/dto";
 import {WorkoutTemplate} from "@workout-templates/entities/workout-template.entity";
 import {Repository} from "typeorm";
 import {UserExerciseGroupTemplateParamDto} from "./dto/exercise-group-template-params.dto";

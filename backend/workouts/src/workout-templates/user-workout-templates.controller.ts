@@ -11,9 +11,9 @@ import {
   ClassSerializerInterceptor,
   SerializeOptions,
 } from "@nestjs/common";
-import {UserScopedParamDto} from "@core/dto/user-scoped.dto";
+import {UserScopedParamDto} from "@core/dto";
 import {OwnerGuard} from "@core/guards/owner.guard";
-import {TransformResponseInterceptor} from "@core/interceptors/transform-response.interceptor";
+import {TransformResponseInterceptor} from "@core/interceptors";
 import {UserWorkoutTemplatesService} from "./user-workout-templates.service";
 import {UserWorkoutTemplateParamDto} from "./dto/workout-template-params.dto";
 import {WorkoutTemplate} from "./entities/workout-template.entity";

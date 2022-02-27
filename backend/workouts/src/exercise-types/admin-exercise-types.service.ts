@@ -1,6 +1,6 @@
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {User} from "@core/entities/user.entity";
+import {User} from "@core/entities";
 import {Repository} from "typeorm";
 import {instanceToPlain} from "class-transformer";
 import {ExerciseType} from "./entities/exercise-type.entity";
