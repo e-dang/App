@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as azure from "@pulumi/azure";
+import * as postgresql from "@pulumi/azure/postgresql";
 import {config} from "./config";
 
 const env = pulumi.getStack();
@@ -7,7 +7,7 @@ const env = pulumi.getStack();
 // Currently azure native package doesn't support the postgres flexible server database.
 // Using azure package instead and leaving commented out azure native code below
 
-const trackerServer = new azure.postgresql.FlexibleServer("tracker-server", {
+const trackerServer = new postgresql.FlexibleServer("tracker-server", {
   name: `tracker-${env}`,
   resourceGroupName: config.resourceGroupName,
   delegatedSubnetId: config.subnetId,
@@ -20,14 +20,14 @@ const trackerServer = new azure.postgresql.FlexibleServer("tracker-server", {
   backupRetentionDays: 7,
 });
 
-new azure.postgresql.FlexibleServerDatabase("tracker-database", {
+new postgresql.FlexibleServerDatabase("tracker-database", {
   name: "tracker",
   serverId: trackerServer.id,
   collation: "en_US.utf8",
   charset: "utf8",
 });
 
-new azure.postgresql.FlexibleServerDatabase("workouts-database", {
+new postgresql.FlexibleServerDatabase("workouts-database", {
   name: "workouts",
   serverId: trackerServer.id,
   collation: "en_US.utf8",

@@ -1,14 +1,15 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as azure from "@pulumi/azure-native";
+import * as resources from "@pulumi/azure-native/resources";
+import * as network from "@pulumi/azure-native/network";
 
 const config = new pulumi.Config();
 const env = pulumi.getStack();
 
-const resourceGroup = new azure.resources.ResourceGroup("stack", {
+const resourceGroup = new resources.ResourceGroup("stack", {
   resourceGroupName: `${env}-stack`,
 });
 
-const vnet = new azure.network.VirtualNetwork("network", {
+const vnet = new network.VirtualNetwork("network", {
   addressSpace: {
     addressPrefixes: config.requireObject<string[]>("vnetAddresses"),
   },
@@ -16,14 +17,14 @@ const vnet = new azure.network.VirtualNetwork("network", {
   virtualNetworkName: `vnet-${env}`,
 });
 
-const clusterSubnet = new azure.network.Subnet("cluster-subnet", {
+const clusterSubnet = new network.Subnet("cluster-subnet", {
   subnetName: "cluster-subnet",
   resourceGroupName: resourceGroup.name,
   virtualNetworkName: vnet.name,
   addressPrefix: config.require("clusterSubnetPrefix"),
 });
 
-const trackerDbSubnet = new azure.network.Subnet("tracker-db-subnet", {
+const trackerDbSubnet = new network.Subnet("tracker-db-subnet", {
   subnetName: "tracker-db-subnet",
   resourceGroupName: resourceGroup.name,
   virtualNetworkName: vnet.name,
@@ -37,18 +38,18 @@ const trackerDbSubnet = new azure.network.Subnet("tracker-db-subnet", {
   ],
 });
 
-const vpnGatewaySubnet = new azure.network.Subnet("GatewaySubnet", {
+const vpnGatewaySubnet = new network.Subnet("GatewaySubnet", {
   name: "vpn-gateway-subnet",
   virtualNetworkName: vnet.name,
   resourceGroupName: resourceGroup.name,
   addressPrefix: config.require("vpnGatewaySubnetPrefix"),
 });
 
-const publicIp = new azure.network.PublicIPAddress("vpn-gateway-public-ip", {
+const publicIp = new network.PublicIPAddress("vpn-gateway-public-ip", {
   resourceGroupName: resourceGroup.name,
 });
 
-new azure.network.VirtualNetworkGateway("vpn-gateway", {
+new network.VirtualNetworkGateway("vpn-gateway", {
   resourceGroupName: resourceGroup.name,
   gatewayType: "Vpn",
   vpnType: "RouteBased",
@@ -73,13 +74,13 @@ new azure.network.VirtualNetworkGateway("vpn-gateway", {
   activeActive: false,
 });
 
-const privateDns = new azure.network.PrivateZone("private-dns", {
+const privateDns = new network.PrivateZone("private-dns", {
   location: "Global",
   privateZoneName: `${env}.postgres.database.azure.com`,
   resourceGroupName: resourceGroup.name,
 });
 
-new azure.network.VirtualNetworkLink("private-dns-link", {
+new network.VirtualNetworkLink("private-dns-link", {
   location: "Global",
   virtualNetworkLinkName: `${env}-link`,
   registrationEnabled: true,

@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as azure from "@pulumi/azure-native";
+import * as authorization from "@pulumi/azure-native/authorization";
 import * as azuread from "@pulumi/azuread";
 
 interface User extends azuread.UserArgs {
@@ -8,7 +8,7 @@ interface User extends azuread.UserArgs {
 
 const config = new pulumi.Config();
 const usersRaw = config.requireObject<User[]>("users");
-const currentPrincipal = azure.authorization.getClientConfig().then((current) => current.objectId);
+const currentPrincipal = authorization.getClientConfig().then((current) => current.objectId);
 
 const users = usersRaw.map((user) => ({
   userObj: new azuread.User("user", {
