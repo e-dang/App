@@ -23,6 +23,8 @@
       "@config/*": ["src/config/*"],
       "@logger": ["src/logger"],
       "@logger/*": ["src/logger/*"],
+      "@database": ["src/database"],
+      "@database/*": ["src/database/*"],
       "@core": ["src/core"],
       "@core/*": ["src/core/*"],
       "@workout-templates": ["src/workout-templates"],
