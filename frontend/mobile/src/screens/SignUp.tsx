@@ -7,6 +7,7 @@ import {setCredentials} from "@store";
 import {useSignUpMutation} from "@api";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {AuthStackParamList} from "@src/App";
+import {logAsyncError} from "@utils";
 
 export type SignUpNavProps = StackNavigationProp<AuthStackParamList, "signUp">;
 
@@ -25,9 +26,7 @@ export const SignUp = () => {
   }, [data, dispatch]);
 
   const handleSignUp = () => {
-    signUp({name, email, password}).catch((err) =>
-      console.error(`handleSignUp failed with error ${(err as Error).message}`),
-    );
+    signUp({name, email, password}).catch((err) => logAsyncError("handleSignUp", err as Error));
   };
 
   const handleBack = () => {

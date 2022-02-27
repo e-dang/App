@@ -42,6 +42,7 @@ export const Welcome = () => {
             testID="appleSignUpBtn"
             variant="outline"
             colorScheme="secondary"
+            // eslint-disable-next-line no-console
             onPress={() => console.log("Apple")}
             startIcon={<NativeIcon as={Icon} name="apple" size={5} color="black" />}
           >
@@ -52,6 +53,7 @@ export const Welcome = () => {
             testID="fbSignUpBtn"
             variant="outline"
             colorScheme="secondary"
+            // eslint-disable-next-line no-console
             onPress={() => console.log("Facebook")}
             startIcon={<NativeIcon as={Icon} name="facebook" size={5} color="black" />}
           >
@@ -62,6 +64,7 @@ export const Welcome = () => {
             testID="googleSignUpBtn"
             variant="outline"
             colorScheme="secondary"
+            // eslint-disable-next-line no-console
             onPress={() => console.log("Google")}
             startIcon={<NativeIcon as={Icon} name="google" size={5} color="black" />}
           >

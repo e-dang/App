@@ -12,5 +12,6 @@ export async function timeout(ms: number) {
 }
 
 export function logAsyncError(funcName: string, error: Error) {
+  // eslint-disable-next-line no-console
   console.error(`${funcName} failed with error ${error.message}`);
 }

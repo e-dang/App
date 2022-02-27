@@ -1,9 +1,10 @@
 import {by, element} from "detox";
 import {v4 as uuidv4} from "uuid";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {SignInRequest, SignUpRequest} from "@api";
 import {decode} from "@utils";
-import {ExerciseType} from "@entities";
+import {AuthToken, ExerciseType} from "@entities";
+import {ApiResponse} from "@api/types";
 
 const BASE_URL = "https://dev.erickdang.com/api/v1";
 const MAILHOG_URL = "https://mail.dev.erickdang.com/api/v2/search";
@@ -30,8 +31,8 @@ const shapeFlags = (flags: string[]) =>
     return {...shapedFlags, [flagName]: value};
   }, {}) as Flags;
 
-export const extractCookies = (headers: any): Cookies => {
-  const cookies: string[] = headers["set-cookie"];
+export const extractCookies = (res: AxiosResponse): Cookies => {
+  const cookies: string[] = (res.headers as Record<string, string[]>)["set-cookie"];
 
   return cookies.reduce((shapedCookies: Cookies, cookieString: string) => {
     const [rawCookie, ...flags] = cookieString.split("; ");
@@ -55,8 +56,8 @@ export async function createUser(userData: Partial<SignUpRequest> = {}) {
 
   return {
     ...data,
-    accessToken: response.data.data.accessToken,
-    refreshToken: extractCookies(response.headers).rt.value,
+    accessToken: (response.data as ApiResponse<AuthToken>).data.accessToken,
+    refreshToken: extractCookies(response).rt.value,
   };
 }
 
@@ -64,7 +65,15 @@ export async function signOut() {
   await element(by.id("masterSignOut")).tap();
 }
 
-export async function checkForEmail(to: string, predicate: (msg: any) => boolean) {
+interface MailHogResponse {
+  items: MailHogEmail[];
+}
+
+interface MailHogEmail {
+  Content: {Headers: {Subject: string[]}};
+}
+
+export async function checkForEmail(to: string, predicate: (msg: MailHogEmail) => boolean) {
   const messages = await axios.get(MAILHOG_URL, {
     params: {
       kind: "to",
@@ -72,8 +81,7 @@ export async function checkForEmail(to: string, predicate: (msg: any) => boolean
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  return (messages.data.items as any[]).some(predicate);
+  return (messages as AxiosResponse<MailHogResponse>).data.items.some(predicate);
 }
 
 export async function signIn({email, password}: SignInRequest) {

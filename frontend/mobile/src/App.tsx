@@ -6,6 +6,7 @@ import {useSelector, useDispatch} from "@hooks";
 import {selectAuthToken} from "@selectors";
 import {useLazyGetAuthUserQuery} from "@api";
 import {setAuthUser} from "@store";
+import {logAsyncError} from "@utils";
 
 export type AuthStackParamList = {
   welcome: undefined;
@@ -25,11 +26,8 @@ export const App = () => {
 
   React.useEffect(() => {
     init()
-      .catch((err) => console.log(err))
-      .finally(
-        () => RNBootSplash.hide({fade: true}), // fade animation
-      )
-      .catch((err) => console.log(err));
+      .then(() => RNBootSplash.hide({fade: true}))
+      .catch((err) => logAsyncError("init", err as Error));
   }, []);
 
   React.useEffect(() => {

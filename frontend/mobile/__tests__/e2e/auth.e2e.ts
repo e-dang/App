@@ -117,7 +117,7 @@ describe("Auth flow", () => {
     await expect(signInScreen).toBeVisible();
 
     // they check their email and see the email to reset their password
-    const isInEmail = await checkForEmail(email, (msg: {Content: {Headers: {Subject: string[]}}}) => {
+    const isInEmail = await checkForEmail(email, (msg) => {
       if (msg.Content.Headers.Subject[0].includes("Password Reset")) {
         return true;
       }
