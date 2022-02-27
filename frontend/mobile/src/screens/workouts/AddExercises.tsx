@@ -31,7 +31,8 @@ const ListItem = ({children, onPress, isSelected = true}: ListItemProps) => {
               fontWeight: "medium",
               color: "black",
               letterSpacing: "lg",
-            }}>
+            }}
+          >
             {children}
           </Box>
           <Box>
@@ -98,7 +99,8 @@ export const AddExercisesScreen = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         isSelected(item) ? separators.unhighlight() : separators.highlight();
       }}
-      isSelected={isSelected(item)}>
+      isSelected={isSelected(item)}
+    >
       {item.name}
     </ListItem>
   );

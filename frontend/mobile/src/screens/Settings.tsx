@@ -31,7 +31,8 @@ const SettingsScreen = () => {
             colorScheme="secondary"
             borderRadius={100}
             width="90%"
-            onPress={handleSignOut}>
+            onPress={handleSignOut}
+          >
             Sign Out
           </Button>
         </Center>

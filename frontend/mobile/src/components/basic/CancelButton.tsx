@@ -11,7 +11,8 @@ export const CancelButton: FC<IButtonProps> = ({...props}) => {
       startIcon={<NBIcon as={Icon} name="times" size={5} color="black" mr={-2} />}
       _text={{color: "black"}}
       variant="unstyled"
-      px={0}>
+      px={0}
+    >
       Cancel
     </HeaderButton>
   );

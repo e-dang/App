@@ -29,7 +29,8 @@ export const App = () => {
         bg="black"
         size="xs"
         onPress={handleSignOut}
-        color="black">
+        color="black"
+      >
         SignOut
       </Button>
     </Box>

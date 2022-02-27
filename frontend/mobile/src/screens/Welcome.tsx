@@ -33,7 +33,8 @@ export const Welcome = () => {
             borderRadius={100}
             testID="emailSignUpBtn"
             onPress={handleSignUpWithEmail}
-            startIcon={<NativeIcon as={Icon} name="envelope" size={5} />}>
+            startIcon={<NativeIcon as={Icon} name="envelope" size={5} />}
+          >
             Sign Up With Email
           </Button>
           <Button
@@ -42,7 +43,8 @@ export const Welcome = () => {
             variant="outline"
             colorScheme="secondary"
             onPress={() => console.log("Apple")}
-            startIcon={<NativeIcon as={Icon} name="apple" size={5} color="black" />}>
+            startIcon={<NativeIcon as={Icon} name="apple" size={5} color="black" />}
+          >
             Sign Up With Apple
           </Button>
           <Button
@@ -51,7 +53,8 @@ export const Welcome = () => {
             variant="outline"
             colorScheme="secondary"
             onPress={() => console.log("Facebook")}
-            startIcon={<NativeIcon as={Icon} name="facebook" size={5} color="black" />}>
+            startIcon={<NativeIcon as={Icon} name="facebook" size={5} color="black" />}
+          >
             Sign Up With Facebook
           </Button>
           <Button
@@ -60,7 +63,8 @@ export const Welcome = () => {
             variant="outline"
             colorScheme="secondary"
             onPress={() => console.log("Google")}
-            startIcon={<NativeIcon as={Icon} name="google" size={5} color="black" />}>
+            startIcon={<NativeIcon as={Icon} name="google" size={5} color="black" />}
+          >
             Sign Up With Google
           </Button>
           <Divider my={3} />
@@ -71,7 +75,8 @@ export const Welcome = () => {
               bgColor="transparent"
               variant="ghost"
               colorScheme="primary"
-              onPress={handleSignIn}>
+              onPress={handleSignIn}
+            >
               Sign In
             </Button>
           </Box>

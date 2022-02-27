@@ -50,7 +50,8 @@ export const ListWorkoutsScreen = () => {
           variant="solid"
           colorScheme="primary"
           borderRadius={100}
-          onPress={handleCreateWorkout}>
+          onPress={handleCreateWorkout}
+        >
           Create Workout
         </Button>
       </VStack>

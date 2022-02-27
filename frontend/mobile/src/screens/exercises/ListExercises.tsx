@@ -28,7 +28,8 @@ const ExerciseScreen = ({children}: ChildrenProps) => {
           variant="solid"
           colorScheme="primary"
           borderRadius={100}
-          onPress={handleCreateExercise}>
+          onPress={handleCreateExercise}
+        >
           Create Exercise
         </Button>
       </VStack>

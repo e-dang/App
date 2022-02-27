@@ -71,7 +71,8 @@ export const SignIn = () => {
               bgColor="transparent"
               variant="ghost"
               colorScheme="primary"
-              onPress={handleSignUp}>
+              onPress={handleSignUp}
+            >
               Sign Up
             </Button>
           </Box>
