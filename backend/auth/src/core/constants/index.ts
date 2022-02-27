@@ -1,0 +1,1 @@
+export const PG_INT_MIN_VALUE = -2147483648;

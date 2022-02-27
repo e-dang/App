@@ -1,0 +1,28 @@
+services:
+  auth:
+    image: auth:dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../../.env.app.dev
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - /home/node/app/node_modules
+      - ../../:/home/node/app
+    networks:
+      - auth-dev
+    stop_signal: SIGKILL
+
+  postgres:
+    image: postgres:13.4
+    ports:
+      - "5432:5432"
+    env_file:
+      - ../../.env.db.dev
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - auth-dev
+
+networks:
+  auth-dev:
