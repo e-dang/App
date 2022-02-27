@@ -30,7 +30,7 @@ spec:
       volumes:
         - name: secrets
           secret:
-            secretName: auth-secrets-v1
+            secretName: auth-secrets
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -38,7 +38,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
-            - mountPath: "/home/auth/app/config/secrets"
+            - mountPath: "/home/auth/app/secrets"
               name: secrets
               readOnly: true
           ports:
