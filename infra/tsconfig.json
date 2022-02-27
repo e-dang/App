@@ -15,6 +15,5 @@
     "incremental": true,
     "baseUrl": "."
   },
-  "exclude": ["node_modules"],
-  "include": ["identity/*", "networks/*", "keys/*", "clusters/*", "cluster-configs/*", "databases/*"]
+  "exclude": ["node_modules"]
 }
