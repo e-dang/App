@@ -1,6 +1,7 @@
 import {IsUndefinable} from "@core/decoractors";
 import {IsDefined, IsNumber, IsPositive, IsString, IsUrl, MinLength} from "class-validator";
 import {register} from "@config";
+import {Environment} from "@src/app.config";
 
 export class EmailConfig {
   @IsString()
@@ -22,7 +23,11 @@ export class EmailConfig {
   @IsUndefinable()
   readonly emailPassword?: string;
 
-  @IsUrl({require_protocol: true, host_whitelist: ["localhost"]})
+  @IsUrl({
+    require_protocol: true,
+    require_port: false,
+    require_tld: process.env.NODE_ENV === Environment.Production,
+  })
   @IsDefined()
   readonly passwordResetRedirectUrl: string;
 }
