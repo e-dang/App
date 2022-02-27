@@ -2,7 +2,7 @@ const jestPackage = require("jest/package.json");
 
 module.exports = {
   root: true,
-  extends: ["edang", "edang-react"],
+  extends: ["edang-react", "edang"],
   settings: {
     jest: {
       version: jestPackage.version,
