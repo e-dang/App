@@ -24,9 +24,12 @@ export const App = () => {
   const init = async () => {};
 
   React.useEffect(() => {
-    void init().finally(() => {
-      void RNBootSplash.hide({fade: true}); // fade animation
-    });
+    init()
+      .catch((err) => console.log(err))
+      .finally(
+        () => RNBootSplash.hide({fade: true}), // fade animation
+      )
+      .catch((err) => console.log(err));
   }, []);
 
   React.useEffect(() => {

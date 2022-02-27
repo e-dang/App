@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, {FC, useCallback} from "react";
 import {Header, ChildrenProps, HeaderButton, Screen} from "@components";
 import {Box, Center, Icon, Heading, SectionList, Spinner, Text, VStack, HStack, Pressable, Divider} from "native-base";
 import {useNavigation} from "@react-navigation/native";
@@ -10,7 +10,6 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
 import {ExerciseType} from "@entities";
 import {ListRenderItem} from "react-native";
 import {useAlphabeticalSections, useSelectable} from "@hooks";
-import _ from "lodash";
 import type {WorkoutStackParamList} from "./WorkoutStack";
 
 type AddExercisesNavProps = StackNavigationProp<WorkoutStackParamList & AppStackParamList, "workoutAddExercises">;
@@ -83,6 +82,10 @@ export const AddExercisesScreen = () => {
   const query = useListExerciseTypesQuery();
   const sections = useAlphabeticalSections(query.data?.data, "name");
   const {selections, select, isSelected, getSelected} = useSelectable(query.data?.data);
+  const itemSeparator = useCallback(
+    ({highlighted}: {highlighted: boolean}) => <Divider bg={highlighted ? "green.600:alpha.30" : undefined} />,
+    [],
+  );
 
   if (query.isLoading) {
     return (
@@ -112,7 +115,7 @@ export const AddExercisesScreen = () => {
         testID="exerciseList"
         sections={sections}
         ListEmptyComponent={<Text>You Don&apos;t Have Any Exercises...</Text>}
-        keyExtractor={(item) => item.id as string}
+        keyExtractor={(item: ExerciseType) => item.id}
         extraData={selections}
         renderItem={renderItem}
         renderSectionHeader={({section: {title}}) => (
@@ -122,7 +125,7 @@ export const AddExercisesScreen = () => {
             </Heading>
           </Box>
         )}
-        ItemSeparatorComponent={({highlighted}) => <Divider bg={highlighted ? "green.600:alpha.30" : undefined} />}
+        ItemSeparatorComponent={itemSeparator}
       />
     </ExerciseScreen>
   );

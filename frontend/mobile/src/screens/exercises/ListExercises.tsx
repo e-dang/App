@@ -5,6 +5,8 @@ import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {FlatList} from "react-native-gesture-handler";
 import {useListExerciseTypesQuery} from "@api";
+import {ExerciseType} from "@entities";
+import {ListRenderItem} from "react-native";
 import type {ExerciseStackParamList} from "./ExerciseStack";
 
 type ListExerciseNavProps = StackNavigationProp<ExerciseStackParamList, "listExercises">;
@@ -56,17 +58,19 @@ export const ListExerciseScreen = () => {
     );
   }
 
+  const renderItem: ListRenderItem<ExerciseType> = ({item}) => (
+    <Box>
+      <Text>{item.name}</Text>
+    </Box>
+  );
+
   return (
     <ExerciseScreen>
       <FlatList
         testID="exerciseList"
         data={query.data.data}
         ListEmptyComponent={<Text>You Don&apos;t Have Any Exercises...</Text>}
-        renderItem={({item}) => (
-          <Box>
-            <Text>{item.name}</Text>
-          </Box>
-        )}
+        renderItem={renderItem}
       />
     </ExerciseScreen>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {useTranslation} from "react-i18next";
@@ -16,8 +16,30 @@ export type HomeTabsParamList = {
 
 const HomeTabs = createBottomTabNavigator<HomeTabsParamList>();
 
+interface IconProps {
+  focused: boolean;
+  color: string;
+  size: number;
+}
+
 export const HomeTabsScreen = () => {
   const {t} = useTranslation();
+  const workoutsIcon = useCallback(
+    ({color, size}: IconProps) => <Icon name="weight-lifter" size={size} color={color} />,
+    [],
+  );
+
+  const exercisesIcon = useCallback(({color, size}: IconProps) => <Icon name="weight" size={size} color={color} />, []);
+
+  const homeIcon = useCallback(
+    ({focused, color, size}: IconProps) => <Icon name={focused ? "home" : "home-outline"} size={size} color={color} />,
+    [],
+  );
+
+  const settingsIcon = useCallback(
+    ({focused, color, size}: IconProps) => <Icon name={focused ? "cog" : "cog-outline"} size={size} color={color} />,
+    [],
+  );
 
   return (
     <HomeTabs.Navigator initialRouteName="_home" screenOptions={{headerShown: false}}>
@@ -27,7 +49,7 @@ export const HomeTabsScreen = () => {
         options={{
           tabBarTestID: "navWorkouts",
           tabBarLabel: t("workouts"),
-          tabBarIcon: ({color, size}) => <Icon name="weight-lifter" size={size} color={color} />,
+          tabBarIcon: workoutsIcon,
         }}
       />
       <HomeTabs.Screen
@@ -36,7 +58,7 @@ export const HomeTabsScreen = () => {
         options={{
           tabBarTestID: "navExercises",
           tabBarLabel: t("exercises"),
-          tabBarIcon: ({color, size}) => <Icon name="weight" size={size} color={color} />,
+          tabBarIcon: exercisesIcon,
         }}
       />
       <HomeTabs.Screen
@@ -45,9 +67,7 @@ export const HomeTabsScreen = () => {
         options={{
           tabBarTestID: "navHome",
           tabBarLabel: t("home"),
-          tabBarIcon: ({focused, color, size}) => (
-            <Icon name={focused ? "home" : "home-outline"} size={size} color={color} />
-          ),
+          tabBarIcon: homeIcon,
         }}
       />
       <HomeTabs.Screen
@@ -56,9 +76,7 @@ export const HomeTabsScreen = () => {
         options={{
           tabBarTestID: "navSettings",
           tabBarLabel: t("settings"),
-          tabBarIcon: ({focused, color, size}) => (
-            <Icon name={focused ? "cog" : "cog-outline"} size={size} color={color} />
-          ),
+          tabBarIcon: settingsIcon,
         }}
       />
     </HomeTabs.Navigator>

@@ -4,6 +4,8 @@ import {Screen} from "@components";
 import {Box, Button, Center, FlatList, Heading, Spinner, Text, VStack} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
+import {WorkoutTemplate} from "@entities";
+import {ListRenderItem} from "react-native";
 import type {WorkoutStackParamList} from "./WorkoutStack";
 
 export type ListWorkoutNavProps = StackNavigationProp<WorkoutStackParamList, "listWorkouts">;
@@ -22,16 +24,18 @@ export const ListWorkoutsScreen = () => {
   } else if (query.isError) {
     content = <Text>There was an error.</Text>;
   } else {
+    const renderItem: ListRenderItem<WorkoutTemplate> = ({item}) => (
+      <Box>
+        <Text>{item.name}</Text>
+      </Box>
+    );
+
     content = (
       <FlatList
         testID="workoutList"
         data={query.data.data}
         ListEmptyComponent={<Text>You Don&apos;t Have Any Workouts...</Text>}
-        renderItem={({item}) => (
-          <Box>
-            <Text>{item.name}</Text>
-          </Box>
-        )}
+        renderItem={renderItem}
         onRefresh={query.refetch}
         refreshing={query.isFetching}
       />

@@ -8,7 +8,12 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import {AppStackParamList} from "@screens/AppStack";
 import {ListRenderItem} from "react-native";
 import {logAsyncError} from "@utils";
-import {CreateExerciseGroupTemplateForm, CreateWorkoutTemplateForm, ExerciseType} from "@entities";
+import {
+  CreateExerciseGroupTemplateForm,
+  CreateWorkoutTemplateForm,
+  ExerciseGroupTemplate,
+  ExerciseType,
+} from "@entities";
 import type {WorkoutStackParamList} from "./WorkoutStack";
 
 export type CreateWorkoutNavProps = StackNavigationProp<WorkoutStackParamList & AppStackParamList, "createWorkout">;
@@ -90,7 +95,7 @@ export const CreateWorkoutScreen = () => {
           <FlatList
             width="100%"
             ListEmptyComponent={<Text>You Don&apos;t Have Any Exercises...</Text>}
-            keyExtractor={(item) => item.index as string}
+            keyExtractor={(item: ExerciseGroupTemplate) => `${item.index}`}
             data={workoutForm.exerciseGroups}
             extraData={workoutForm.exerciseGroups}
             renderItem={renderItem}
