@@ -1,24 +1,15 @@
 module.exports = {
+  root: true,
+  extends: ["edang"],
   settings: {
     jest: {
-      version: 27, // just so eslint doesnt complain
+      version: 27,
     },
   },
-  overrides: [
-    {
-      files: ["**/*.ts", "**/*.tsx"],
-      parserOptions: {
-        project: `${__dirname}/tsconfig.json`,
-      },
-      rules: {
-        "@typescript-eslint/no-unused-vars": ["error", {varsIgnorePattern: "^_"}], // should set resource to variable in pulumi code
-        "@typescript-eslint/naming-convention": [
-          "error",
-          {
-            leadingUnderscore: "allow", // allows for throw away vars
-          },
-        ],
-      },
-    },
-  ],
+  parserOptions: {
+    project: `${__dirname}/tsconfig.json`,
+  },
+  rules: {
+    "no-new": "off", // resources aren't always assigned to variables in IaC
+  },
 };
