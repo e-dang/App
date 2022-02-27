@@ -12,13 +12,21 @@ enum LogLevel {
   Fatal = "fatal",
 }
 
-export class LoggerConfig {
+interface LoggerConfigProperties {
+  readonly logLevel: LogLevel;
+}
+
+class InputLoggerConfigValidator implements LoggerConfigProperties {
   @IsEnum(LogLevel)
   @IsDefined()
-  private readonly level: LogLevel;
+  readonly logLevel: LogLevel;
+}
 
-  get logLevel() {
-    return process.env.NODE_ENV === Environment.Test ? "silent" : this.level;
+export class LoggerConfig implements LoggerConfigProperties {
+  readonly logLevel: LogLevel;
+
+  constructor(validatedConfig: InputLoggerConfigValidator) {
+    this.logLevel = process.env.NODE_ENV === Environment.Test ? LogLevel.Silent : validatedConfig.logLevel;
   }
 
   get transport() {
@@ -26,4 +34,9 @@ export class LoggerConfig {
   }
 }
 
-export const loggerConfig = register(LoggerConfig);
+export const loggerConfig = register(InputLoggerConfigValidator, (validatedConfig) => {
+  return {
+    provide: LoggerConfig,
+    useValue: new LoggerConfig(validatedConfig),
+  };
+});
