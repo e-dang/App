@@ -3,7 +3,7 @@ module.exports = {
   extends: ["edang"],
   settings: {
     jest: {
-      version: 27,
+      version: 27, // just so eslint doesnt complain
     },
   },
   parserOptions: {
