@@ -1,5 +1,4 @@
-import {Resource} from "@core/entities/resource.entity";
-import {User} from "@core/entities/user.entity";
+import {User, Resource} from "@core/entities";
 import {ExerciseTemplate} from "@exercise-templates/entities/exercise-template.entity";
 import {Exclude} from "class-transformer";
 import {Column, Entity, Index, ManyToOne, OneToMany, Unique} from "typeorm";

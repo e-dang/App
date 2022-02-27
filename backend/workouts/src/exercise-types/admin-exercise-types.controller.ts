@@ -10,8 +10,8 @@ import {
   ClassSerializerInterceptor,
   SerializeOptions,
 } from "@nestjs/common";
-import {Roles} from "@core/decorators/roles";
-import {TransformResponseInterceptor} from "@core/interceptors/transform-response.interceptor";
+import {Roles} from "@core/decorators";
+import {TransformResponseInterceptor} from "@core/interceptors";
 import {ExerciseTypesAdminService} from "./admin-exercise-types.service";
 import {CreateExerciseTypeAdminDto, UpdateExerciseTypeAdminDto} from "./dto/exercise-type-body.dto";
 import {ExerciseTypeParamDto} from "./dto/exercise-type-params.dto";

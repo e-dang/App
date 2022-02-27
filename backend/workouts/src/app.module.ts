@@ -6,13 +6,12 @@ import {WorkoutTemplatesModule} from "@workout-templates/workout-templates.modul
 import {ExerciseGroupTemplatesModule} from "@exercise-group-templates/exercise-group-templates.module";
 import {ExerciseTemplateModule} from "@exercise-templates/exercise-template.module";
 import {ExerciseTypesModule} from "@exercise-types/exercise-types.module";
-import {RolesGuard} from "@core/guards/roles.guard";
-import {HealthController} from "@health/health.controller";
-import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
+import {RolesGuard} from "@core/guards";
+import {AllExceptionsFilter} from "@core/filters";
 import {ConfigModule} from "@config";
+import {HealthModule} from "@health";
+import {DatabaseConfig, databaseConfig} from "@database";
 import path from "path";
-import {HealthModule} from "@health/health.module";
-import {DatabaseConfig, databaseConfig} from "./database";
 import {appConfig} from "./app.config";
 import {loggerConfig, LoggerModule} from "./logger";
 
@@ -34,7 +33,6 @@ import {loggerConfig, LoggerModule} from "./logger";
     ExerciseTemplateModule,
     ExerciseTypesModule,
   ],
-  controllers: [HealthController],
   providers: [
     {
       provide: APP_GUARD,

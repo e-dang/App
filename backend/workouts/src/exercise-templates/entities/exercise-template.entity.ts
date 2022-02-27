@@ -1,4 +1,4 @@
-import {Resource} from "@core/entities/resource.entity";
+import {Resource} from "@core/entities";
 import {ExerciseGroupTemplate} from "@exercise-group-templates/entities/exercise-group-template.entity";
 import {ExerciseType} from "@exercise-types/entities/exercise-type.entity";
 import {Type} from "class-transformer";

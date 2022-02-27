@@ -1,4 +1,4 @@
-import {UserScopedParamDto} from "@core/dto/user-scoped.dto";
+import {UserScopedParamDto} from "@core/dto";
 import {IntersectionType} from "@nestjs/mapped-types";
 import {IsUUID} from "class-validator";
 

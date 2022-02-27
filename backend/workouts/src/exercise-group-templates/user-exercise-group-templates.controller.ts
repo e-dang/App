@@ -11,9 +11,9 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from "@nestjs/common";
-import {UserScopedParamDto} from "@core/dto/user-scoped.dto";
+import {UserScopedParamDto} from "@core/dto";
 import {OwnerGuard} from "@core/guards/owner.guard";
-import {TransformResponseInterceptor} from "@core/interceptors/transform-response.interceptor";
+import {TransformResponseInterceptor} from "@core/interceptors";
 import {ExerciseGroupTemplatesService} from "./user-exercise-group-templates.service";
 import {UserExerciseGroupTemplateParamDto} from "./dto/exercise-group-template-params.dto";
 import {CreateExerciseGroupTemplateDto, UpdateExerciseGroupTemplateDto} from "./dto/exercise-group-template-body.dto";

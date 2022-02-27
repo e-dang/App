@@ -1,6 +1,6 @@
 import {Module} from "@nestjs/common";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {User} from "@core/entities/user.entity";
+import {User} from "@core/entities";
 import {WorkoutTemplate} from "./entities/workout-template.entity";
 import {UserWorkoutTemplatesService} from "./user-workout-templates.service";
 import {UserWorkoutTemplatesController} from "./user-workout-templates.controller";
