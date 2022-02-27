@@ -30,7 +30,7 @@
     "clean:dev": "docker compose -f docker/dev/docker-compose.yaml -p dev-workouts rm -v",
     "clean:test": "docker compose -f docker/test/docker-compose.yaml -p test-workouts rm -v",
     "clean:prod": "docker compose -f docker/prod/docker-compose.yaml -p prod-workouts rm -v",
-    "lint": "eslint \"{src,__tests__,config,scripts}/**/*.ts\"",
+    "lint": "eslint \"./**/*.ts\"",
     "gen:env": "ts-node scripts/gen-env.ts",
     "gen:keys": "ts-node scripts/gen-keys.ts",
     "gen:token": "ts-node -r tsconfig-paths/register scripts/gen-token.ts"
