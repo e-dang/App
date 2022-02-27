@@ -9,19 +9,19 @@ spec:
       annotations:
         cert-manager.io/issuer: letsencrypt
       hosts:
-        - host: dev.erickdang.com
-          paths:
-            - path: /api/v1/auth
-              pathType: Prefix
-            - path: /api/v1/user
-              pathType: Prefix
+      - host: dev.erickdang.com
+        paths:
+        - path: /api/v1/auth
+          pathType: Prefix
+        - path: /api/v1/user
+          pathType: Prefix
       tls:
-        - hosts:
-            - dev.erickdang.com
-          secretName: letsencrypt-auth
+      - hosts:
+        - dev.erickdang.com
+        secretName: letsencrypt-auth
   postRenderers:
-    - kustomize:
-        images:
-          - name: ericdang/auth
-            newName: ericdang/auth
-            newTag: dev-53154eee-1639868578 # {"$imagepolicy": "flux-system:auth:tag"}
+  - kustomize:
+      images:
+      - name: ericdang/auth
+        newName: ericdang/auth
+        newTag: dev-2bb4b2a9-1645927295 # {"$imagepolicy": "flux-system:auth:tag"}
