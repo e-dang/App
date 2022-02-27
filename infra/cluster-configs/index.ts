@@ -180,7 +180,7 @@ const _gotkComponentsFile = new github.RepositoryFile(
     content: gotkComponentsRaw,
     overwriteOnCreate: true,
   },
-  {provider: githubProvider},
+  {provider: githubProvider, retainOnDelete: true},
 );
 
 const _gotkSyncFile = new github.RepositoryFile(
@@ -192,7 +192,7 @@ const _gotkSyncFile = new github.RepositoryFile(
     content: gotkSyncRaw,
     overwriteOnCreate: true,
   },
-  {provider: githubProvider},
+  {provider: githubProvider, retainOnDelete: true},
 );
 
 const _gotkPatchesFile = new github.RepositoryFile(
@@ -204,7 +204,7 @@ const _gotkPatchesFile = new github.RepositoryFile(
     content: gotkPatchesRaw,
     overwriteOnCreate: true,
   },
-  {provider: githubProvider},
+  {provider: githubProvider, retainOnDelete: true},
 );
 
 const _gotkKustomizationFile = new github.RepositoryFile(
@@ -216,7 +216,7 @@ const _gotkKustomizationFile = new github.RepositoryFile(
     content: gotkKustomizationRaw,
     overwriteOnCreate: true,
   },
-  {provider: githubProvider},
+  {provider: githubProvider, retainOnDelete: true},
 );
 
 const devRole = new k8s.rbac.v1.ClusterRole(
