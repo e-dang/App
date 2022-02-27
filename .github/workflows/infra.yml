@@ -1,0 +1,35 @@
+name: Infra
+
+env:
+  DIRECTORY: infra
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - infra/**
+      - .github/workflows/infra.yml
+  push:
+    paths:
+      - infra/**
+      - .github/workflows/infra.yml
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
+
+      - name: Install dependencies
+        run: yarn lint
+        working-directory: ${{ env.DIRECTORY }}
