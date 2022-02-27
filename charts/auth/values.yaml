@@ -27,8 +27,8 @@ podSecurityContext: {}
 
 securityContext:
   runAsNonRoot: true
-  runAsUser: 150
-  runAsGroup: 150
+  runAsUser: 1000
+  runAsGroup: 1000
 
 service:
   type: ClusterIP
