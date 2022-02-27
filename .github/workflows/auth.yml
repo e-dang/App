@@ -2,8 +2,6 @@ name: Auth
 
 env:
   DOCKER_BUILDKIT: 1
-  CLUSTER_NAME: dev
-  RESOURCE_GROUP: dev-stack
   DIRECTORY: backend/auth
 
 on:
@@ -28,88 +26,98 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
 
-      - name: Install and Run Pre-commit
-        uses: pre-commit/action@v2.0.3
-
-  unit-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code Repository
-        uses: actions/checkout@v2
-
-      - name: Setup yarn
+      - name: Setup node
         uses: actions/setup-node@v2
-        with:
-          node-version: '17.1.x'
 
       - name: Install dependencies
-        run: cd ${DIRECTORY} && yarn install
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
 
-      - name: Unit test
-        run: cd ${DIRECTORY} && yarn test:unit
+      - name: Install dependencies
+        run: yarn lint
+        working-directory: ${{ env.DIRECTORY }}
 
-  integration-test:
+  build:
     runs-on: ubuntu-latest
-    services:
-      # Label used to access the service container
-      tracker-dev.postgres.database.azure.com:
-        image: postgres:13.4
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: tests
-        options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
-
-      - name: Install sshfs
-        run: |
-          sudo apt-get install -y sshfs fuse iproute2
-          echo user_allow_other | sudo tee -a /etc/fuse.conf
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Install telepresence
-        run: |
-          sudo curl -fL https://app.getambassador.io/download/tel2/linux/amd64/latest/telepresence -o /usr/local/bin/telepresence && \
-          sudo chmod +x /usr/local/bin/telepresence
+      - name: Build dev Docker image
+        run: yarn build:dev
+        working-directory: ${{ env.DIRECTORY }}
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v1
+      - name: Export dev Docker image
+        run: docker save auth:dev > /tmp/auth.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          version: 'latest'
+          name: auth
+          path: /tmp/auth.tar
 
-      - name: Login to azure
-        uses: azure/login@v1
+  unit-test:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          name: auth
+          path: /tmp
 
-      - name: Connect to cluster context
-        run: |
-          az aks get-credentials -n ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --admin
-          telepresence connect
+      - name: Load image
+        run: docker load --input /tmp/auth.tar
 
-      - name: Build docker image
-        run: cd ${DIRECTORY} && yarn build
+      - name: Unit test
+        run: yarn test:unit
+        working-directory: ${{ env.DIRECTORY }}
 
-      - name: Create env file
-        run: |
-          echo "dbName=tests" >> ${DIRECTORY}/.env
-          echo "dbUser=postgres" >> ${DIRECTORY}/.env
-          echo "dbPassword=postgres" >> ${DIRECTORY}/.env
+  integration-test:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
 
-      - name: Integration tests
-        run: cd ${DIRECTORY} && yarn test:int:ci
-        env:
-          NETWORK: ${{ job.container.network }}
+      - name: Setup node
+        uses: actions/setup-node@v2
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
+
+      - name: Setup environment
+        run: yarn setup
+        working-directory: ${{ env.DIRECTORY }}
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: auth
+          path: /tmp
+
+      - name: Load image
+        run: docker load --input /tmp/auth.tar
+
+      - name: Start test stack
+        run: yarn up:test --wait
+        working-directory: ${{ env.DIRECTORY }}
+
+      - name: Run tests
+        run: docker compose -p test exec -T auth yarn jest __tests__/integration
+        working-directory: ${{ env.DIRECTORY }}
 
   push-staging:
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs:
       - lint
       - unit-test
@@ -122,6 +130,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Generate tag
         id: tag
         run: |
@@ -129,16 +143,10 @@ jobs:
           ts=$(date +%s)
           echo "::set-output name=TAG::dev-${sha}-${ts}"
 
-      - name: Build docker image
-        run: cd ${DIRECTORY} && yarn build:ci
-        env:
-          TAG: ${{ steps.tag.outputs.TAG }}
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - name: Build and push
+        uses: docker/build-push-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Push staging docker image
-        run: docker push ericdang/auth:${{ steps.tag.outputs.TAG }}
+          context: ${{ env.DIRECTORY }}
+          file: ${{ env.DIRECTORY }}/docker/prod/Dockerfile
+          push: true
+          tags: ericdang/auth:${{ steps.tag.outputs.TAG }}
