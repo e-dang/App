@@ -4543,10 +4543,10 @@ eslint-config-airbnb@^19.0.4:
     object.assign "^4.1.2"
     object.entries "^1.1.5"
 
-eslint-config-edang-react@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-edang-react/-/eslint-config-edang-react-1.1.0.tgz#1ca2e8c2feadb1f65f87ca8a119a49c762591948"
-  integrity sha512-tUeBXV0Yyy3WZIMW7BIuZcoB4QruVsJKnkDacCy3Oq0cmg5oKosk8o24Mxt7Ax0T8WRmcnKd6dWRPHQSZ8JrUQ==
+eslint-config-edang-react@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-edang-react/-/eslint-config-edang-react-1.2.0.tgz#8977b948ce4bd56f4b0271bcc4f074f411183e14"
+  integrity sha512-IJnZo4D1Aywu9E3GuX2u0vAnuuAuDAa4A7rw7k4cVKz6bCU9PyzKtNM67UK27LqkpC/RKxoVa4wRSZRBxMux2w==
 
 eslint-config-edang@^1.1.0:
   version "1.1.0"
