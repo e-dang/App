@@ -1,5 +1,8 @@
 name: Mobile
 
+env:
+  DIRECTORY: frontend/mobile
+
 on:
   pull_request:
     branches:
@@ -8,8 +11,6 @@ on:
       - frontend/mobile/**
       - .github/workflows/mobile.yml
   push:
-    branches:
-      - main
     paths:
       - frontend/mobile/**
       - .github/workflows/mobile.yml
@@ -22,8 +23,18 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
 
-      - name: Install and Run Pre-commit
-        uses: pre-commit/action@v2.0.3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "17.1.x"
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
+
+      - name: Lint
+        run: yarn lint
+        working-directory: ${{ env.DIRECTORY }}
 
   unit-test:
     runs-on: ubuntu-latest
@@ -34,10 +45,12 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '17.1.x'
+          node-version: "17.1.x"
 
       - name: Install dependencies
-        run: cd frontend/mobile && yarn install
+        run: yarn install
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Run unit tests
-        run: cd frontend/mobile && yarn test:unit
+        run: yarn test:unit
+        working-directory: ${{ env.DIRECTORY }}
