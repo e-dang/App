@@ -7,8 +7,8 @@ const env = pulumi.getStack();
 // Currently azure native package doesn't support the postgres flexible server database.
 // Using azure package instead and leaving commented out azure native code below
 
-const trackerServer = new postgresql.FlexibleServer("tracker-server", {
-  name: `tracker-${env}`,
+const sharedServer = new postgresql.FlexibleServer("shared-server", {
+  name: `shared-${env}`,
   resourceGroupName: config.resourceGroupName,
   delegatedSubnetId: config.subnetId,
   privateDnsZoneId: config.privateDnsId,
@@ -20,16 +20,16 @@ const trackerServer = new postgresql.FlexibleServer("tracker-server", {
   backupRetentionDays: 7,
 });
 
-new postgresql.FlexibleServerDatabase("tracker-database", {
-  name: "tracker",
-  serverId: trackerServer.id,
+new postgresql.FlexibleServerDatabase("auth-database", {
+  name: "auth",
+  serverId: sharedServer.id,
   collation: "en_US.utf8",
   charset: "utf8",
 });
 
 new postgresql.FlexibleServerDatabase("workouts-database", {
   name: "workouts",
-  serverId: trackerServer.id,
+  serverId: sharedServer.id,
   collation: "en_US.utf8",
   charset: "utf8",
 });
