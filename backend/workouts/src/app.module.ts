@@ -7,11 +7,11 @@ import {ExerciseGroupTemplatesModule} from "@exercise-group-templates/exercise-g
 import {ExerciseTemplateModule} from "@exercise-templates/exercise-template.module";
 import {ExerciseTypesModule} from "@exercise-types/exercise-types.module";
 import {RolesGuard} from "@core/guards/roles.guard";
-import {TerminusModule} from "@nestjs/terminus";
 import {HealthController} from "@health/health.controller";
 import {AllExceptionsFilter} from "@core/filters/catch-all.filter";
 import {ConfigModule} from "@config";
-import path from "path/posix";
+import path from "path";
+import {HealthModule} from "@health/health.module";
 import {DatabaseConfig, databaseConfig} from "./database";
 import {appConfig} from "./app.config";
 import {loggerConfig, LoggerModule} from "./logger";
@@ -28,7 +28,7 @@ import {loggerConfig, LoggerModule} from "./logger";
       load: [appConfig, databaseConfig, loggerConfig],
       configDir: path.join(process.env.PWD, "secrets"),
     }),
-    TerminusModule,
+    HealthModule,
     WorkoutTemplatesModule,
     ExerciseGroupTemplatesModule,
     ExerciseTemplateModule,
