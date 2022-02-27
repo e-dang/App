@@ -30,6 +30,6 @@ jobs:
         run: yarn install
         working-directory: ${{ env.DIRECTORY }}
 
-      - name: Install dependencies
+      - name: Lint
         run: yarn lint
         working-directory: ${{ env.DIRECTORY }}
