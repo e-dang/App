@@ -34,7 +34,7 @@ export class ConfigModule {
     for (const file of files) {
       const filepath = path.join(dirpath, file);
       const fileStats = fs.lstatSync(filepath);
-      if ((fileStats.isFile() || fileStats.isSymbolicLink()) && file.substr(0, 2) !== "..") {
+      if ((fileStats.isFile() || fileStats.isSymbolicLink()) && file.substring(0, 2) !== "..") {
         configs[file] = fs.readFileSync(filepath, {encoding: "utf-8"}).toString();
       }
     }
