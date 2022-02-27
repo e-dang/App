@@ -12,8 +12,6 @@ on:
       - backend/workouts/**
       - .github/workflows/workouts.yml
   push:
-    branches:
-      - main
     paths:
       - backend/workouts/**
       - .github/workflows/workouts.yml
