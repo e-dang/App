@@ -21,6 +21,8 @@
     "paths": {
       "@config": ["src/config"],
       "@config/*": ["src/config/*"],
+      "@logger": ["src/logger"],
+      "@logger/*": ["src/logger/*"],
       "@core": ["src/core"],
       "@core/*": ["src/core/*"],
       "@workout-templates": ["src/workout-templates"],
