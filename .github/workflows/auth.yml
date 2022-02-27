@@ -113,7 +113,7 @@ jobs:
         working-directory: ${{ env.DIRECTORY }}
 
       - name: Run tests
-        run: docker compose -p test exec -T auth yarn jest __tests__/integration
+        run: docker compose -p test-auth exec -T auth yarn jest __tests__/integration
         working-directory: ${{ env.DIRECTORY }}
 
   push-staging:
