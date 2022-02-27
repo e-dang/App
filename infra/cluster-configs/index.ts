@@ -126,7 +126,7 @@ const gotkComponentsManifests = new k8s.yaml.ConfigGroup(
   {provider, dependsOn: [fluxSystemNamespace]},
 );
 
-const _gotkSyncManifests = new k8s.yaml.ConfigGroup(
+new k8s.yaml.ConfigGroup(
   "gotk-sync",
   {
     yaml: gotkSyncRaw,
@@ -134,7 +134,7 @@ const _gotkSyncManifests = new k8s.yaml.ConfigGroup(
   {provider, dependsOn: [gotkComponentsManifests]},
 );
 
-const _sopsDecryptionSecret = new k8s.core.v1.Secret(
+new k8s.core.v1.Secret(
   "sops-decryption-secret",
   {
     metadata: {
@@ -150,7 +150,7 @@ const _sopsDecryptionSecret = new k8s.core.v1.Secret(
   {dependsOn: [fluxSystemNamespace]},
 );
 
-const _githubSshSecret = new k8s.core.v1.Secret(
+new k8s.core.v1.Secret(
   "github-ssh",
   {
     metadata: {
@@ -171,7 +171,7 @@ const githubProvider = new github.Provider("github-provider", {
   token: config.githubToken,
 });
 
-const _gotkComponentsFile = new github.RepositoryFile(
+new github.RepositoryFile(
   "gotk-components",
   {
     repository: "App",
@@ -183,7 +183,7 @@ const _gotkComponentsFile = new github.RepositoryFile(
   {provider: githubProvider, retainOnDelete: true},
 );
 
-const _gotkSyncFile = new github.RepositoryFile(
+new github.RepositoryFile(
   "gotk-sync",
   {
     repository: "App",
@@ -195,7 +195,7 @@ const _gotkSyncFile = new github.RepositoryFile(
   {provider: githubProvider, retainOnDelete: true},
 );
 
-const _gotkPatchesFile = new github.RepositoryFile(
+new github.RepositoryFile(
   "gotk-patches",
   {
     repository: "App",
@@ -207,7 +207,7 @@ const _gotkPatchesFile = new github.RepositoryFile(
   {provider: githubProvider, retainOnDelete: true},
 );
 
-const _gotkKustomizationFile = new github.RepositoryFile(
+new github.RepositoryFile(
   "gotk-kustomization",
   {
     repository: "App",
@@ -230,7 +230,7 @@ const devRole = new k8s.rbac.v1.ClusterRole(
   {provider},
 );
 
-const _devRoleBinding = new k8s.rbac.v1.ClusterRoleBinding(
+new k8s.rbac.v1.ClusterRoleBinding(
   "dev-role-binding",
   {
     metadata: {

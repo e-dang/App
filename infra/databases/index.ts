@@ -20,14 +20,14 @@ const trackerServer = new azure.postgresql.FlexibleServer("tracker-server", {
   backupRetentionDays: 7,
 });
 
-const _trackerDb = new azure.postgresql.FlexibleServerDatabase("tracker-database", {
+new azure.postgresql.FlexibleServerDatabase("tracker-database", {
   name: "tracker",
   serverId: trackerServer.id,
   collation: "en_US.utf8",
   charset: "utf8",
 });
 
-const _workoutsDb = new azure.postgresql.FlexibleServerDatabase("workouts-database", {
+new azure.postgresql.FlexibleServerDatabase("workouts-database", {
   name: "workouts",
   serverId: trackerServer.id,
   collation: "en_US.utf8",

@@ -43,7 +43,7 @@ const cluster = new containerservice.ManagedCluster("aks", {
   },
 });
 
-const _clusterSubnetAccess = new authorization.RoleAssignment("cluster-subnet-access", {
+new authorization.RoleAssignment("cluster-subnet-access", {
   principalId: cluster.identity.apply((id) => id?.principalId || ""),
   principalType: "ServicePrincipal",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7", // Network Contributor
@@ -57,24 +57,21 @@ const dnsZone = azure.network.getZone({
   zoneName: config.dnsZone,
 });
 
-const _kubeletResourceGroupReaderAccess = new azure.authorization.RoleAssignment(
-  "kubelet-domain-resouce-group-access",
-  {
-    principalId: cluster.identityProfile.apply((conf) => conf?.kubeletidentity.objectId || ""),
-    principalType: "ServicePrincipal",
-    roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7", // Reader Role,
-    scope: domainResourceGroup.then((conf) => conf.id),
-  },
-);
+new azure.authorization.RoleAssignment("kubelet-domain-resouce-group-access", {
+  principalId: cluster.identityProfile.apply((conf) => conf?.kubeletidentity.objectId || ""),
+  principalType: "ServicePrincipal",
+  roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7", // Reader Role,
+  scope: domainResourceGroup.then((conf) => conf.id),
+});
 
-const _kubeletDnsContributorAccess = new authorization.RoleAssignment("kubelet-dns-zone-access", {
+new authorization.RoleAssignment("kubelet-dns-zone-access", {
   principalId: cluster.identityProfile.apply((conf) => conf?.kubeletidentity.objectId || ""),
   principalType: "ServicePrincipal",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/befefa01-2a29-4197-83a8-272ff33ce314", // DNS Contributor
   scope: dnsZone.then((conf) => conf.id),
 });
 
-const _devAccess = new authorization.RoleAssignment("dev-access", {
+new authorization.RoleAssignment("dev-access", {
   principalId: config.devGroupId,
   principalType: "Group",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/4abbcc35-e782-43d8-92c5-2d3f1bd2253f", // Azure Kubernetes Service Cluster User Role
@@ -113,7 +110,7 @@ if (env === "dev") {
   });
 
   // Delete default node pool and remove spot node taints
-  pulumi.all([kubeConfig, spotNodes.id]).apply(([kubeConf, _]) => {
+  pulumi.all([kubeConfig, spotNodes.id]).apply(([kubeConf]) => {
     const nodes = execSync(`kubectl get nodes -o=name --kubeconfig <(echo "${kubeConf}")`, {
       shell: "/bin/bash",
     }).toString();

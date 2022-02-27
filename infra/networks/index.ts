@@ -48,7 +48,7 @@ const publicIp = new azure.network.PublicIPAddress("vpn-gateway-public-ip", {
   resourceGroupName: resourceGroup.name,
 });
 
-const _vpnGateway = new azure.network.VirtualNetworkGateway("vpn-gateway", {
+new azure.network.VirtualNetworkGateway("vpn-gateway", {
   resourceGroupName: resourceGroup.name,
   gatewayType: "Vpn",
   vpnType: "RouteBased",
@@ -79,7 +79,7 @@ const privateDns = new azure.network.PrivateZone("private-dns", {
   resourceGroupName: resourceGroup.name,
 });
 
-const _privateDnsLink = new azure.network.VirtualNetworkLink("private-dns-link", {
+new azure.network.VirtualNetworkLink("private-dns-link", {
   location: "Global",
   virtualNetworkLinkName: `${env}-link`,
   registrationEnabled: true,

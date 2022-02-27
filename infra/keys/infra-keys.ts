@@ -60,7 +60,7 @@ const githubTokenSops = new keyvault.Key("github-token-sops", {
   },
 });
 
-const _adminAccess = new authorization.RoleAssignment("infra-kv-admin-access", {
+new authorization.RoleAssignment("infra-kv-admin-access", {
   principalId: config.adminGroupId,
   principalType: "Group",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483", // Key Vault Administrator

@@ -83,21 +83,21 @@ const akvServicePrincipalPassword = new azuread.ServicePrincipalPassword("akv-se
   servicePrincipalId: akvServicePrincipal.id,
 });
 
-const _serviceAccess = new authorization.RoleAssignment("service-access", {
+new authorization.RoleAssignment("service-access", {
   principalId: akvServicePrincipal.id,
   principalType: "ServicePrincipal",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/12338af0-0e69-4776-bea7-57ae8d297424", // Key Vault Crypto User
   scope: fluxVault.id,
 });
 
-const _adminAccess = new authorization.RoleAssignment("admin-access", {
+new authorization.RoleAssignment("admin-access", {
   principalId: config.adminGroupId,
   principalType: "Group",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483", // Key Vault Administrator
   scope: fluxVault.id,
 });
 
-const _devAccess = new authorization.RoleAssignment("dev-access", {
+new authorization.RoleAssignment("dev-access", {
   principalId: config.devGroupId,
   principalType: "Group",
   roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/12338af0-0e69-4776-bea7-57ae8d297424", // Key Vault Crypto User
