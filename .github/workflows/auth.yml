@@ -52,7 +52,7 @@ jobs:
         run: docker save auth:dev > /tmp/auth.tar
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: auth
           path: /tmp/auth.tar
